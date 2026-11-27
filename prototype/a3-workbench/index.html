@@ -1,0 +1,1085 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<style>
+:root { color-scheme: light; padding-top: env(safe-area-inset-top, 0px); padding-bottom: env(safe-area-inset-bottom, 0px); }
+body { margin: 0; font: 14px system-ui, -apple-system, sans-serif; }
+img { max-width: 100%; }
+[hidden] { display: none !important; }
+</style>
+</head>
+<body>
+<title>A3 Workbench</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<style>
+/* Layout: NHS-style A3 sheet (Arial, black and NHS Blue text, pale grey-green bands, thin black rules). Title block on top, Plan on the left half, Do / Check-Act on the right. Title block on top, Plan on the left half, Do / Check-Act on the right, numbered boxes in A3 reading order. Edit mode puts the form beside the live sheet. */
+:root {
+  --bg: #f0f4f5;
+  --paper: #ffffff;
+  --ink: #000000;
+  --muted: #4c6272;
+  --line: #d8dde0;
+  --line-strong: #aeb7bd;
+  --accent: #005eb8;
+  --accent-strong: #003087;
+  --on-accent: #ffffff;
+  --accent-soft: #e6eeec;
+  --gap: #b74919;
+  --gap-soft: rgba(183, 73, 25, 0.16);
+  --good: #1d9a78;
+  --warn: #a35f00;
+  --field: #f7f9fa;
+  --shadow: 0 1px 2px rgba(0, 48, 135, .06), 0 6px 18px rgba(0, 48, 135, .06);
+  --f-display: Arial, "Helvetica Neue", Helvetica, sans-serif;
+  --f-body: Arial, "Helvetica Neue", Helvetica, sans-serif;
+  --f-mono: Arial, "Helvetica Neue", Helvetica, sans-serif;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0b1622; --paper: #13202d; --ink: #ffffff; --muted: #a9bac6; --line: #2a3a4a; --line-strong: #4a5f72;
+    --accent: #41b6e6; --accent-strong: #8fd3f2; --on-accent: #0b1622; --accent-soft: #1b2c3a; --gap: #e0773f; --gap-soft: rgba(224, 119, 63, 0.22); --good: #3fc49d; --warn: #f19d19;
+    --field: #0f1a25; --shadow: 0 1px 2px rgba(0,0,0,.3), 0 6px 18px rgba(0,0,0,.25); color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0b1622; --paper: #13202d; --ink: #ffffff; --muted: #a9bac6; --line: #2a3a4a; --line-strong: #4a5f72;
+    --accent: #41b6e6; --accent-strong: #8fd3f2; --on-accent: #0b1622; --accent-soft: #1b2c3a; --gap: #e0773f; --gap-soft: rgba(224, 119, 63, 0.22); --good: #3fc49d; --warn: #f19d19;
+    --field: #0f1a25; --shadow: 0 1px 2px rgba(0,0,0,.3), 0 6px 18px rgba(0,0,0,.25); color-scheme: dark;
+}
+/* The exported PDF is always printed light. */
+.force-light {
+  --bg: #ffffff; --paper: #ffffff; --ink: #000000; --muted: #4c6272; --line: #d8dde0; --line-strong: #aeb7bd;
+  --accent: #005eb8; --accent-strong: #003087; --on-accent: #ffffff; --accent-soft: #e6eeec; --gap: #b74919; --gap-soft: rgba(183, 73, 25, 0.16); --good: #1d9a78; --warn: #a35f00; --field: #f7f9fa;
+  color-scheme: light;
+}
+
+* { box-sizing: border-box; }
+body { background: var(--bg); color: var(--ink); font-family: var(--f-body); font-size: 14px; line-height: 1.5; }
+body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 10; background: var(--paper); }
+button, input, textarea, select { font: inherit; color: inherit; }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+/* Top bar */
+.bar { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 5; background: var(--paper); border-bottom: 1px solid var(--line); }
+.bar-in { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 16px; padding-block: 10px; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+.brand { display: flex; align-items: center; gap: 10px; font-family: var(--f-display); font-weight: 700; font-size: 18px; color: var(--accent); }
+.brand-mark { display: inline-grid; place-items: center; width: 32px; height: 24px; background: var(--accent); color: var(--on-accent); font-size: 12px; font-weight: 700; }
+.bar-mid { display: flex; align-items: center; gap: 8px; flex: 1 1 260px; min-width: 0; }
+.bar-mid select { flex: 1 1 auto; min-width: 0; max-width: 380px; }
+.bar-end { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+.seg { display: inline-flex; border: 1px solid var(--line-strong); border-radius: 6px; overflow: hidden; }
+.seg button { border: 0; background: transparent; padding: 6px 14px; cursor: pointer; font-weight: 500; }
+.seg button[aria-pressed="true"] { background: var(--accent); color: var(--on-accent); }
+.btn { border: 1px solid var(--line-strong); background: var(--paper); border-radius: 6px; padding: 6px 12px; cursor: pointer; font-weight: 500; white-space: nowrap; }
+.btn:hover { border-color: var(--accent); color: var(--accent); }
+.btn.primary { background: var(--accent); border-color: var(--accent); color: var(--on-accent); font-weight: 700; }
+.btn.primary:hover { background: var(--accent-strong); border-color: var(--accent-strong); color: var(--on-accent); }
+.btn.small { padding: 3px 9px; font-size: 12.5px; }
+.btn.ghost { border-color: transparent; background: transparent; color: var(--muted); }
+.btn.ghost:hover { color: var(--gap); border-color: transparent; }
+.btn:disabled { opacity: .5; cursor: default; }
+select, input[type="text"], input[type="number"], input[type="date"], textarea {
+  background: var(--field); border: 1px solid var(--line); border-radius: 5px; padding: 6px 8px; width: 100%; min-width: 0;
+}
+select:focus, input:focus, textarea:focus { border-color: var(--accent); outline: none; box-shadow: 0 0 0 2px var(--accent-soft); }
+textarea { resize: vertical; min-height: 64px; line-height: 1.45; }
+.status { font-size: 12.5px; color: var(--muted); font-variant-numeric: tabular-nums; }
+.status.warn { color: var(--warn); }
+.status.ok { color: var(--good); }
+
+.notice { border-left: 6px solid var(--accent) !important; display: flex; flex-wrap: wrap; gap: 8px 14px; align-items: center; justify-content: space-between; background: var(--accent-soft); border: 1px solid var(--line); border-radius: 8px; padding: 10px 14px; font-size: 13.5px; }
+
+/* Workspace */
+.wrap { padding-block: 18px 48px; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); display: grid; gap: 14px; }
+.work { display: grid; gap: 18px; align-items: start; }
+.work.editing { grid-template-columns: minmax(0, 1fr); }
+@media (min-width: 1180px) {
+  .work.editing { grid-template-columns: 440px minmax(0, 1fr); }
+  .work.editing .form { position: sticky; top: calc(env(safe-area-inset-top, 0px) + 70px); max-height: calc(100vh - 90px); overflow-y: auto; }
+}
+.preview-wrap { min-width: 0; container-type: inline-size; }
+
+/* Form */
+.form { background: var(--paper); border: 1px solid var(--line); border-radius: 10px; padding: 4px 0; min-width: 0; }
+.form details { border-bottom: 1px solid var(--line); }
+.form details:last-child { border-bottom: 0; }
+.form summary { display: flex; align-items: center; gap: 10px; padding: 12px 16px; cursor: pointer; list-style: none; font-family: var(--f-display); font-weight: 700; font-size: 15px; }
+.form summary::-webkit-details-marker { display: none; }
+.form summary::after { content: "+"; margin-left: auto; color: var(--accent); font-weight: 700; font-size: 18px; }
+.form details[open] summary::after { content: "–"; }
+.fbody { display: grid; gap: 12px; padding: 0 16px 16px; }
+.prompt { font-size: 13px; color: var(--muted); border-left: 2px solid var(--accent); padding-left: 10px; }
+.field { display: grid; gap: 4px; min-width: 0; }
+.field > span { font-size: 12.5px; font-weight: 700; color: var(--ink); }
+.row2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 10px; }
+.tbl { display: grid; gap: 8px; }
+.trow { display: grid; gap: 6px; padding: 8px; border: 1px solid var(--line); border-radius: 6px; background: var(--field); position: relative; }
+.trow .tcols { display: grid; grid-template-columns: repeat(auto-fit, minmax(90px, 1fr)); gap: 6px; }
+.trow input, .trow select, .trow textarea { background: var(--paper); }
+.trow-head { display: flex; align-items: center; justify-content: space-between; font-size: 12px; font-weight: 700; color: var(--accent); }
+.check { display: flex; align-items: center; gap: 6px; font-size: 13px; }
+.check input { width: auto; }
+.hint { font-size: 12px; color: var(--muted); }
+.coach { display: grid; gap: 6px; padding: 10px 12px; border-radius: 6px; background: var(--field); border: 1px dashed var(--line-strong); font-size: 13px; }
+.coach b { font-size: 13px; color: var(--accent); }
+.coach ul { margin: 0; padding-left: 18px; display: grid; gap: 4px; }
+.coach li.ok { color: var(--good); list-style: "✓  "; }
+.coach li.flag { color: var(--warn); list-style: "!  "; }
+.num { font-family: var(--f-display); display: inline-grid; place-items: center; min-width: 26px; height: 26px; padding: 0 6px; background: var(--accent); color: var(--on-accent); font-size: 13px; font-weight: 700; }
+.tag { font-size: 11px; font-weight: 700; color: var(--accent); padding: 1px 0; }
+
+/* The A3 sheet */
+.sheet { background: var(--paper); color: var(--ink); border: 1px solid var(--line); box-shadow: var(--shadow); padding: 20px; display: grid; gap: 14px; min-width: 0; }
+.tblock { display: grid; grid-template-columns: minmax(0, 1fr); border-bottom: 1.5px solid var(--ink); }
+.tblock-title { padding: 4px 0 14px; display: grid; gap: 4px; min-width: 0; }
+.tblock-title small { font-size: 13px; font-weight: 700; color: var(--accent); }
+.tblock-title h1 { margin: 0; font-family: var(--f-display); font-weight: 700; font-size: clamp(22px, 3.6cqi, 36px); line-height: 1.1; letter-spacing: -.01em; text-wrap: balance; overflow-wrap: anywhere; }
+.tblock-meta { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); align-content: start; background: var(--accent-soft); border-top: 6px solid var(--accent); margin-bottom: 14px; }
+.meta { padding: 7px 12px; min-width: 0; }
+.meta small { display: block; font-size: 11px; font-weight: 700; color: var(--accent); }
+.meta div { overflow-wrap: anywhere; font-size: 13.5px; }
+.halves { display: grid; gap: 14px; grid-template-columns: minmax(0, 1fr); }
+.half { display: grid; gap: 14px; align-content: start; min-width: 0; }
+.half-label { display: flex; align-items: center; gap: 8px; font-size: 12px; font-weight: 700; color: var(--accent); }
+.half-label::after { content: ""; flex: 1; height: 1px; background: var(--line); }
+.box { border: 1px solid var(--line); min-width: 0; display: grid; align-content: start; }
+.box-h { display: flex; align-items: center; gap: 10px; padding: 0 10px 0 0; background: var(--accent-soft); }
+.box-h .num { min-width: 34px; height: 34px; font-size: 15px; }
+.box-h h2 { margin: 0; font-family: var(--f-display); font-size: 16px; font-weight: 700; color: var(--ink); }
+.box-h .tag { margin-left: auto; }
+.box-h .cbtn { border: 1px solid var(--line-strong); background: var(--paper); border-radius: 4px; font-size: 11.5px; padding: 1px 7px; cursor: pointer; color: var(--muted); }
+.box-h .cbtn:hover { color: var(--accent); border-color: var(--accent); }
+.box-b { padding: 10px 12px; display: grid; gap: 10px; min-width: 0; container-type: inline-size; }
+.box-b p { margin: 0; white-space: pre-wrap; overflow-wrap: anywhere; }
+.lbl { font-size: 12px; font-weight: 700; color: var(--accent); display: block; margin-bottom: 2px; }
+.ps { border-left: 4px solid var(--gap); padding: 4px 0 4px 10px; font-weight: 700; }
+.goal-st { border-left: 4px solid var(--good); padding: 4px 0 4px 10px; font-weight: 700; }
+.empty { color: var(--muted); font-style: italic; font-size: 13px; }
+.kpi { display: flex; flex-wrap: wrap; gap: 8px 18px; align-items: baseline; }
+.kpi .big { font-family: var(--f-display); font-weight: 700; font-size: 26px; line-height: 1; font-variant-numeric: tabular-nums; }
+.kpi .unit { font-size: 13px; color: var(--ink); }
+.chart { width: 100%; height: auto; display: block; overflow: visible; }
+.chart text { font-family: var(--f-body); font-size: 11px; fill: var(--ink); }
+.chart .t-ink { fill: var(--ink); }
+.chart .t-gap { fill: var(--ink); }
+.chart .t-good { fill: var(--ink); font-weight: 700; }
+.chart .t-acc { fill: var(--accent); }
+.chart .grid { stroke: var(--line); stroke-width: 1; fill: none; }
+.chart .axis { stroke: var(--line-strong); stroke-width: 1; fill: none; }
+.chart .std { stroke: var(--good); stroke-width: 1.5; stroke-dasharray: 5 4; fill: none; }
+.chart .tgt { stroke: var(--good); stroke-width: 1.5; stroke-dasharray: 5 4; fill: none; }
+.chart .base { stroke: var(--line-strong); stroke-width: 1; stroke-dasharray: 2 3; fill: none; }
+.chart .act { stroke: var(--accent); stroke-width: 2.2; fill: none; }
+.chart .pred { stroke: var(--muted); stroke-width: 1.6; stroke-dasharray: 6 4; fill: none; }
+.chart .dot { fill: var(--accent); stroke: var(--paper); stroke-width: 1.5; }
+.chart .dot-end { fill: var(--accent); stroke: var(--paper); stroke-width: 2; }
+.chart .gapfill { fill: var(--gap-soft); stroke: none; }
+.chart .bone { stroke: var(--line-strong); stroke-width: 1.4; fill: none; }
+.chart .spine { stroke: var(--ink); stroke-width: 2; fill: none; }
+.chart .head { fill: var(--gap-soft); stroke: var(--gap); stroke-width: 1.4; }
+.chart .quad { fill: var(--field); stroke: var(--line); stroke-width: 1; }
+.chart .quad-win { fill: var(--accent-soft); stroke: var(--line); stroke-width: 1; }
+.chart .pt { fill: var(--paper); stroke: var(--accent); stroke-width: 2; }
+.chart .pt-on { fill: var(--accent); stroke: var(--accent); stroke-width: 2; }
+.chart .pt-label { font-size: 11px; font-weight: 700; }
+.chart .b-track { fill: var(--field); stroke: var(--line); }
+.chart .b-band { fill: var(--gap-soft); }
+.chart .b-bar { fill: var(--accent); }
+.chart .b-tgt { stroke: var(--good); stroke-width: 3; }
+.chart .b-base { stroke: var(--ink); stroke-width: 2; }
+.chart .g-row { fill: var(--field); }
+.chart .g-done { fill: var(--good); }
+.chart .g-prog { fill: var(--accent); }
+.chart .g-not { fill: var(--paper); stroke: var(--line-strong); stroke-width: 1.2; }
+.chart .g-late { fill: var(--gap); }
+.chart .today { stroke: var(--gap); stroke-width: 1.2; stroke-dasharray: 3 3; }
+.legend { display: flex; flex-wrap: wrap; gap: 4px 14px; font-size: 12px; color: var(--ink); }
+.legend i { display: inline-block; width: 16px; height: 0; border-top: 2px solid var(--accent); vertical-align: middle; margin-right: 5px; }
+.legend i.std { border-top: 2px dashed var(--good); }
+.legend i.pred { border-top: 2px dashed var(--muted); }
+.legend i.gapk { height: 9px; border: 0; background: var(--gap-soft); }
+.legend i.sq { width: 10px; height: 10px; border: 0; }
+.whys { display: grid; gap: 0; }
+.why { display: grid; grid-template-columns: 52px minmax(0, 1fr); border: 1px solid var(--line); border-top: 0; }
+.why:first-child { border-top: 1px solid var(--line); }
+.why .wn { display: grid; place-items: center; font-weight: 700; font-size: 12px; color: var(--accent); background: var(--accent-soft); border-right: 1px solid var(--line); }
+.why .wt { padding: 5px 9px; font-size: 13px; overflow-wrap: anywhere; }
+.why .we { display: block; font-size: 12px; color: var(--accent); }
+.why.root .wn { background: var(--accent); color: var(--on-accent); }
+.rc { border: 2px solid var(--accent); padding: 6px 10px; font-weight: 700; overflow-wrap: anywhere; }
+.cm-table, .res-table { width: 100%; border-collapse: collapse; font-size: 12.5px; }
+.cm-table th, .cm-table td, .res-table th, .res-table td { border: 1px solid var(--line); padding: 4px 7px; text-align: left; vertical-align: top; overflow-wrap: break-word; }
+.cm-table { min-width: 340px; }
+.res-table { min-width: 420px; }
+.scroll-x > .chart { min-width: 380px; }
+.cm-table th, .res-table th { font-size: 11.5px; color: var(--ink); font-weight: 700; background: var(--accent-soft); }
+.cm-table td.n { font-weight: 700; color: var(--accent); width: 26px; text-align: center; }
+.cm-table tr.off td { color: var(--muted); }
+.pill { display: inline-block; font-size: 11px; font-weight: 700; padding: 0 7px; border-radius: 9px; border: 1.5px solid var(--line-strong); white-space: nowrap; color: var(--ink); }
+.pill.cont { border-color: var(--warn); }
+.pill.perm { border-color: var(--accent); }
+.pill.done { border-color: var(--good); }
+.pill.prog { border-color: var(--accent); }
+.pill.late { border-color: var(--gap); }
+.two { display: grid; gap: 10px; grid-template-columns: minmax(0, 1fr); }
+.scroll-x { overflow-x: auto; min-width: 0; }
+.foot { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 6px; font-size: 12px; font-weight: 700; color: var(--ink); border-top: 1.5px solid var(--ink); padding-top: 8px; }
+.foot span:last-child { color: var(--accent); }
+
+@container (min-width: 620px) {
+  .tblock { grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr); }
+  .tblock-meta { margin: 0 0 14px 0; }
+  .tblock-title { padding-right: 20px; }
+}
+@container (min-width: 900px) {
+  .halves { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
+}
+@container (min-width: 560px) {
+  .two { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
+  .two.cm { grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr); }
+}
+/* Fixed A3-landscape layout used for the PDF capture */
+.sheet.export { width: 1587px; box-shadow: none; border: 0; padding: 26px; }
+.sheet.export .tblock { grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr); }
+.sheet.export .tblock-meta { margin: 0 0 14px 0; }
+.sheet.export .halves { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
+.sheet.export .two { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
+.sheet.export .two.cm { grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr); }
+.sheet.export .tblock-title h1 { font-size: 40px; }
+.sheet.export .cbtn { display: none; }
+.capture-host { position: fixed; left: -20000px; top: 0; }
+
+/* Confirm strip (in-page, the viewer has no dialogs) */
+.confirm { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; padding: 8px 12px; border: 1px solid var(--gap); border-radius: 6px; font-size: 13px; }
+.toast { position: fixed; bottom: calc(16px + env(safe-area-inset-bottom, 0px)); left: 50%; transform: translateX(-50%); background: var(--ink); color: var(--paper); padding: 8px 14px; border-radius: 6px; font-size: 13px; z-index: 20; max-width: calc(100vw - 32px); }
+@media (prefers-reduced-motion: no-preference) { .toast { transition: opacity .2s; } }
+</style>
+
+<header class="bar">
+  <div class="bar-in">
+    <div class="brand"><span class="brand-mark">A3</span>A3 Workbench</div>
+    <div class="bar-mid">
+      <label for="a3pick" class="hint" style="white-space:nowrap">A3</label>
+      <select id="a3pick" aria-label="Choose an A3"></select>
+      <button class="btn small" id="newA3" hidden>New A3</button>
+    </div>
+    <div class="bar-end">
+      <span class="status" id="status" aria-live="polite"></span>
+      <div class="seg" role="group" aria-label="Mode" id="modeSeg" hidden>
+        <button id="modeEdit" aria-pressed="false">Edit</button>
+        <button id="modePresent" aria-pressed="true">Present</button>
+      </div>
+      <button class="btn primary" id="saveBtn" hidden>Save</button>
+      <button class="btn" id="pdfBtn">Download PDF</button>
+    </div>
+  </div>
+</header>
+
+<main class="wrap">
+  <div id="notices"></div>
+  <div class="work" id="work">
+    <form class="form" id="form" hidden></form>
+    <div class="preview-wrap"><article class="sheet" id="sheet"></article></div>
+  </div>
+</main>
+<div id="captureHost" class="capture-host" aria-hidden="true"></div>
+
+<script>
+(() => {
+"use strict";
+
+/* ---------- helpers ---------- */
+const $ = (s, r = document) => r.querySelector(s);
+const esc = (v) => String(v ?? "").replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+const num = (v) => (v === "" || v === null || v === undefined || isNaN(+v)) ? null : +v;
+const fmt = (v) => v === null ? "–" : (Math.round(v * 10) / 10).toLocaleString();
+const uid = () => "a" + Math.random().toString(36).slice(2, 9);
+const LS_KEY = "a3wb-draft-v1";
+const LS_MODE = "a3wb-mode";
+const lsGet = (k) => { try { return localStorage.getItem(k); } catch (e) { return null; } };
+const lsSet = (k, v) => { try { localStorage.setItem(k, v); } catch (e) {} };
+const lsDel = (k) => { try { localStorage.removeItem(k); } catch (e) {} };
+const parseDate = (s) => { if (!s) return null; const d = new Date(s + "T00:00:00"); return isNaN(d) ? null : d; };
+const fmtDate = (s) => { const d = parseDate(s); return d ? d.toLocaleDateString(undefined, { day: "numeric", month: "short", year: "numeric" }) : ""; };
+const today = () => new Date().toISOString().slice(0, 10);
+
+function blankA3() {
+  return {
+    id: uid(), example: false, title: "", owner: "", mentor: "", team: "", date: today(), revision: "1",
+    background: "", strategicLink: "",
+    metric: { name: "", unit: "", better: "lower", standard: null },
+    currentText: "", problemStatement: "", current: [{ label: "", value: null }],
+    goal: { statement: "", baseline: null, target: null, current: null, deadline: "" },
+    rcaTool: "whys", whys: [{ why: "", evidence: "" }], rootCauses: "",
+    fishbone: { Method: "", Machine: "", People: "", Material: "", Measurement: "", Environment: "" },
+    countermeasures: [{ name: "", cause: "", kind: "Permanent", effect: 3, effort: 3, chosen: true }],
+    tasks: [{ task: "", owner: "", start: "", end: "", status: "Not started" }],
+    results: [{ label: "", predicted: null, actual: null }],
+    followup: { checkPlan: "", checkDate: "", standardize: "", yokoten: "", lessons: "" }
+  };
+}
+function normalize(a) { // fill any missing fields so older data keeps working
+  const b = blankA3();
+  const out = Object.assign({}, b, a || {});
+  for (const k of ["metric", "goal", "fishbone", "followup"]) out[k] = Object.assign({}, b[k], (a || {})[k] || {});
+  for (const k of ["current", "whys", "countermeasures", "tasks", "results"]) if (!Array.isArray(out[k])) out[k] = b[k];
+  return out;
+}
+
+/* ---------- state ---------- */
+let store = { version: 1, activeId: null, a3s: [] };
+let mode = "present";
+let canEdit = false;
+let saver = null;          // the artifact namespace, when this view can publish
+let comments = null;
+let dirty = false;
+let saving = false;
+let saveTimer = null;
+let canSaveRemote = true;
+const active = () => store.a3s.find(a => a.id === store.activeId) || store.a3s[0];
+
+/* ---------- section definitions (from the A3 knowledge base) ---------- */
+const SECTIONS = [
+  { n: 1, key: "background", title: "Background", phase: "Plan", prompt: "Why does this problem matter, and to whom? Tie it to a business goal or KPI and say why now." },
+  { n: 2, key: "current", title: "Current condition", phase: "Plan", prompt: "What is happening today, and what should be happening? How often does it go wrong, and how do you know? Go and see (gemba)." },
+  { n: 3, key: "goal", title: "Goal", phase: "Plan", prompt: "What would success look like, in numbers, and by when? Use the same metric as the current condition." },
+  { n: 4, key: "rca", title: "Root cause analysis", phase: "Plan", prompt: "Why does the gap exist? Ask why several times, check each answer against facts, and blame conditions, not people." },
+  { n: 5, key: "cm", title: "Countermeasures", phase: "Plan", prompt: "For each root cause, what could you change? Compare two or three options on effect and effort. Keep containment separate from permanent fixes." },
+  { n: 6, key: "plan", title: "Implementation plan", phase: "Do", prompt: "What needs to happen, who owns each step, and when will it be done? Every task needs one owner and a date." },
+  { n: 7, key: "follow", title: "Follow-up", phase: "Check · Act", prompt: "How will you know it worked, and when will you check? Compare predicted and actual on the goal metric. How will you sustain and share it?" }
+];
+
+/* ---------- coaching checks (common mistakes from the knowledge base) ---------- */
+const SOLUTION_WORDS = /\b(implement|buy|install|purchase|new system|deploy|introduce|roll out|rollout)\b/i;
+const LACK_WORDS = /\b(lack of|no |need more|insufficient|not enough)\b/i;
+const BLAME_WORDS = /\b(human error|careless|lazy|didn't follow|did not follow|operator error|staff error)\b/i;
+const TRAINING_WORDS = /\b(train|training|retrain|remind|reminder|awareness)\b/i;
+function checks(a, key) {
+  const out = [];
+  const ok = (t) => out.push(["ok", t]);
+  const flag = (t) => out.push(["flag", t]);
+  if (key === "header") {
+    if (!a.title) flag("Name the problem in a few words.");
+    else if (SOLUTION_WORDS.test(a.title)) flag("The title sounds like a solution. Name the problem instead.");
+    else ok("Title names a problem.");
+    if (!a.owner) flag("Add one owner.");
+  }
+  if (key === "background") {
+    if (!a.background) flag("Say why this matters and to whom.");
+    if (!a.strategicLink) flag("Link it to a business goal or KPI.");
+    else ok("Linked to a business goal.");
+  }
+  if (key === "current") {
+    const pts = a.current.filter(p => num(p.value) !== null);
+    if (!a.metric.name) flag("Name the metric you will track through to follow-up.");
+    if (num(a.metric.standard) === null) flag("Add the standard or expected level, so the gap shows.");
+    if (pts.length < 3) flag("Add at least three data points to show the trend.");
+    else ok(`${pts.length} data points charted.`);
+    if (a.problemStatement && LACK_WORDS.test(a.problemStatement)) flag("The problem is stated as a lack of something. Describe the gap instead.");
+    if (a.problemStatement && SOLUTION_WORDS.test(a.problemStatement)) flag("The problem statement assumes a fix.");
+    if (!/\d/.test(a.problemStatement + a.currentText)) flag("Use numbers: the gap in time, %, count or cost.");
+    if (!/gemba|observ|walk|went to|saw/i.test(a.currentText)) flag("Note what you observed first-hand (gemba).");
+  }
+  if (key === "goal") {
+    const g = a.goal;
+    if (num(g.baseline) === null || num(g.target) === null) flag("Add a baseline and a target number.");
+    if (!g.deadline) flag("Add a deadline.");
+    if (g.statement && !/\d/.test(g.statement)) flag("The goal has no number, so it may be a countermeasure.");
+    if (num(g.baseline) !== null && num(g.target) !== null && g.deadline) ok("Goal has a metric, baseline, target and deadline.");
+  }
+  if (key === "rca") {
+    const w = a.whys.filter(x => x.why.trim());
+    if ((a.rcaTool === "whys" || a.rcaTool === "both") && w.length < 3) flag("Ask why at least three times.");
+    if (w.length && w.some(x => !x.evidence.trim())) flag("Add evidence for each why.");
+    if (BLAME_WORDS.test(w.map(x => x.why).join(" ") + " " + a.rootCauses)) flag("A cause blames people. Ask what in the system allowed it.");
+    if (!a.rootCauses.trim()) flag("State the verified root cause.");
+    if (w.length >= 3 && w.every(x => x.evidence.trim())) ok("Why chain has evidence at each step.");
+  }
+  if (key === "cm") {
+    const c = a.countermeasures.filter(x => x.name.trim());
+    if (c.length < 2) flag("Compare at least two options.");
+    if (c.some(x => !x.cause.trim())) flag("Link every countermeasure to a root cause.");
+    if (c.length && c.every(x => TRAINING_WORDS.test(x.name))) flag("Training alone rarely holds. Look for a change to the process.");
+    if (c.length >= 2 && c.every(x => x.cause.trim())) ok("Options compared and linked to causes.");
+  }
+  if (key === "plan") {
+    const t = a.tasks.filter(x => x.task.trim());
+    if (!t.length) flag("Add the tasks.");
+    if (t.some(x => !x.owner.trim() || !x.end)) flag("Every task needs an owner and a due date.");
+    else if (t.length) ok("Every task has an owner and a date.");
+  }
+  if (key === "follow") {
+    const f = a.followup;
+    if (!f.checkDate) flag("Set a date to check results.");
+    if (!a.results.some(r => num(r.predicted) !== null)) flag("Add predicted results on the goal metric.");
+    if (!f.standardize.trim()) flag("Say how the change will be standardized.");
+    if (!f.yokoten.trim()) flag("Name who else should learn from this (yokoten).");
+    if (f.checkDate && f.standardize.trim() && f.yokoten.trim()) ok("Check, sustain and share are planned.");
+  }
+  return out;
+}
+
+/* ---------- charts (inline SVG, colors from tokens) ---------- */
+function niceRange(vals, pad = 0.12) {
+  let lo = Math.min(...vals), hi = Math.max(...vals);
+  if (lo === hi) { lo -= 1; hi += 1; }
+  const span = hi - lo;
+  lo = lo - span * pad; hi = hi + span * pad;
+  const step = niceStep((hi - lo) / 4);
+  lo = Math.floor(lo / step) * step; hi = Math.ceil(hi / step) * step;
+  if (Math.min(...vals) >= 0 && lo < 0) lo = 0;
+  return { lo, hi, step };
+}
+function niceStep(raw) {
+  const p = Math.pow(10, Math.floor(Math.log10(raw)));
+  const m = raw / p;
+  return (m <= 1 ? 1 : m <= 2 ? 2 : m <= 2.5 ? 2.5 : m <= 5 ? 5 : 10) * p;
+}
+let clipN = 0;
+
+function lineChart({ labels, series, refs = [], gapRef = null, better = "lower", unit = "" }) {
+  const W = 560, H = 210, L = 40, R = 64, T = 14, B = 26;
+  const all = [];
+  series.forEach(s => s.values.forEach(v => v !== null && all.push(v)));
+  refs.forEach(r => r.value !== null && all.push(r.value));
+  if (!all.length || !labels.length) return "";
+  const { lo, hi, step } = niceRange(all);
+  const iw = W - L - R, ih = H - T - B;
+  const x = (i) => L + (labels.length === 1 ? iw / 2 : (i * iw) / (labels.length - 1));
+  const y = (v) => T + ih - ((v - lo) / (hi - lo)) * ih;
+  let s = `<svg class="chart" viewBox="0 0 ${W} ${H}" role="img">`;
+  for (let v = lo; v <= hi + 1e-9; v += step) {
+    s += `<line class="grid" x1="${L}" x2="${W - R}" y1="${y(v)}" y2="${y(v)}"/>`;
+    s += `<text x="${L - 6}" y="${y(v) + 3.5}" text-anchor="end">${esc(fmt(v))}</text>`;
+  }
+  s += `<line class="axis" x1="${L}" x2="${W - R}" y1="${T + ih}" y2="${T + ih}"/>`;
+  labels.forEach((lb, i) => { s += `<text x="${x(i)}" y="${H - 8}" text-anchor="middle">${esc(lb)}</text>`; });
+  // gap shading between the actual line and the standard, on the worse side
+  const main = series[0];
+  if (gapRef !== null && main) {
+    const pts = main.values.map((v, i) => v === null ? null : [x(i), y(v)]).filter(Boolean);
+    if (pts.length > 1) {
+      const id = "gc" + (++clipN);
+      const ys = y(gapRef);
+      const clipRect = better === "lower" ? `<rect x="${L}" y="${T}" width="${iw}" height="${Math.max(0, ys - T)}"/>` : `<rect x="${L}" y="${ys}" width="${iw}" height="${Math.max(0, T + ih - ys)}"/>`;
+      s += `<defs><clipPath id="${id}">${clipRect}</clipPath></defs>`;
+      const poly = pts.map(p => p.join(",")).join(" ") + ` ${pts[pts.length - 1][0]},${ys} ${pts[0][0]},${ys}`;
+      s += `<polygon class="gapfill" clip-path="url(#${id})" points="${poly}"/>`;
+    }
+  }
+  refs.forEach(r => {
+    if (r.value === null) return;
+    s += `<line class="${r.cls}" x1="${L}" x2="${W - R}" y1="${y(r.value)}" y2="${y(r.value)}"/>`;
+    s += `<text class="${r.tcls || ""}" x="${W - R + 6}" y="${y(r.value) + 3.5}">${esc(r.label)} ${esc(fmt(r.value))}</text>`;
+  });
+  series.forEach((se) => {
+    const pts = se.values.map((v, i) => v === null ? null : [x(i), y(v)]);
+    let d = "", pen = false;
+    pts.forEach(p => { if (!p) { pen = false; return; } d += (pen ? "L" : "M") + p[0].toFixed(1) + "," + p[1].toFixed(1); pen = true; });
+    if (d) s += `<path class="${se.cls}" d="${d}"/>`;
+    if (se.dots) {
+      const real = pts.map((p, i) => p && [p, i]).filter(Boolean);
+      real.forEach(([p], k) => {
+        const end = k === real.length - 1;
+        s += `<circle class="${end ? "dot-end" : "dot"}" cx="${p[0]}" cy="${p[1]}" r="${end ? 4.5 : 3}"/>`;
+      });
+      if (real.length) {
+        const [p, i] = real[real.length - 1];
+        s += `<text class="t-acc" x="${p[0]}" y="${p[1] - 9}" text-anchor="middle" font-weight="600">${esc(fmt(se.values[i]))}</text>`;
+      }
+    }
+  });
+  s += `</svg>`;
+  return s;
+}
+
+function bulletChart(g, better, unit) {
+  const b = num(g.baseline), t = num(g.target), c = num(g.current);
+  const vals = [b, t, c].filter(v => v !== null);
+  if (vals.length < 2) return "";
+  const W = 560, H = 74, L = 8, R = 8, T = 22;
+  const hi = Math.max(...vals) * 1.12, lo = 0;
+  const x = (v) => L + ((v - lo) / (hi - lo)) * (W - L - R);
+  let s = `<svg class="chart" viewBox="0 0 ${W} ${H}" role="img">`;
+  s += `<rect class="b-track" x="${L}" y="${T}" width="${W - L - R}" height="22" rx="2"/>`;
+  if (b !== null && t !== null) {
+    const a1 = Math.min(b, t), a2 = Math.max(b, t);
+    s += `<rect class="b-band" x="${x(a1)}" y="${T}" width="${x(a2) - x(a1)}" height="22"/>`;
+  }
+  if (c !== null) s += `<rect class="b-bar" x="${L}" y="${T + 7}" width="${Math.max(0, x(c) - L)}" height="8"/>`;
+  if (b !== null) { s += `<line class="b-base" x1="${x(b)}" x2="${x(b)}" y1="${T - 3}" y2="${T + 25}"/><text class="t-ink" x="${x(b)}" y="${T - 7}" text-anchor="middle">Baseline ${esc(fmt(b))}</text>`; }
+  if (t !== null) { s += `<line class="b-tgt" x1="${x(t)}" x2="${x(t)}" y1="${T - 3}" y2="${T + 25}"/><text class="t-good" x="${x(t)}" y="${T - 7}" text-anchor="middle" font-weight="600">Target ${esc(fmt(t))}</text>`; }
+  if (c !== null) s += `<text class="t-acc" x="${Math.max(L + 4, x(c))}" y="${T + 38}" text-anchor="${x(c) < 80 ? "start" : "middle"}" font-weight="600">Now ${esc(fmt(c))}</text>`;
+  s += `<text x="${W - R}" y="${T + 38}" text-anchor="end">${esc(unit)}</text>`;
+  s += `</svg>`;
+  return s;
+}
+
+const FISH = ["Method", "Machine", "People", "Material", "Measurement", "Environment"];
+function fishbone(fb, effect) {
+  const has = FISH.some(k => (fb[k] || "").trim());
+  if (!has) return "";
+  const W = 700, H = 270, cy = 135, headX = 565;
+  let s = `<svg class="chart" viewBox="0 0 ${W} ${H}" role="img">`;
+  s += `<line class="spine" x1="20" x2="${headX}" y1="${cy}" y2="${cy}"/>`;
+  s += `<path class="head" d="M${headX},${cy - 46} L${W - 6},${cy - 46} L${W - 6},${cy + 46} L${headX},${cy + 46} Z"/>`;
+  const words = wrapWords(effect || "Problem", 18).slice(0, 5);
+  words.forEach((w, i) => { s += `<text class="t-ink" x="${(headX + W - 6) / 2}" y="${cy - (words.length - 1) * 6.5 + i * 13 + 4}" text-anchor="middle" font-weight="600">${esc(w)}</text>`; });
+  const cols = [130, 275, 420];
+  FISH.forEach((k, i) => {
+    const top = i < 3, bx = cols[i % 3];
+    const yEnd = top ? 26 : H - 26;
+    s += `<line class="bone" x1="${bx}" y1="${yEnd}" x2="${bx + 60}" y2="${cy}"/>`;
+    s += `<text class="t-acc" x="${bx - 4}" y="${top ? yEnd - 8 : yEnd + 16}" font-weight="600" text-anchor="middle">${esc(k)}</text>`;
+    const items = (fb[k] || "").split(/\n|;/).map(t => t.trim()).filter(Boolean).slice(0, 4);
+    items.forEach((t, j) => {
+      const f = (j + 1) / (items.length + 1);
+      const px = bx + 60 * f, py = yEnd + (cy - yEnd) * f;
+      s += `<text x="${px - 6}" y="${py + 3.5}" text-anchor="end" class="t-ink" font-size="10">${esc(t.length > 19 ? t.slice(0, 18) + "…" : t)}</text>`;
+    });
+  });
+  s += `</svg>`;
+  return s;
+}
+function wrapWords(t, max) {
+  const out = []; let line = "";
+  String(t).split(/\s+/).forEach(w => { if ((line + " " + w).trim().length > max) { if (line) out.push(line); line = w; } else line = (line + " " + w).trim(); });
+  if (line) out.push(line);
+  return out;
+}
+
+function matrix(cms) {
+  const list = cms.filter(c => c.name.trim());
+  if (!list.length) return "";
+  const W = 320, H = 250, L = 36, T = 10, S = 196;
+  const x = (v) => L + ((Math.min(5, Math.max(1, v)) - 0.5) / 5) * S;
+  const y = (v) => T + S - ((Math.min(5, Math.max(1, v)) - 0.5) / 5) * S;
+  let s = `<svg class="chart" viewBox="0 0 ${W} ${H}" role="img">`;
+  s += `<rect class="quad-win" x="${L}" y="${T}" width="${S / 2}" height="${S / 2}"/>`;
+  s += `<rect class="quad" x="${L + S / 2}" y="${T}" width="${S / 2}" height="${S / 2}"/>`;
+  s += `<rect class="quad" x="${L}" y="${T + S / 2}" width="${S / 2}" height="${S / 2}"/>`;
+  s += `<rect class="quad" x="${L + S / 2}" y="${T + S / 2}" width="${S / 2}" height="${S / 2}"/>`;
+  s += `<text x="${L + 5}" y="${T + 13}" class="t-acc" font-weight="600">Quick wins</text>`;
+  s += `<text x="${L + S - 5}" y="${T + 13}" text-anchor="end">Big bets</text>`;
+  s += `<text x="${L + 5}" y="${T + S - 6}">Fill-ins</text>`;
+  s += `<text x="${L + S - 5}" y="${T + S - 6}" text-anchor="end">Avoid</text>`;
+  s += `<text x="${L + S / 2}" y="${T + S + 18}" text-anchor="middle">Effort  →</text>`;
+  s += `<text x="${L - 12}" y="${T + S / 2}" text-anchor="middle" transform="rotate(-90 ${L - 12} ${T + S / 2})">Effect  →</text>`;
+  s += `<text x="${L}" y="${T + S + 32}">Filled = chosen</text>`;
+  const seen = {};
+  list.forEach((c, i) => {
+    const key = c.effect + ":" + c.effort; const k = seen[key] = (seen[key] || 0) + 1;
+    const cx = x(+c.effort || 3) + (k - 1) * 9, cy = y(+c.effect || 3) - (k - 1) * 9;
+    s += `<circle class="${c.chosen ? "pt-on" : "pt"}" cx="${cx}" cy="${cy}" r="9"/>`;
+    s += `<text class="pt-label" x="${cx}" y="${cy + 4}" text-anchor="middle" style="fill:${c.chosen ? "var(--paper)" : "var(--accent)"}">${i + 1}</text>`;
+  });
+  s += `</svg>`;
+  return s;
+}
+
+function gantt(tasks) {
+  const list = tasks.filter(t => t.task.trim() && parseDate(t.start) && parseDate(t.end));
+  if (!list.length) return "";
+  const starts = list.map(t => parseDate(t.start)), ends = list.map(t => parseDate(t.end));
+  let min = new Date(Math.min(...starts)), max = new Date(Math.max(...ends));
+  min = new Date(min.getFullYear(), min.getMonth(), 1);
+  max = new Date(max.getFullYear(), max.getMonth() + 1, 1);
+  const W = 640, LW = 200, R = 10, T = 22, RH = 22;
+  const H = T + list.length * RH + 8;
+  const x = (d) => LW + ((d - min) / (max - min)) * (W - LW - R);
+  let s = `<svg class="chart" viewBox="0 0 ${W} ${H}" role="img">`;
+  for (let m = new Date(min); m <= max; m = new Date(m.getFullYear(), m.getMonth() + 1, 1)) {
+    s += `<line class="grid" x1="${x(m)}" x2="${x(m)}" y1="${T - 4}" y2="${H - 6}"/>`;
+    const nx = new Date(m.getFullYear(), m.getMonth() + 1, 1);
+    if (nx <= max) s += `<text x="${(x(m) + x(nx)) / 2}" y="${T - 8}" text-anchor="middle">${esc(m.toLocaleDateString(undefined, { month: "short" }))}${m.getMonth() === 0 ? " " + String(m.getFullYear()).slice(2) : ""}</text>`;
+  }
+  const now = new Date();
+  list.forEach((t, i) => {
+    const yy = T + i * RH;
+    if (i % 2 === 0) s += `<rect class="g-row" x="0" y="${yy}" width="${W}" height="${RH}"/>`;
+    const name = t.task.length > 30 ? t.task.slice(0, 29) + "…" : t.task;
+    s += `<text class="t-ink" x="4" y="${yy + 14.5}">${esc(name)}</text>`;
+    const late = t.status !== "Done" && parseDate(t.end) < now;
+    const cls = t.status === "Done" ? "g-done" : late ? "g-late" : t.status === "In progress" ? "g-prog" : "g-not";
+    const x1 = x(parseDate(t.start)), x2 = Math.max(x1 + 3, x(new Date(parseDate(t.end).getTime() + 86400000)));
+    s += `<rect class="${cls}" x="${x1}" y="${yy + 5}" width="${x2 - x1}" height="${RH - 10}" rx="2"/>`;
+    const label = t.owner || "";
+    if (label) s += `<text x="${x2 + 4 > W - 60 ? x1 - 4 : x2 + 4}" y="${yy + 14.5}" text-anchor="${x2 + 4 > W - 60 ? "end" : "start"}">${esc(label)}</text>`;
+  });
+  if (now >= min && now <= max) s += `<line class="today" x1="${x(now)}" x2="${x(now)}" y1="${T - 4}" y2="${H - 6}"/><text class="t-gap" x="${x(now) + 3}" y="${H - 1}">today</text>`;
+  s += `</svg>`;
+  return s;
+}
+
+/* ---------- sheet rendering ---------- */
+function box(sec, inner) {
+  return `<section class="box" data-sec="${sec.key}">
+    <div class="box-h"><span class="num">${sec.n}</span><h2>${esc(sec.title)}</h2><span class="tag">${esc(sec.phase)}</span>${comments ? `<button type="button" class="cbtn" data-comment="${sec.key}" title="Comment on this section">Comment</button>` : ""}</div>
+    <div class="box-b">${inner}</div></section>`;
+}
+const para = (t, cls = "") => t && t.trim() ? `<p class="${cls}">${esc(t)}</p>` : "";
+const emptyNote = (t) => `<p class="empty">${esc(t)}</p>`;
+
+function renderSheet(a, target) {
+  const S = Object.fromEntries(SECTIONS.map(s => [s.key, s]));
+  const unit = a.metric.unit || "";
+  const better = a.metric.better;
+  const std = num(a.metric.standard);
+  const cur = a.current.filter(p => p.label !== "" || num(p.value) !== null);
+  const lastVal = [...cur].reverse().find(p => num(p.value) !== null);
+  const gapNow = lastVal && std !== null ? num(lastVal.value) - std : null;
+
+  // 1 Background
+  let b1 = para(a.background) || emptyNote("Why this problem, why now, and why it matters.");
+  if (a.strategicLink) b1 += `<div><span class="lbl">Business link</span><p>${esc(a.strategicLink)}</p></div>`;
+
+  // 2 Current condition
+  let b2 = "";
+  if (a.problemStatement) b2 += `<div><span class="lbl">Problem statement</span><p class="ps">${esc(a.problemStatement)}</p></div>`;
+  if (lastVal || std !== null) {
+    b2 += `<div class="kpi">`;
+    if (lastVal) b2 += `<div><span class="lbl">${esc(a.metric.name || "Actual")}${lastVal.label ? " · " + esc(lastVal.label) : ""}</span><span class="big">${esc(fmt(num(lastVal.value)))}</span> <span class="unit">${esc(unit)}</span></div>`;
+    if (std !== null) b2 += `<div><span class="lbl">Standard</span><span class="big">${esc(fmt(std))}</span> <span class="unit">${esc(unit)}</span></div>`;
+    if (gapNow !== null) {
+      const bad = better === "lower" ? gapNow > 0 : gapNow < 0;
+      b2 += `<div><span class="lbl">Gap</span><span class="big" style="color:${bad ? "var(--ink)" : "var(--accent)"}">${gapNow > 0 ? "+" : ""}${esc(fmt(gapNow))}</span> <span class="unit">${esc(unit)}</span></div>`;
+    }
+    b2 += `</div>`;
+  }
+  const chart2 = lineChart({ labels: cur.map(p => p.label), series: [{ values: cur.map(p => num(p.value)), cls: "act", dots: true }], refs: [{ value: std, cls: "std", label: "Std", tcls: "t-good" }], gapRef: std, better, unit });
+  if (chart2) b2 += `<div class="scroll-x">${chart2}</div><div class="legend"><span><i></i>${esc(a.metric.name || "Actual")}${unit ? " (" + esc(unit) + ")" : ""}</span><span><i class="std"></i>Standard</span><span><i class="gapk"></i>Gap to standard</span></div>`;
+  b2 += para(a.currentText);
+  if (!b2) b2 = emptyNote("Facts about today: standard, actual, the gap, and what you saw at the gemba.");
+
+  // 3 Goal
+  let b3 = "";
+  if (a.goal.statement) b3 += `<p class="goal-st">${esc(a.goal.statement)}</p>`;
+  const bc = bulletChart(a.goal, better, unit);
+  if (bc) b3 += `<div class="scroll-x">${bc}</div>`;
+  if (a.goal.deadline) b3 += `<div class="hint">Deadline: <b>${esc(fmtDate(a.goal.deadline))}</b>${a.metric.name ? " · Metric: " + esc(a.metric.name) : ""}</div>`;
+  if (!b3) b3 = emptyNote("Metric, baseline, target and deadline.");
+
+  // 4 Root cause
+  let b4 = "";
+  const whys = a.whys.filter(w => w.why.trim());
+  const showWhys = a.rcaTool !== "fishbone" && whys.length;
+  const fb = a.rcaTool !== "whys" ? fishbone(a.fishbone, a.problemStatement ? (a.metric.name || a.title) : a.title) : "";
+  if (showWhys) {
+    b4 += `<div class="whys">` + whys.map((w, i) => `<div class="why${i === whys.length - 1 ? " root" : ""}"><div class="wn">WHY ${i + 1}</div><div class="wt">${esc(w.why)}${w.evidence ? `<span class="we">Evidence: ${esc(w.evidence)}</span>` : ""}</div></div>`).join("") + `</div>`;
+  }
+  if (fb) b4 += `<div class="scroll-x">${fb}</div>`;
+  if (a.rootCauses.trim()) b4 += `<div><span class="lbl">Root cause</span><div class="rc">${esc(a.rootCauses)}</div></div>`;
+  if (!b4) b4 = emptyNote("A chain of whys with evidence, or a fishbone, down to one to three root causes.");
+
+  // 5 Countermeasures
+  let b5 = "";
+  const cms = a.countermeasures.filter(c => c.name.trim());
+  if (cms.length) {
+    const tbl = `<table class="cm-table"><thead><tr><th>#</th><th>Countermeasure</th><th>Root cause</th><th>Type</th></tr></thead><tbody>` +
+      cms.map((c, i) => `<tr class="${c.chosen ? "" : "off"}"><td class="n">${i + 1}</td><td>${esc(c.name)}${c.chosen ? "" : " <span class='hint'>(not chosen)</span>"}</td><td>${esc(c.cause)}</td><td><span class="pill ${c.kind === "Containment" ? "cont" : "perm"}">${esc(c.kind)}</span></td></tr>`).join("") + `</tbody></table>`;
+    b5 = `<div class="two cm"><div class="scroll-x">${tbl}</div><div style="max-width:340px">${matrix(a.countermeasures)}</div></div>`;
+  } else b5 = emptyNote("Two or three options, each linked to a root cause, compared on effect and effort.");
+
+  // 6 Plan
+  let b6 = "";
+  const tasks = a.tasks.filter(t => t.task.trim());
+  const gc = gantt(a.tasks);
+  if (gc) b6 += `<div class="scroll-x">${gc}</div><div class="legend"><span><i class="sq" style="background:var(--good)"></i>Done</span><span><i class="sq" style="background:var(--accent)"></i>In progress</span><span><i class="sq" style="border:1.2px solid var(--line-strong)"></i>Not started</span><span><i class="sq" style="background:var(--gap)"></i>Overdue</span></div>`;
+  if (tasks.length) {
+    const now = new Date();
+    b6 += `<div class="scroll-x"><table class="res-table"><thead><tr><th>Task</th><th>Owner</th><th>Due</th><th>Status</th></tr></thead><tbody>` + tasks.map(t => {
+      const late = t.status !== "Done" && parseDate(t.end) && parseDate(t.end) < now;
+      const pc = t.status === "Done" ? "done" : late ? "late" : t.status === "In progress" ? "prog" : "";
+      return `<tr><td>${esc(t.task)}</td><td>${esc(t.owner) || "<span class='empty'>none</span>"}</td><td style="white-space:nowrap">${esc(fmtDate(t.end)) || "<span class='empty'>none</span>"}</td><td><span class="pill ${pc}">${late ? "Overdue" : esc(t.status)}</span></td></tr>`;
+    }).join("") + `</tbody></table></div>`;
+  }
+  if (!b6) b6 = emptyNote("Tasks with one owner, start and due dates, and status.");
+
+  // 7 Follow-up
+  let b7 = "";
+  const res = a.results.filter(r => r.label !== "" || num(r.predicted) !== null || num(r.actual) !== null);
+  const fc = lineChart({
+    labels: res.map(r => r.label),
+    series: [{ values: res.map(r => num(r.predicted)), cls: "pred" }, { values: res.map(r => num(r.actual)), cls: "act", dots: true }],
+    refs: [{ value: num(a.goal.target), cls: "tgt", label: "Target", tcls: "t-good" }, { value: num(a.goal.baseline), cls: "base", label: "Base" }],
+    better, unit
+  });
+  if (fc) b7 += `<div class="scroll-x">${fc}</div><div class="legend"><span><i></i>Actual</span><span><i class="pred"></i>Predicted</span><span><i class="std"></i>Target</span></div>`;
+  const f = a.followup;
+  const fl = [["How and when we check", f.checkPlan + (f.checkDate ? (f.checkPlan ? "\n" : "") + "Check date: " + fmtDate(f.checkDate) : "")], ["Standardize", f.standardize], ["Share (yokoten)", f.yokoten], ["Lessons learned", f.lessons]].filter(x => x[1] && x[1].trim());
+  if (fl.length) b7 += `<div class="two">` + fl.map(([l, t]) => `<div><span class="lbl">${esc(l)}</span><p>${esc(t)}</p></div>`).join("") + `</div>`;
+  if (!b7) b7 = emptyNote("Predicted vs actual on the goal metric, the check date, and how it will be sustained and shared.");
+
+  const meta = [["Owner", a.owner], ["Mentor", a.mentor], ["Team", a.team], ["Revised", fmtDate(a.date) + (a.revision ? " · Rev " + a.revision : "")]];
+  target.innerHTML = `
+    <div class="tblock">
+      <div class="tblock-title"><small>Problem-solving A3${a.example ? " (example)" : ""}</small><h1>${esc(a.title) || '<span class="empty">Untitled A3</span>'}</h1></div>
+      <div class="tblock-meta">${meta.map(([l, v]) => `<div class="meta"><small>${l}</small><div>${esc(v) || "–"}</div></div>`).join("")}</div>
+    </div>
+    <div class="halves">
+      <div class="half"><div class="half-label">Plan · understand the problem</div>${box(S.background, b1)}${box(S.current, b2)}${box(S.goal, b3)}${box(S.rca, b4)}</div>
+      <div class="half"><div class="half-label">Plan · Do · Check · Act</div>${box(S.cm, b5)}${box(S.plan, b6)}${box(S.follow, b7)}</div>
+    </div>
+    <div class="foot"><span>${esc(a.title || "Untitled A3")}</span><span>A3 Workbench · ${esc(fmtDate(a.date))}</span></div>`;
+}
+
+/* ---------- form ---------- */
+const txt = (path, label, val, ph = "", rows = 0) => rows
+  ? `<label class="field"><span>${label}</span><textarea id="f-${path}" data-p="${path}" rows="${rows}" placeholder="${esc(ph)}">${esc(val)}</textarea></label>`
+  : `<label class="field"><span>${label}</span><input type="text" id="f-${path}" data-p="${path}" value="${esc(val)}" placeholder="${esc(ph)}"></label>`;
+const numIn = (path, label, val) => `<label class="field"><span>${label}</span><input type="number" step="any" id="f-${path}" data-p="${path}" data-t="num" value="${val ?? ""}"></label>`;
+const dateIn = (path, label, val) => `<label class="field"><span>${label}</span><input type="date" id="f-${path}" data-p="${path}" value="${esc(val)}"></label>`;
+const sel = (path, label, val, opts) => `<label class="field"><span>${label}</span><select id="f-${path}" data-p="${path}">${opts.map(o => `<option value="${esc(o[0])}"${o[0] === val ? " selected" : ""}>${esc(o[1])}</option>`).join("")}</select></label>`;
+const coachBox = (a, key) => `<div class="coach" data-coach="${key}">${coachInner(a, key)}</div>`;
+function coachInner(a, key) {
+  const c = checks(a, key);
+  if (!c.length) return "";
+  return `<b>Coach notes</b><ul>${c.map(([k, t]) => `<li class="${k}">${esc(t)}</li>`).join("")}</ul>`;
+}
+
+function tableEditor(listKey, rows, cols, addLabel, rowLabel) {
+  return `<div class="tbl">` + rows.map((r, i) => `<div class="trow">
+      <div class="trow-head"><span>${rowLabel} ${i + 1}</span><span>
+        ${i > 0 ? `<button type="button" class="btn ghost small" data-move="${listKey}:${i}:-1" aria-label="Move up">↑</button>` : ""}
+        <button type="button" class="btn ghost small" data-del="${listKey}:${i}" aria-label="Remove ${rowLabel} ${i + 1}">Remove</button></span></div>
+      <div class="tcols">${cols.map(c => cell(listKey, i, c, r[c.k])).join("")}</div></div>`).join("") +
+    `<button type="button" class="btn small" data-add="${listKey}">+ ${addLabel}</button></div>`;
+}
+function cell(listKey, i, c, v) {
+  const p = `${listKey}.${i}.${c.k}`;
+  const id = `f-${listKey}-${i}-${c.k}`;
+  const style = c.wide ? ` style="grid-column:1/-1"` : "";
+  if (c.type === "num") return `<label class="field"${style}><span>${c.label}</span><input type="number" step="any" id="${id}" data-p="${p}" data-t="num" value="${v ?? ""}"></label>`;
+  if (c.type === "date") return `<label class="field"${style}><span>${c.label}</span><input type="date" id="${id}" data-p="${p}" value="${esc(v)}"></label>`;
+  if (c.type === "sel") return `<label class="field"${style}><span>${c.label}</span><select id="${id}" data-p="${p}"${c.num ? ' data-t="num"' : ""}>${c.opts.map(o => `<option value="${esc(o)}"${String(o) === String(v) ? " selected" : ""}>${esc(o)}</option>`).join("")}</select></label>`;
+  if (c.type === "bool") return `<label class="check"${style}><input type="checkbox" id="${id}" data-p="${p}" data-t="bool"${v ? " checked" : ""}> ${c.label}</label>`;
+  return `<label class="field"${style}><span>${c.label}</span><input type="text" id="${id}" data-p="${p}" value="${esc(v)}" placeholder="${esc(c.ph || "")}"></label>`;
+}
+
+const openSecs = new Set(["header"]);
+function renderForm() {
+  const a = active();
+  const form = $("#form");
+  const d = (key, head, inner) => `<details data-k="${key}"${openSecs.has(key) ? " open" : ""}><summary>${head}</summary><div class="fbody">${inner}</div></details>`;
+  const S = Object.fromEntries(SECTIONS.map(s => [s.key, s]));
+  const sh = (s) => `<span class="num">${s.n}</span>${esc(s.title)}<span class="tag">${esc(s.phase)}</span>`;
+  form.innerHTML =
+    d("header", `<span class="num">A3</span>Title and team`,
+      `<p class="prompt">In a few words, what problem are you working on? Name the problem, not the solution.</p>` +
+      txt("title", "Title", a.title, "e.g. Late lab results delay ER discharges") +
+      `<div class="row2">${txt("owner", "Owner", a.owner)}${txt("mentor", "Mentor or coach", a.mentor)}</div>` +
+      txt("team", "Team", a.team) +
+      `<div class="row2">${dateIn("date", "Last revised", a.date)}${txt("revision", "Revision", a.revision)}</div>` + coachBox(a, "header")) +
+    d("background", sh(S.background),
+      `<p class="prompt">${esc(S.background.prompt)}</p>` + txt("background", "Background", a.background, "The situation and why it matters", 4) +
+      txt("strategicLink", "Business goal or KPI it supports", a.strategicLink) + coachBox(a, "background")) +
+    d("current", sh(S.current),
+      `<p class="prompt">${esc(S.current.prompt)}</p>` +
+      txt("problemStatement", "Problem statement", a.problemStatement, "The gap in numbers, without assuming a fix", 3) +
+      `<div class="row2">${txt("metric.name", "Metric", a.metric.name, "e.g. Turnaround time")}${txt("metric.unit", "Unit", a.metric.unit, "min, %, count")}</div>` +
+      `<div class="row2">${numIn("metric.standard", "Standard / expected", a.metric.standard)}${sel("metric.better", "Better is", a.metric.better, [["lower", "Lower"], ["higher", "Higher"]])}</div>` +
+      `<div class="field"><span>Data points (oldest first)</span>${tableEditor("current", a.current, [{ k: "label", label: "Period", ph: "e.g. Jun" }, { k: "value", label: "Value", type: "num" }], "Add data point", "Point")}</div>` +
+      txt("currentText", "What you observed", a.currentText, "Facts from the gemba: where, when, how often", 4) + coachBox(a, "current")) +
+    d("goal", sh(S.goal),
+      `<p class="prompt">${esc(S.goal.prompt)}</p>` + txt("goal.statement", "Goal statement", a.goal.statement, "Cut X from 85 to 45 by 31 March", 2) +
+      `<div class="row2">${numIn("goal.baseline", "Baseline", a.goal.baseline)}${numIn("goal.current", "Current", a.goal.current)}${numIn("goal.target", "Target", a.goal.target)}</div>` +
+      dateIn("goal.deadline", "Deadline", a.goal.deadline) + coachBox(a, "goal")) +
+    d("rca", sh(S.rca),
+      `<p class="prompt">${esc(S.rca.prompt)}</p>` +
+      sel("rcaTool", "Show on the A3", a.rcaTool, [["whys", "5 Whys"], ["fishbone", "Fishbone"], ["both", "5 Whys and fishbone"]]) +
+      `<div class="field"><span>5 Whys (start at the point of occurrence)</span>${tableEditor("whys", a.whys, [{ k: "why", label: "Why?", wide: true }, { k: "evidence", label: "Evidence", wide: true }], "Ask why again", "Why")}</div>` +
+      `<div class="field"><span>Fishbone causes (one per line)</span><div class="row2">${FISH.map(k => `<label class="field"><span>${k}</span><textarea rows="2" id="f-fb-${k}" data-p="fishbone.${k}">${esc(a.fishbone[k])}</textarea></label>`).join("")}</div></div>` +
+      txt("rootCauses", "Verified root cause(s)", a.rootCauses, "One to three causes, backed by evidence", 2) + coachBox(a, "rca")) +
+    d("cm", sh(S.cm),
+      `<p class="prompt">${esc(S.cm.prompt)}</p>` +
+      tableEditor("countermeasures", a.countermeasures, [
+        { k: "name", label: "Countermeasure", wide: true }, { k: "cause", label: "Root cause it addresses", wide: true },
+        { k: "kind", label: "Type", type: "sel", opts: ["Permanent", "Containment"] },
+        { k: "effect", label: "Effect 1–5", type: "sel", opts: [1, 2, 3, 4, 5], num: true },
+        { k: "effort", label: "Effort 1–5", type: "sel", opts: [1, 2, 3, 4, 5], num: true },
+        { k: "chosen", label: "Chosen", type: "bool" }], "Add option", "Option") + coachBox(a, "cm")) +
+    d("plan", sh(S.plan),
+      `<p class="prompt">${esc(S.plan.prompt)}</p>` +
+      tableEditor("tasks", a.tasks, [
+        { k: "task", label: "Task", wide: true }, { k: "owner", label: "Owner" },
+        { k: "status", label: "Status", type: "sel", opts: ["Not started", "In progress", "Done"] },
+        { k: "start", label: "Start", type: "date" }, { k: "end", label: "Due", type: "date" }], "Add task", "Task") + coachBox(a, "plan")) +
+    d("follow", sh(S.follow),
+      `<p class="prompt">${esc(S.follow.prompt)}</p>` +
+      `<div class="field"><span>Predicted vs actual (same metric as the goal)</span>${tableEditor("results", a.results, [{ k: "label", label: "Period" }, { k: "predicted", label: "Predicted", type: "num" }, { k: "actual", label: "Actual", type: "num" }], "Add period", "Period")}</div>` +
+      txt("followup.checkPlan", "How and when you will check", a.followup.checkPlan, "", 2) + dateIn("followup.checkDate", "Check date", a.followup.checkDate) +
+      txt("followup.standardize", "Standardize", a.followup.standardize, "Standard work, checklists, visual controls", 2) +
+      txt("followup.yokoten", "Share with (yokoten)", a.followup.yokoten, "Other teams or sites with the same problem", 2) +
+      txt("followup.lessons", "Lessons learned", a.followup.lessons, "", 2) + coachBox(a, "follow")) +
+    `<div class="fbody" style="padding-top:14px">
+       <div id="delZone"><button type="button" class="btn ghost small" id="delA3">Delete this A3</button></div>
+     </div>`;
+}
+function refreshCoach() {
+  const a = active();
+  document.querySelectorAll("[data-coach]").forEach(el => { el.innerHTML = coachInner(a, el.dataset.coach); });
+}
+
+function setPath(obj, path, val) {
+  const parts = path.split(".");
+  let o = obj;
+  for (let i = 0; i < parts.length - 1; i++) o = o[parts[i]];
+  o[parts[parts.length - 1]] = val;
+}
+
+/* ---------- rendering and modes ---------- */
+let renderTimer = null;
+function renderAll() {
+  renderPicker();
+  renderSheet(active(), $("#sheet"));
+  renderNotices();
+  if (mode === "edit") renderForm();
+}
+function scheduleSheet() {
+  clearTimeout(renderTimer);
+  renderTimer = setTimeout(() => { renderSheet(active(), $("#sheet")); refreshCoach(); renderPicker(); }, 120);
+}
+function renderPicker() {
+  const p = $("#a3pick");
+  const v = store.activeId;
+  p.innerHTML = store.a3s.map(a => `<option value="${esc(a.id)}"${a.id === v ? " selected" : ""}>${esc(a.title || "Untitled A3")}${a.example ? " (example)" : ""}</option>`).join("");
+}
+function renderNotices() {
+  const a = active();
+  const n = $("#notices");
+  let h = "";
+  if (a && a.example) {
+    h += `<div class="notice"><span><b>This is an example A3.</b> It shows how a finished A3 reads. ${canEdit ? "Start your own, or edit this one to learn the layout." : ""}</span>${canEdit ? `<button class="btn primary small" id="startOwn">Start my own A3</button>` : ""}</div>`;
+  }
+  n.innerHTML = h;
+  n.hidden = !h;
+}
+function setMode(m) {
+  mode = (m === "edit" && canEdit) ? "edit" : "present";
+  lsSet(LS_MODE, mode);
+  $("#modeEdit").setAttribute("aria-pressed", String(mode === "edit"));
+  $("#modePresent").setAttribute("aria-pressed", String(mode === "present"));
+  $("#form").hidden = mode !== "edit";
+  $("#work").classList.toggle("editing", mode === "edit");
+  $("#saveBtn").hidden = !(canEdit && mode === "edit");
+  if (mode === "edit") renderForm();
+}
+
+/* ---------- saving ---------- */
+function setStatus(t, cls = "") { const s = $("#status"); s.textContent = t; s.className = "status " + cls; }
+function markDirty() {
+  dirty = true;
+  lsSet(LS_KEY, JSON.stringify({ dirty: true, store }));
+  setStatus(canSaveRemote && saver ? "Unsaved changes" : "Changes kept in this browser", "warn");
+  clearTimeout(saveTimer);
+  if (saver && canSaveRemote) saveTimer = setTimeout(save, 4000);
+}
+async function save() {
+  clearTimeout(saveTimer);
+  if (!dirty) { setStatus("All changes saved", "ok"); return; }
+  if (!saver || !canSaveRemote) { setStatus("Saving to the shared page isn't available here. Changes stay in this browser.", "warn"); return; }
+  if (saving) { saveTimer = setTimeout(save, 1500); return; }
+  saving = true;
+  const snapshot = JSON.stringify(store, null, 1);
+  setStatus("Saving…");
+  try {
+    await saver.publish({ "a3.json": { content: snapshot, contentType: "application/json" } });
+    if (JSON.stringify(store, null, 1) === snapshot) { dirty = false; lsDel(LS_KEY); }
+    const t = new Date().toLocaleTimeString(undefined, { hour: "numeric", minute: "2-digit" });
+    setStatus(dirty ? "Unsaved changes" : `Saved ${t} · colleagues see this version`, dirty ? "warn" : "ok");
+    if (dirty) saveTimer = setTimeout(save, 3000);
+  } catch (e) {
+    const code = e && e.code;
+    if (code === "conflict") setStatus("Someone saved a newer version. Reloading to it; your changes are kept in this browser.", "warn");
+    else if (code === "not_writer" || code === "not_granted") { canSaveRemote = false; setStatus("You can view this A3 but not save to it. Changes stay in this browser.", "warn"); }
+    else if (code === "capability_disabled") { canSaveRemote = false; setStatus("Saving isn't available in this view. Changes stay in this browser.", "warn"); }
+    else setStatus("Couldn't save just now. Your changes are kept in this browser; try Save again.", "warn");
+  } finally { saving = false; }
+}
+
+/* ---------- PDF export ---------- */
+function loadScript(src) {
+  return new Promise((res, rej) => {
+    if (document.querySelector(`script[src="${src}"]`)) return res();
+    const s = document.createElement("script"); s.src = src; s.onload = res; s.onerror = () => rej(new Error("load " + src));
+    document.head.appendChild(s);
+  });
+}
+const SVG_PROPS = ["fill", "stroke", "stroke-width", "stroke-dasharray", "opacity", "font-size", "font-family", "font-weight"];
+function inlineSvgStyles(root) {
+  root.querySelectorAll("svg *").forEach(el => {
+    const cs = getComputedStyle(el);
+    SVG_PROPS.forEach(p => { const v = cs.getPropertyValue(p); if (v) el.setAttribute(p, v); });
+    el.removeAttribute("class"); el.removeAttribute("style");
+  });
+  root.querySelectorAll("svg").forEach(svg => {
+    const r = svg.getBoundingClientRect();
+    svg.setAttribute("width", Math.round(r.width)); svg.setAttribute("height", Math.round(r.height));
+  });
+}
+async function buildPdf() {
+  await loadScript("https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js");
+  await loadScript("https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js");
+  const host = $("#captureHost");
+  host.innerHTML = "";
+  host.classList.add("force-light");
+  const sheet = document.createElement("article");
+  sheet.className = "sheet export force-light";
+  host.appendChild(sheet);
+  const keepComments = comments; comments = null;
+  renderSheet(active(), sheet);
+  comments = keepComments;
+  try { await document.fonts.ready; } catch (e) {}
+  inlineSvgStyles(sheet);
+  const canvas = await window.html2canvas(sheet, { scale: 2, backgroundColor: "#ffffff", useCORS: true, logging: false });
+  host.innerHTML = "";
+  const { jsPDF } = window.jspdf;
+  const pdf = new jsPDF({ orientation: "landscape", unit: "mm", format: "a3" });
+  const pw = 420, ph = 297, m = 8;
+  const ratio = canvas.width / canvas.height;
+  let w = pw - 2 * m, h = w / ratio;
+  if (h > ph - 2 * m) { h = ph - 2 * m; w = h * ratio; }
+  pdf.addImage(canvas.toDataURL("image/jpeg", 0.92), "JPEG", (pw - w) / 2, m, w, h);
+  pdf.setProperties({ title: active().title || "A3" });
+  return pdf.output("blob");
+}
+window.__a3buildPdf = buildPdf;
+async function downloadPdf() {
+  const btn = $("#pdfBtn");
+  btn.disabled = true; const label = btn.textContent; btn.textContent = "Preparing PDF…";
+  try {
+    const blob = await buildPdf();
+    const name = (active().title || "A3").replace(/[^\w\- ]+/g, "").trim().slice(0, 80) || "A3";
+    const dl = window.claude?.use ? await window.claude.use("downloads") : null;
+    if (dl) {
+      try { await dl.save({ filename: name + " - A3.pdf", data: blob }); toast("PDF saved"); }
+      catch (e) { if (e && e.code !== "dismissed" && e.code !== "declined") toast("The PDF couldn't be saved here."); }
+    } else if (!window.claude) {
+      // Opened as a plain web page (for example from the repository): a normal browser download works.
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url; link.download = name + " - A3.pdf";
+      document.body.appendChild(link); link.click(); link.remove();
+      setTimeout(() => URL.revokeObjectURL(url), 4000);
+      toast("PDF downloaded");
+    } else {
+      toast("Downloads aren't available in this view.");
+    }
+  } catch (e) {
+    toast("Couldn't build the PDF. Check your connection and try again.");
+  } finally { btn.disabled = false; btn.textContent = label; }
+}
+let toastTimer;
+function toast(t) {
+  let el = $(".toast");
+  if (!el) { el = document.createElement("div"); el.className = "toast"; el.setAttribute("role", "status"); document.body.appendChild(el); }
+  el.textContent = t; el.hidden = false;
+  clearTimeout(toastTimer); toastTimer = setTimeout(() => { el.hidden = true; }, 3200);
+}
+
+/* ---------- events ---------- */
+$("#form").addEventListener("input", (e) => {
+  const el = e.target; const p = el.dataset.p; if (!p) return;
+  let v = el.dataset.t === "bool" ? el.checked : el.value;
+  if (el.dataset.t === "num") v = num(v);
+  const a = active();
+  setPath(a, p, v);
+  if (a.example) { a.example = false; renderNotices(); }
+  markDirty(); scheduleSheet();
+});
+$("#form").addEventListener("toggle", (e) => { const k = e.target.dataset && e.target.dataset.k; if (!k) return; e.target.open ? openSecs.add(k) : openSecs.delete(k); }, true);
+$("#form").addEventListener("submit", (e) => e.preventDefault());
+$("#form").addEventListener("click", (e) => {
+  const t = e.target.closest("button"); if (!t) return;
+  const a = active();
+  const blank = blankA3();
+  if (t.dataset.add) { a[t.dataset.add].push(JSON.parse(JSON.stringify(blank[t.dataset.add][0]))); }
+  else if (t.dataset.del) { const [k, i] = t.dataset.del.split(":"); a[k].splice(+i, 1); if (!a[k].length) a[k].push(JSON.parse(JSON.stringify(blank[k][0]))); }
+  else if (t.dataset.move) { const [k, i, d] = t.dataset.move.split(":"); const j = +i + +d; [a[k][i], a[k][j]] = [a[k][j], a[k][i]]; }
+  else if (t.id === "delA3") {
+    $("#delZone").innerHTML = `<div class="confirm"><span>Delete “${esc(a.title || "Untitled A3")}” for everyone?</span><button type="button" class="btn small" id="delYes" style="border-color:var(--gap);color:var(--gap)">Delete</button><button type="button" class="btn small" id="delNo">Keep it</button></div>`;
+    return;
+  } else if (t.id === "delNo") { renderForm(); return; }
+  else if (t.id === "delYes") {
+    store.a3s = store.a3s.filter(x => x.id !== a.id);
+    if (!store.a3s.length) store.a3s.push(blankA3());
+    store.activeId = store.a3s[0].id;
+    markDirty(); renderAll(); toast("A3 deleted"); return;
+  } else return;
+  if (a.example) a.example = false;
+  markDirty(); renderForm(); scheduleSheet();
+});
+$("#sheet").addEventListener("click", async (e) => {
+  const b = e.target.closest("[data-comment]"); if (!b || !comments) return;
+  const sec = b.closest(".box");
+  try { await comments.openComposer({ element: sec }); } catch (err) { toast("Comments aren't available in this view."); }
+});
+$("#notices").addEventListener("click", (e) => {
+  if (e.target.id === "startOwn") newA3();
+});
+function newA3() {
+  const n = blankA3(); store.a3s.push(n); store.activeId = n.id;
+  openSecs.clear(); openSecs.add("header");
+  markDirty(); setMode("edit"); renderAll();
+  setTimeout(() => { const f = $("#f-title"); if (f) f.focus(); }, 30);
+}
+$("#newA3").addEventListener("click", newA3);
+$("#a3pick").addEventListener("change", (e) => { store.activeId = e.target.value; renderAll(); });
+$("#modeEdit").addEventListener("click", () => { setMode("edit"); renderNotices(); });
+$("#modePresent").addEventListener("click", () => setMode("present"));
+$("#saveBtn").addEventListener("click", save);
+$("#pdfBtn").addEventListener("click", downloadPdf);
+window.addEventListener("beforeunload", () => { if (dirty) lsSet(LS_KEY, JSON.stringify({ dirty: true, store })); });
+
+/* ---------- boot ---------- */
+async function boot() {
+  let loaded = null;
+  try { const r = await fetch("a3.json", { cache: "no-store" }); if (r.ok) loaded = await r.json(); } catch (e) {}
+  if (!loaded || !Array.isArray(loaded.a3s) || !loaded.a3s.length) loaded = { version: 1, activeId: null, a3s: [blankA3()] };
+  store = loaded;
+  store.a3s = store.a3s.map(normalize);
+  if (!store.a3s.find(a => a.id === store.activeId)) store.activeId = store.a3s[0].id;
+  renderAll();
+  setMode("present");
+
+  const claude = window.claude;
+  if (!claude || !claude.use) {
+    // Opened outside the claude.ai viewer: allow local editing kept in this browser.
+    canEdit = true; canSaveRemote = false;
+    showEditing();
+    return;
+  }
+  const [user, art, com] = await Promise.all([claude.use("user"), claude.use("artifact"), claude.use("comments")]);
+  comments = com;
+  let editor = false;
+  try { const c = user ? await user.can("files.write") : null; editor = c === null ? (user ? await user.canEdit() : false) : c; } catch (e) {}
+  if (editor && art) { canEdit = true; saver = art; }
+  renderSheet(active(), $("#sheet"));
+  if (canEdit) showEditing();
+}
+function showEditing() {
+  // An editor's unsaved changes from an earlier visit come back first.
+  let restored = false;
+  try {
+    const d = JSON.parse(lsGet(LS_KEY) || "null");
+    if (d && d.dirty && d.store && Array.isArray(d.store.a3s) && d.store.a3s.length) {
+      store = d.store; store.a3s = store.a3s.map(normalize);
+      if (!store.a3s.find(a => a.id === store.activeId)) store.activeId = store.a3s[0].id;
+      restored = true; dirty = true; renderAll();
+    }
+  } catch (e) {}
+  $("#modeSeg").hidden = false;
+  $("#newA3").hidden = false;
+  renderNotices();
+  const want = lsGet(LS_MODE);
+  setMode(want === "edit" ? "edit" : "present");
+  if (!saver) setStatus("Changes are saved in this browser only", "");
+  else if (restored) { setStatus("Restored unsaved changes from this browser", "warn"); if (canSaveRemote) saveTimer = setTimeout(save, 4000); }
+}
+boot();
+})();
+</script>
+</body>
+</html>

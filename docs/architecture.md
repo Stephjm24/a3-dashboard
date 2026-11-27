@@ -207,7 +207,7 @@ erDiagram
 | Look and components | Tailwind CSS with shadcn/ui |
 | Database access | Prisma with PostgreSQL |
 | Validation | Zod, one schema for the A3 data model |
-| Sign-in | Auth.js: email invite links now, Microsoft Entra ID later |
+| Sign-in | One-time invite links with server-side sessions now; Microsoft Entra ID added in phase 6 |
 | AI | Anthropic TypeScript SDK, with its Foundry client later |
 | Charts | Apache ECharts, plus custom SVG for fishbone and 5 Whys |
 | Spreadsheets | SheetJS on the server |

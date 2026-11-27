@@ -20,9 +20,9 @@ The organisation's standard platform is Microsoft Azure, but no Azure subscripti
 | Final say | The AI proposes; the person accepts, edits or rejects. No invented numbers: every proposed number must trace to the person's words or an uploaded cell. |
 | Screen | Coach chat on the left, live A3 on the right, suggestions shown as drafts in the A3 boxes. To be reviewed once built. |
 | Numbers | Typed in chat or fields, plus CSV or Excel upload for metric history. |
-| Stack | One TypeScript app on Next.js, Prisma and PostgreSQL, Zod, Auth.js, Apache ECharts, SheetJS, Playwright. |
+| Stack | One TypeScript app on Next.js, Prisma and PostgreSQL, Zod, Apache ECharts, SheetJS, Playwright. |
 | Storage | PostgreSQL. Each A3 version saved whole as JSON. |
-| Sign-in | Built for Microsoft Entra ID; email invite links until IT sets it up. |
+| Sign-in | One-time invite links created by the product owner, with server-side sessions. Microsoft Entra ID is added in phase 6. Auth.js was the first choice, but its current major version is still a beta, so the library for Entra ID is chosen in phase 6. |
 | AI provider | One AI connector module. Anthropic API with a development key and test data now; Claude on Microsoft Foundry after Azure approval, as a settings change. |
 | Hosting | GitHub for code, reviews and Actions. Render for the tester phase with test data only. Azure Container Apps after approval. GitHub Pages is not used because the app needs a server. |
 | Repository | The product owner's GitHub account owns it for now. |

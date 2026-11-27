@@ -2,6 +2,31 @@
 
 This repository holds the A3 coach app: a web app where a person describes a problem in plain language and a guided AI coach turns it into a problem-solving A3 on a live dashboard. The system design is in [docs/architecture.md](docs/architecture.md). The app itself is being built in phases; this foundation already validates data changes. No real A3 records have been supplied.
 
+## Run the app locally
+
+Use Node.js 22.18 or later and PostgreSQL. The quickest database is Docker:
+
+```sh
+cp .env.example .env
+docker compose up -d db
+npm ci
+npm run db:deploy
+npm run invite -- you@example.com   # prints a one-time sign-in link
+npm run dev
+```
+
+Open the printed link, enter your name, and you land on My A3s at http://localhost:3000/a3. Each invite link works once and expires after 14 days.
+
+| Command | What it does |
+| --- | --- |
+| `npm run dev` | Development server with hot reload |
+| `npm run lint` · `npm run typecheck` · `npm test` | The same checks CI runs |
+| `npm run build` | Production build (standalone server for the Docker image) |
+| `npm run db:migrate` | Create a migration after changing `prisma/schema.prisma` |
+| `npm run invite -- email` | Create an invite link for a tester |
+
+Use test data only until the Azure environment is approved.
+
 ## Run the foundation checks
 
 Use Git and Python 3.12. From a fresh checkout in Bash (including Git Bash on Windows with the appropriate Python executable):
@@ -24,7 +49,7 @@ py -3.12 -m venv .venv
 .\.venv\Scripts\python.exe -m unittest discover -s tests -v
 ```
 
-A successful run prints `Foundation checks passed.` and a passing test summary. Python is a development tool for this foundation. The application's run and build commands will be documented here when phase 1 lands.
+A successful run prints `Foundation checks passed.` and a passing test summary. Python is a development tool for this foundation. The app's own commands are in the section above.
 
 ## Where to start
 
@@ -36,4 +61,4 @@ A successful run prints `Foundation checks passed.` and a passing test summary. 
 - [Delivery plan](docs/delivery.md) sets out the build phases, hosting and completion criteria.
 - [Changelog](CHANGELOG.md) records changes intended for release.
 
-The next application contribution is phase 1: the Next.js app, database, sign-in by invite link, the My A3s list and the empty A3 page.
+Phase 1 (app foundation) is in place. Next is phase 2: editing every A3 section by hand, with version history and charts.

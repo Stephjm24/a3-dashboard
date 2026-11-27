@@ -41,7 +41,13 @@ class FoundationTests(unittest.TestCase):
 
     def test_token_in_ordinary_file(self):
         self.write("notes.md", "ghp_" + "x" * 36)
-        self.assertIn("possible GitHub token", " ".join(check(self.root)))
+        self.assertIn("possible access token", " ".join(check(self.root)))
+
+    def test_api_keys_in_ordinary_file(self):
+        for secret in ("sk-ant-api03-" + "x" * 30, "AKIA" + "ABCDEFGHIJKLMNOP"):
+            with self.subTest(secret=secret[:8]):
+                self.write("notes.md", f"key = {secret}")
+                self.assertIn("possible access token", " ".join(check(self.root)))
 
     def test_invalid_json_and_duplicate_fields(self):
         for contents in ("[", '{"a":1,"a":2}', "[NaN]"):

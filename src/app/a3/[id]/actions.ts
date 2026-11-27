@@ -7,7 +7,8 @@ import { requireUser } from "@/lib/auth/session";
 import { getA3, saveA3Version } from "@/lib/a3/repository";
 import { applyPart, isEditablePart, PART_LABELS } from "@/lib/a3/edit";
 import { parseCsv, type Table } from "@/lib/a3/import";
-import { MAX_UPLOAD_BYTES, readXlsx } from "@/lib/a3/excel";
+import { MAX_UPLOAD_BYTES, readXlsx, UnsafeWorkbookError } from "@/lib/a3/excel";
+import { limiter, RULES, tooManyMessage } from "@/lib/security/rate-limit";
 
 export type SaveState = { ok: true; version: number } | { ok: false; error: string };
 
@@ -24,6 +25,8 @@ const CONFLICT =
 /** Saves one part of the A3 (the header, a section or the metrics) as a new version. */
 export async function savePart(input: z.input<typeof saveInput>): Promise<SaveState> {
   const user = await requireUser();
+  const limited = limiter.hit(`save:${user.id}`, RULES.save);
+  if (!limited.ok) return { ok: false, error: tooManyMessage(limited.retryAfterSeconds) };
   const parsed = saveInput.safeParse(input);
   if (!parsed.success) return { ok: false, error: "That save could not be read. Reload the page and try again." };
   const { a3Id, baseVersion, part, data } = parsed.data;
@@ -57,6 +60,7 @@ const restoreInput = z.object({ a3Id: z.uuid(), version: z.coerce.number().int()
 /** Makes an earlier version current again by saving a copy of it as the newest version. */
 export async function restoreVersion(formData: FormData): Promise<void> {
   const user = await requireUser();
+  if (!limiter.hit(`save:${user.id}`, RULES.save).ok) redirect("/a3");
   const parsed = restoreInput.safeParse({ a3Id: formData.get("a3Id"), version: formData.get("version") });
   if (!parsed.success) redirect("/a3");
   const { a3Id, version } = parsed.data;
@@ -81,7 +85,9 @@ export type ReadTableState = { ok: true; table: Table; fileName: string } | { ok
  * file itself is not stored: only the numbers the person maps and saves are.
  */
 export async function readTableFile(formData: FormData): Promise<ReadTableState> {
-  await requireUser();
+  const user = await requireUser();
+  const limited = limiter.hit(`upload:${user.id}`, RULES.upload);
+  if (!limited.ok) return { ok: false, error: tooManyMessage(limited.retryAfterSeconds) };
   const file = formData.get("file");
   if (!(file instanceof File) || file.size === 0) return { ok: false, error: "Choose a CSV or Excel file." };
   if (file.size > MAX_UPLOAD_BYTES) return { ok: false, error: "That file is larger than 2 MB. Upload just the columns you need." };
@@ -97,7 +103,10 @@ export async function readTableFile(formData: FormData): Promise<ReadTableState>
     }
     if (table.rows.length === 0) return { ok: false, error: "No rows found under the header row." };
     return { ok: true, table, fileName: file.name };
-  } catch {
+  } catch (e) {
+    if (e instanceof UnsafeWorkbookError) {
+      return { ok: false, error: "That workbook is too large once unpacked. Copy just the columns you need into a new file." };
+    }
     return { ok: false, error: "That file could not be read. Check it opens in Excel and try again." };
   }
 }

@@ -34,9 +34,9 @@ The page has four views:
 | Comments | Comment button on each section | Not available | Not available |
 | PDF | Download PDF | Download PDF | Download PDF |
 
-Share the hosted copy for live feedback on one A3. Send the GitHub Pages address when colleagues should try the tool with their own A3. Nothing they type leaves their browser. Because the Pages address is public, keep real or sensitive A3s out of `a3.json`.
+Share the hosted copy for live feedback on one A3. Send the GitHub Pages address when colleagues should try the tool with their own A3. Nothing they type leaves their browser. Because the Pages address is public, keep real or sensitive A3s out of `a3.json`. Their work stays in that browser's storage until they clear it, so on a shared computer the next person can see it. Any other GitHub Pages site under `stephjm24.github.io` can also read that storage, so publish only trusted sites there.
 
-The [Prototype Pages workflow](../../.github/workflows/prototype-pages.yml) publishes `index.html` and `a3.json` from this folder when a change to them reaches `main`. It can also be run by hand from the Actions tab. Before the first run, a maintainer sets **Settings > Pages > Build and deployment > Source** to **GitHub Actions**.
+The [Prototype Pages workflow](../../.github/workflows/prototype-pages.yml) publishes `index.html` and `a3.json` from this folder when a change to them reaches `main`. Nothing else in the repository is published. [scripts/pages_site.py](../../scripts/pages_site.py) adds a Content Security Policy to the published page, since GitHub Pages cannot send security headers. The policy lets only the page's own script run, so a script typed into a field cannot. Every value typed into the form is also escaped before it is shown. It can also be run by hand from the Actions tab. Before the first run, a maintainer sets **Settings > Pages > Build and deployment > Source** to **GitHub Actions**.
 
 To try it locally:
 
@@ -49,7 +49,7 @@ Then open http://localhost:8000. The page loads `a3.json` from the same folder, 
 
 ## Files
 
-- [index.html](index.html) is the whole prototype: styles, form, A3 layout and charts. The PDF export loads html2canvas 1.4.1 and jsPDF 2.5.1 from cdnjs when first used.
+- [index.html](index.html) is the whole prototype: styles, form, A3 layout and charts. The PDF export loads html2canvas 1.4.1 and jsPDF 4.2.1 from cdn.jsdelivr.net when first used. Each is pinned with a Subresource Integrity hash, so the browser refuses a changed file. When you change either version, update its URL and hash together in `PDF_LIBS`.
 - [a3.json](a3.json) holds the starting A3s. It contains one synthetic example, "Late lab results delay ER discharges". Keep real or sensitive A3s out of this file.
 
 ## Keeping the two copies in step

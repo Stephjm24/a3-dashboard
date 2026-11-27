@@ -1,11 +1,39 @@
 import "server-only";
 import ExcelJS from "exceljs";
+import JSZip from "jszip";
 import { toTable, type Table } from "./import";
 
 export const MAX_UPLOAD_BYTES = 2 * 1024 * 1024;
+/** A 2 MB .xlsx can unpack to gigabytes (a "zip bomb"). Real metric sheets stay far below these. */
+export const MAX_UNPACKED_BYTES = 50 * 1024 * 1024;
+export const MAX_ZIP_ENTRIES = 1000;
+
+export class UnsafeWorkbookError extends Error {}
+
+/**
+ * Reads only the zip directory, which states each part's unpacked size, and
+ * refuses files that would unpack too large before anything is decompressed.
+ */
+export async function checkXlsxSize(bytes: ArrayBuffer): Promise<void> {
+  const zip = await JSZip.loadAsync(bytes);
+  const entries = Object.values(zip.files);
+  if (entries.length > MAX_ZIP_ENTRIES) throw new UnsafeWorkbookError("too many parts");
+  let total = 0;
+  for (const entry of entries) {
+    // JSZip keeps the size from the zip directory here; it is not part of its typed API.
+    const size = (entry as unknown as { _data?: { uncompressedSize?: number } })._data?.uncompressedSize;
+    if (typeof size !== "number" || size < 0) {
+      if (entry.dir) continue;
+      throw new UnsafeWorkbookError("unknown part size");
+    }
+    total += size;
+    if (total > MAX_UNPACKED_BYTES) throw new UnsafeWorkbookError("unpacks too large");
+  }
+}
 
 /** Reads the first worksheet of an .xlsx file as text cells. Dates become YYYY-MM-DD. */
 export async function readXlsx(bytes: ArrayBuffer): Promise<Table & { sheet: string }> {
+  await checkXlsxSize(bytes);
   const workbook = new ExcelJS.Workbook();
   await workbook.xlsx.load(bytes);
   const sheet = workbook.worksheets[0];

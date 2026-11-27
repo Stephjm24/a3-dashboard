@@ -4,6 +4,8 @@ Version 0.1, agreed with the product owner on 27 November 2026. The full design,
 
 A person describes a problem in plain language. A guided AI coach turns it into a problem-solving A3 on a live dashboard. The coach proposes text and numbers, and the person accepts or edits every one before it becomes part of the A3.
 
+The diagrams describe the agreed target. The [README](../README.md) lists what runs today and the [delivery plan](delivery.md) assigns each remaining capability to a phase.
+
 ## 1. System context
 
 The browser talks only to the app server. The server is the only part that talks to the database, file storage, sign-in and Claude. Moving to Azure changes the services on the right, not the app.
@@ -98,7 +100,7 @@ flowchart TD
 
 ## 4. Environments and delivery
 
-Code changes go through pull requests on GitHub. A merge deploys automatically. Until Azure is approved, only test data is used.
+GitHub runs application and foundation checks on pull requests and pushes to `main`. The diagram shows the intended deployment flow for the tester and Azure phases. Local and tester environments use test data.
 
 ```mermaid
 flowchart LR
@@ -199,7 +201,7 @@ erDiagram
     }
 ```
 
-## Tech stack
+## Target technology stack
 
 | Layer | Choice |
 | --- | --- |

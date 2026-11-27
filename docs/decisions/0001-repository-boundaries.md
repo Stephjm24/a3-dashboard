@@ -1,6 +1,6 @@
 # 0001 · Keep the application portable until its source is available
 
-Status: adopted for the repository foundation. Product and hosting choices remain open.
+Historical foundation decision. [Decision 0002](0002-system-architecture.md) supersedes the original application-import and hosting assumptions. The [current repository map](../../README.md#find-your-way-around) shows where the implementation lives.
 
 ## Evidence and scope
 
@@ -8,7 +8,7 @@ The supplied A3 project brief establishes a web dashboard under development, a G
 
 The existing UI, audience, permissions, workflows, library choices, routes, canonical fields, data providers, hosting and build commands still need evidence from the working export or an existing deployment. Do not infer any of these from the name A3. Record the source revision or export date and what actually runs when importing it.
 
-## Initial layout
+## Layout at initialisation
 
 ```text
 .
@@ -35,7 +35,7 @@ The existing UI, audience, permissions, workflows, library choices, routes, cano
         └── 0001-repository-boundaries.md
 ```
 
-## Integrating the first application
+## Original application import proposal
 
 Default to a single application. Preserve its existing entry point, relative asset paths, routing, package manager and lockfile. Import at the repository root if its conventions permit. If it requires its own root configuration that collides with existing files, inspect both versions before any replacement. A self-contained `app/` import is an alternative when it keeps a working export intact. Set the build root accordingly. Preserve a single-file dashboard as a single file on its first import.
 

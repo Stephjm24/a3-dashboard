@@ -12,7 +12,7 @@ Update the existing guide for the subject. Put changes to an agreed design in a 
 
 | GitHub job | Local equivalent |
 | --- | --- |
-| [App checks](.github/workflows/app.yml) | After [local setup](README.md#run-locally), run `npm run lint`, `npm run typecheck`, `npm test`, `npm run db:deploy` against the local test database and `npm run build`. |
+| [App checks](.github/workflows/app.yml) | After [local setup](README.md#run-locally), run `npm run lint`, `npm run typecheck`, `npm test`, `npm run db:deploy` against the local test database and `docker build --target runner --tag a3-dashboard:ci .` to compile the production app and package the server. CI also starts the image and checks an invite lookup against PostgreSQL. |
 | [Foundation checks](.github/workflows/foundation.yml) | Run the repository validator and Python tests below. They cover tracked files, static JSON contracts and their fixtures. |
 
 The Python checks use Git and Python 3.12. Run from the repository root. On macOS or Linux:

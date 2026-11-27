@@ -15,22 +15,19 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
-  deploy:
-    name: Publish A3 Workbench prototype
+  # Build and deploy run as separate jobs, as in GitHub's own Pages workflow.
+  # In one job, deploy-pages sometimes looked up the artifact before GitHub had
+  # registered it and failed with "No artifacts named github-pages".
+  build:
+    name: Collect A3 Workbench prototype
     runs-on: ubuntu-24.04
     timeout-minutes: 5
     permissions:
       contents: read
-      pages: write
-      id-token: write
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
         with:
           persist-credentials: false
-      - uses: actions/configure-pages@45bfe0192ca1faeb007ade9deae92b16b8254a0d # v6.0.0
       - name: Collect the prototype files
         run: |
           mkdir -p _site
@@ -38,5 +35,19 @@ jobs:
       - uses: actions/upload-pages-artifact@fc324d3547104276b827a68afc52ff2a11cc49c9 # v5.0.0
         with:
           path: _site
+
+  deploy:
+    name: Publish A3 Workbench prototype
+    needs: build
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/configure-pages@45bfe0192ca1faeb007ade9deae92b16b8254a0d # v6.0.0
       - id: deployment
         uses: actions/deploy-pages@368f82528645a54fb793d4d04e342629a3f51346 # v5.0.1

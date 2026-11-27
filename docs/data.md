@@ -9,9 +9,13 @@ Each A3 has an owner and a current version in PostgreSQL. Creating an A3 writes 
 | What fields make up an A3 document? | [A3 document schema](../src/lib/a3/schema.ts) |
 | Which sections does the workspace display? | [Section definitions](../src/lib/a3/sections.ts) |
 | How are versions created and read? | [A3 repository functions](../src/lib/a3/repository.ts) |
+| Which part of the A3 does each editor save, and how is a change described? | [Editing rules](../src/lib/a3/edit.ts) |
+| How are CSV and Excel files turned into metric values? | [Import functions](../src/lib/a3/import.ts) and [Excel reader](../src/lib/a3/excel.ts) |
 | How are records, sessions and invites stored? | [Prisma schema](../prisma/schema.prisma) and [migrations](../prisma/migrations) |
 
-Keep operational records in the database. Use synthetic data for local development and tester sessions. CSV and Excel import is planned for phase 2.
+Keep operational records in the database. Use synthetic data for local development and tester sessions.
+
+Each save of a section writes the whole document as the next version, and is refused if the A3 was saved elsewhere since the editor opened. Restoring an earlier version saves a copy of it as the newest version, so history is never rewritten. CSV (`.csv`, `.tsv`, `.txt`) and Excel (`.xlsx`) files up to 2 MB are read in memory for the import preview and then discarded: only the values the person maps to a metric are saved. Dates can be ISO, day-first or month-first, chosen by the person. See [decision 0003](decisions/0003-manual-editing-and-imports.md).
 
 ## Reference data in Git
 

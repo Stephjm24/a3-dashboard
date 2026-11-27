@@ -1,6 +1,6 @@
 # A3 dashboard
 
-An invite-only workspace for developing a seven-section problem-solving A3. In the current version, a tester can sign in, create an A3, reopen it from **My A3s** and see its initial version and section layout. The coach pane shows the opening prompt. Manual section editing and charts are planned for phase 2, followed by interactive coaching in phase 3. Use synthetic test data for local development and tester sessions.
+An invite-only workspace for developing a seven-section problem-solving A3. In the current version, a tester can sign in, create an A3 and fill in every section by hand. Each save becomes a new version that can be reopened or restored from **Version history**, and the charts redraw from the version on screen. Metric values can be typed or imported from CSV or Excel. The coach pane shows the opening prompt; interactive coaching follows in phase 3. Use synthetic test data for local development and tester sessions.
 
 ## Run locally
 
@@ -22,8 +22,8 @@ Open the invite URL printed by the command and enter your name. It is single-use
 | To work on | Start here |
 | --- | --- |
 | Pages, navigation and server actions | [src/app](src/app) |
-| The A3 sheet, coach pane and progress strip | [src/components/a3](src/components/a3). Shared forms and sign-out live in [src/components](src/components). |
-| A3 sections, validation, progress and database access | [src/lib/a3](src/lib/a3). TypeScript unit tests sit beside the code they cover. |
+| The A3 sheet, coach pane and progress strip | [src/components/a3](src/components/a3), with section editors in [editors](src/components/a3/editors) and charts in [charts](src/components/a3/charts). Shared forms and sign-out live in [src/components](src/components). |
+| A3 sections, validation, editing, versions, imports, chart options and database access | [src/lib/a3](src/lib/a3). TypeScript unit tests sit beside the code they cover. |
 | Sign-in, sessions and invites | [src/lib/auth](src/lib/auth) and the [invite creation script](scripts/create-invite.ts) |
 | Database tables and migration history | [prisma/schema.prisma](prisma/schema.prisma) and [prisma/migrations](prisma/migrations) |
 | Versioned reference data and synthetic samples | [Data guide](docs/data.md), [contracts](data/schemas) and [fixtures](tests/fixtures) |

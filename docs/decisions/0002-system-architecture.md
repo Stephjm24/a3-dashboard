@@ -1,6 +1,6 @@
 # 0002 · System architecture for the proof of concept
 
-Status: adopted on 27 November 2026 by the product owner. Supersedes the open product and hosting questions in [0001](0001-repository-boundaries.md).
+Status: adopted on 27 November 2026 by the product owner. Supersedes the open product and hosting questions in [0001](0001-repository-boundaries.md). The spreadsheet library is amended by [0003](0003-manual-editing-and-imports.md).
 
 ## Context
 

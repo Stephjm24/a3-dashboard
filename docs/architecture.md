@@ -212,6 +212,6 @@ erDiagram
 | Sign-in | One-time invite links with server-side sessions now; Microsoft Entra ID added in phase 6 |
 | AI | Anthropic TypeScript SDK, with its Foundry client later |
 | Charts | Apache ECharts, plus custom SVG for fishbone and 5 Whys |
-| Spreadsheets | SheetJS on the server |
+| Spreadsheets | ExcelJS on the server, see [0003](decisions/0003-manual-editing-and-imports.md) |
 | PDF | Playwright printing the A3 page |
 | Tests | Vitest, Playwright, and a set of sample problems for the coach |

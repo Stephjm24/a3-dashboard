@@ -25,15 +25,18 @@ async function Workspace({ params }: { params: Promise<{ id: string }> }) {
 
   return (
     <div className="flex flex-1 flex-col">
-      <div className="border-b border-slate-200 bg-white px-6 py-2 text-sm">
+      <div className="flex items-center justify-between border-b border-slate-200 bg-white px-6 py-2 text-sm">
         <Link href="/a3" className="text-slate-600 hover:underline">
           ← My A3s
+        </Link>
+        <Link href={`/a3/${a3.id}/history`} className="text-slate-600 hover:underline">
+          Version history
         </Link>
       </div>
       <ProgressStrip doc={a3.document} />
       <div className="grid flex-1 grid-cols-1 lg:grid-cols-[minmax(320px,1fr)_2fr]">
         <CoachPane />
-        <A3Sheet a3={a3} />
+        <A3Sheet a3={a3} editable />
       </div>
     </div>
   );

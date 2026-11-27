@@ -345,6 +345,84 @@ textarea { resize: vertical; min-height: 72px; line-height: 1.45; }
 .p-foot { display: flex; justify-content: space-between; gap: 16px; padding: 8px 24px 12px; font-size: 12px; color: var(--muted); border-top: 2px solid var(--rule); margin: 0 20px; padding-inline: 0; }
 .p-foot b { color: var(--ink); }
 
+/* Home: an NHS.UK start page */
+.brand { color: inherit; text-decoration: none; }
+.brand:hover > span:last-child { text-decoration: underline; }
+.home { display: block; }
+.hero { background: var(--accent); color: var(--on-accent); border-top: 1px solid rgba(255, 255, 255, .3); }
+.home-in { max-width: 1120px; margin: 0 auto; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+.hero .home-in { padding-top: 44px; padding-bottom: 52px; display: grid; gap: 28px; align-items: center; }
+.hero .eyebrow { margin: 0 0 10px; font-weight: 700; font-size: 17px; opacity: .92; }
+.hero h1 { margin: 0 0 14px; font-family: var(--f-display); font-size: clamp(36px, 6vw, 56px); line-height: 1.06; letter-spacing: -.02em; }
+.hero .lede { margin: 0 0 28px; font-size: clamp(19px, 2.4vw, 24px); line-height: 1.4; max-width: 30ch; }
+.hero-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 14px 32px; }
+.action-link { display: inline-flex; align-items: center; gap: 12px; font-size: 21px; font-weight: 700; color: inherit; background: none; border: 0; padding: 4px 0; cursor: pointer; text-decoration: none; }
+.action-link .arrow { display: inline-grid; place-items: center; width: 36px; height: 36px; border-radius: 50%; background: var(--good); color: #ffffff; flex: none; }
+.action-link .arrow svg { width: 20px; height: 20px; fill: currentColor; }
+.action-link:hover span:last-child { text-decoration: underline; text-decoration-thickness: 3px; }
+.hero .text-link { color: inherit; background: none; border: 0; padding: 4px 0; cursor: pointer; font-size: 19px; text-decoration: underline; text-underline-offset: 3px; }
+.hero .text-link:hover { text-decoration-thickness: 3px; }
+.hero-facts { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); border-top: 1px solid currentColor; padding-top: 14px; gap: 12px; max-width: 520px; }
+.hero-facts b { display: block; font-size: 30px; line-height: 1.1; }
+.hero-facts span { font-size: 15px; opacity: .92; }
+.home-body .home-in { padding-top: 44px; padding-bottom: 56px; display: grid; gap: 56px; }
+.home h2 { margin: 0 0 6px; font-family: var(--f-display); font-size: clamp(24px, 3vw, 32px); line-height: 1.15; letter-spacing: -.01em; }
+.home .sub { margin: 0 0 22px; color: var(--muted); font-size: 18px; max-width: 64ch; }
+.cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 300px), 1fr)); gap: 20px; }
+.card { display: grid; gap: 10px; align-content: start; text-align: left; background: var(--paper); color: var(--ink); border: 1px solid var(--line); border-bottom: 4px solid var(--line-strong); padding: 22px 22px 20px; cursor: pointer; font-size: 16px; }
+.card:hover { border-bottom-color: var(--accent); }
+.card h3 { margin: 0; font-size: 21px; line-height: 1.25; color: var(--accent); text-decoration: underline; text-underline-offset: 3px; overflow-wrap: anywhere; }
+.card:hover h3 { text-decoration-thickness: 3px; }
+.card .who { color: var(--muted); font-size: 15px; }
+.card .bar { display: grid; gap: 4px; font-size: 14px; }
+.card .bar .meter { height: 8px; margin: 0; }
+.card .bar .meter i { background: var(--accent); }
+.card .bar .meter.ok i { background: var(--good); }
+.card.new { border-style: dashed; border-bottom: 1px dashed var(--line-strong); background: transparent; align-content: center; justify-items: start; min-height: 160px; }
+.card.new h3 { display: flex; align-items: center; gap: 10px; }
+.a3map { display: grid; gap: 18px; border: 2px solid var(--rule); background: var(--paper); padding: 18px; }
+.map-half { display: grid; gap: 12px; align-content: start; }
+.map-half > .half-label { margin-bottom: 2px; }
+.mbox { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 2px 12px; align-items: start; text-align: left; background: var(--paper); color: var(--ink); border: 1px solid var(--line-strong); padding: 12px 14px 12px 12px; font-size: 16px; }
+button.mbox { cursor: pointer; }
+button.mbox:hover { border-color: var(--accent); box-shadow: inset 0 -3px 0 var(--accent); }
+.mbox .num { grid-row: span 2; }
+.mbox b { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 10px; font-size: 18px; }
+.mbox .tag { font-size: 12px; }
+.mbox span.d { color: var(--muted); font-size: 15px; line-height: 1.4; }
+.mbox.extra { border-style: dashed; }
+.howto { display: grid; gap: 28px; align-items: start; }
+.steps { list-style: none; margin: 0; padding: 0; display: grid; gap: 0; counter-reset: step; }
+.steps li { position: relative; padding: 0 0 26px 58px; counter-increment: step; }
+.steps li::before { content: counter(step); position: absolute; left: 0; top: 0; width: 40px; height: 40px; display: grid; place-items: center; background: var(--accent); color: var(--on-accent); font-weight: 700; font-size: 19px; }
+.steps li:not(:last-child)::after { content: ""; position: absolute; left: 19px; top: 44px; bottom: 4px; width: 2px; background: var(--line-strong); }
+.steps h3 { margin: 6px 0 4px; font-size: 20px; }
+.steps p { margin: 0 0 8px; max-width: 46ch; }
+.link-btn { background: none; border: 0; padding: 2px 0; color: var(--accent); text-decoration: underline; text-underline-offset: 3px; cursor: pointer; font-size: 16px; font-weight: 700; }
+.link-btn:hover { color: var(--accent-strong); text-decoration-thickness: 3px; }
+.thumb { display: grid; gap: 8px; }
+.thumb .poster-frame { cursor: pointer; }
+.thumb figcaption { font-size: 14px; color: var(--muted); }
+.dodont { display: grid; gap: 20px; }
+.dd { background: var(--paper); border: 1px solid var(--line); border-top: 6px solid var(--good); padding: 18px 22px 16px; }
+.dd.dont { border-top-color: var(--gap); }
+.dd h3 { margin: 0 0 10px; font-size: 20px; }
+.dd ul { margin: 0; padding: 0; list-style: none; display: grid; gap: 10px; }
+.dd li { position: relative; padding-left: 32px; }
+.dd li::before { position: absolute; left: 0; top: -1px; font-weight: 700; font-size: 20px; line-height: 1.2; }
+.dd.do li::before { content: "✓"; color: var(--good); }
+.dd.dont li::before { content: "✕"; color: var(--gap); }
+.home-note { margin: 0; background: var(--paper); border-left: 10px solid var(--accent); padding: 16px 20px; max-width: 80ch; }
+.home-foot { border-top: 1px solid var(--line-strong); padding-top: 16px; display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px; color: var(--muted); font-size: 14px; }
+@media (min-width: 760px) {
+  .a3map { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); padding: 22px; gap: 24px; }
+  .dodont { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
+}
+@media (min-width: 900px) {
+  .hero .home-in { grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr); }
+  .howto { grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr); }
+}
+
 /* In-page confirm and toast (the viewer shows no dialogs) */
 .confirm { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; padding: 12px 14px; border-left: 6px solid var(--gap); background: var(--paper); font-size: 15px; }
 .toast { position: fixed; bottom: calc(16px + env(safe-area-inset-bottom, 0px)); left: 50%; transform: translateX(-50%); background: var(--ink); color: var(--paper); padding: 10px 16px; font-size: 15px; z-index: 20; max-width: calc(100vw - 32px); }
@@ -355,15 +433,16 @@ textarea { resize: vertical; min-height: 72px; line-height: 1.45; }
 <div class="topbar">
 <header class="masthead">
   <div class="mast-in">
-    <div class="brand"><span class="brand-mark">A3</span><span>A3 Workbench<small>Problem solving on one page</small></span></div>
+    <a class="brand" href="#" id="brandHome"><span class="brand-mark">A3</span><span>A3 Workbench<small>Problem solving on one page</small></span></a>
     <nav class="tabs" role="group" aria-label="View">
+      <button type="button" id="modeHome" aria-pressed="true">Home</button>
       <button type="button" id="modeEdit" aria-pressed="false" hidden>Edit</button>
       <button type="button" id="modePresent" aria-pressed="true">A3 sheet</button>
       <button type="button" id="modePoster" aria-pressed="false">Poster</button>
     </nav>
   </div>
 </header>
-<div class="toolbar">
+<div class="toolbar" id="toolbar">
   <div class="tool-in">
     <div class="picker">
       <label for="a3pick">A3</label>
@@ -379,7 +458,8 @@ textarea { resize: vertical; min-height: 72px; line-height: 1.45; }
 </div>
 </div>
 
-<main class="wrap">
+<div class="home" id="home"></div>
+<main class="wrap" id="app" hidden>
   <div id="notices"></div>
   <div class="work" id="work">
     <form class="form" id="form" hidden></form>
@@ -976,13 +1056,147 @@ function showPoster() {
   const el = renderPoster(active(), frame);
   scalePoster(el);
 }
-function scalePoster(el = $("#posterFrame .poster")) {
+function scalePoster(el = $("#posterFrame .poster"), frame = $("#posterFrame")) {
   if (!el) return;
-  const frame = $("#posterFrame");
   const s = frame.clientWidth / 1587;
   el.style.transform = `scale(${s})`;
   frame.style.height = Math.round(1123 * s) + "px";
 }
+
+/* ---------- home ---------- */
+const MAP = {
+  background: "Why this matters, to whom, and why now.",
+  current: "The facts today: the standard, the actual and the gap, seen first-hand.",
+  goal: "One metric, from baseline to target, by a date.",
+  rca: "Why the gap exists, with each why checked against evidence.",
+  cm: "Options for each root cause, compared on effect and effort.",
+  plan: "The tasks, with one owner and a date for each.",
+  follow: "Predicted against actual, and how the change will stick and spread.",
+  insights: "The one thing a colleague should take away. Added to the standard seven."
+};
+function filledSections(a) {
+  const t = (v) => !!(v && String(v).trim());
+  const f = {
+    background: t(a.background),
+    current: t(a.problemStatement) || a.current.some(p => num(p.value) !== null),
+    goal: t(a.goal.statement) || num(a.goal.target) !== null,
+    rca: a.whys.some(w => t(w.why)) || t(a.rootCauses),
+    cm: a.countermeasures.some(c => t(c.name)),
+    plan: a.tasks.some(x => t(x.task)),
+    follow: a.results.some(r => num(r.predicted) !== null || num(r.actual) !== null) || t(a.followup.checkPlan),
+    insights: t(a.insights.headline)
+  };
+  return SECTIONS.filter(s => f[s.key]).length;
+}
+const ARROW = `<span class="arrow" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 2a10 10 0 0 0-9.95 9h11.64L9.74 7.05a1 1 0 0 1 1.41-1.41l5.66 5.65a1 1 0 0 1 0 1.42l-5.66 5.65a1 1 0 0 1-1.41 0 1 1 0 0 1 0-1.41L13.69 13H2.05A10 10 0 1 0 12 2z"/></svg></span>`;
+function renderHome() {
+  const el = $("#home");
+  const ex = store.a3s.find(a => a.example);
+  const mine = store.a3s.filter(a => !a.example);
+  const card = (a) => {
+    const n = filledSections(a), ins = computeInsights(a);
+    const who = [a.owner, a.date ? "Revised " + fmtDate(a.date) : "", a.revision ? "Rev " + a.revision : ""].filter(Boolean).join(" · ");
+    return `<button type="button" class="card" data-open="${esc(a.id)}">
+      ${a.example ? `<span><span class="tag">Example</span></span>` : ""}
+      <h3>${esc(a.title || "Untitled A3")}</h3>
+      <span class="who">${esc(who) || "No owner yet"}</span>
+      <span class="bar"><span>${n} of 8 sections filled in</span><span class="meter${n === 8 ? " ok" : ""}" aria-hidden="true"><i style="width:${n / 8 * 100}%"></i></span></span>
+      <span class="bar"><span>${ins.clear} of ${ins.of} coach checks clear</span><span class="meter${ins.clear === ins.of ? " ok" : ""}" aria-hidden="true"><i style="width:${ins.clear / ins.of * 100}%"></i></span></span>
+    </button>`;
+  };
+  const list = mine.concat(ex ? [ex] : []);
+  const mapBox = (s) => `<${canEdit ? `button type="button" data-jump="${s.key}"` : "div"} class="mbox${s.extra ? " extra" : ""}"><span class="num">${s.n}</span><b>${esc(s.title)} <span class="tag ${phaseClass(s.phase)}">${esc(s.phase)}</span></b><span class="d">${esc(MAP[s.key])}</span></${canEdit ? "button" : "div"}>`;
+  const where = !window.claude
+    ? `<b>Your work stays in this browser.</b> Nothing you type is sent anywhere, and other people can't see it. This address is public, so keep real or sensitive A3s off it.`
+    : saver
+      ? `<b>Your work is saved to this page.</b> Everyone it's shared with sees the latest saved version, and can comment on each section.`
+      : `<b>You can view, comment on and download these A3s.</b> Ask the owner for edit access if you want to change them.`;
+  const pick = active();
+  el.innerHTML = `
+  <section class="hero"><div class="home-in">
+    <div>
+      <h1>A3 Workbench</h1>
+      <p class="lede">Work through a problem on one page, then share it as an A3 poster.</p>
+      <div class="hero-actions">
+        ${canEdit ? `<button type="button" class="action-link" id="homeNew">${ARROW}<span>Start a new A3</span></button>` : ""}
+        ${ex ? `<button type="button" class="text-link" data-open="${esc(ex.id)}">Open the example</button>` : ""}
+      </div>
+    </div>
+    <div class="hero-facts" aria-label="At a glance">
+      <div><b>8</b><span>sections, in A3 order</span></div>
+      <div><b>6</b><span>charts and diagrams, drawn as you type</span></div>
+      <div><b>1</b><span>A3 page to share as a PDF</span></div>
+    </div>
+  </div></section>
+  <div class="home-body"><div class="home-in">
+    <section aria-labelledby="h-yours">
+      <h2 id="h-yours">${mine.length ? "Your A3s" : "A3s on this page"}</h2>
+      <p class="sub">${canEdit ? "Open an A3 to read it as a sheet, or start a new one." : "Open an A3 to read it as a sheet or a poster."}</p>
+      <div class="cards">${list.map(card).join("")}${canEdit ? `<button type="button" class="card new" id="homeNew2"><h3><span aria-hidden="true">+</span> Start a new A3</h3><span class="who">Opens the form with section guidance and coach notes.</span></button>` : ""}</div>
+    </section>
+    <section aria-labelledby="h-map">
+      <h2 id="h-map">How an A3 reads</h2>
+      <p class="sub">An A3 tells the story of one problem on one sheet. Read it down the left, then down the right.${canEdit ? " Choose a box to go to that section of the form." : ""}</p>
+      <div class="a3map">
+        <div class="map-half"><div class="half-label"><b>Plan</b>Understand the problem</div>${SECTIONS.slice(0, 4).map(mapBox).join("")}</div>
+        <div class="map-half"><div class="half-label"><b>Do · Check · Act</b>Solve it, check it, learn from it</div>${SECTIONS.slice(4).map(mapBox).join("")}</div>
+      </div>
+    </section>
+    <section aria-labelledby="h-steps" class="howto">
+      <div>
+        <h2 id="h-steps">From draft to poster</h2>
+        <p class="sub">Three steps, all on this page.</p>
+        <ol class="steps">
+          <li><h3>Fill it in</h3><p>Work through the sections in order. Coach notes flag common mistakes as you type.</p>${canEdit ? `<button type="button" class="link-btn" data-go="edit">Go to Edit</button>` : ""}</li>
+          <li><h3>Review it as an A3</h3><p>The sheet builds as you type, with Plan on the left and Do, Check and Act on the right.</p><button type="button" class="link-btn" data-go="present">Go to the A3 sheet</button></li>
+          <li><h3>Share the poster</h3><p>Download PDF lays the A3 out as a poster on one A3 landscape page, with the key insight across the top.</p><button type="button" class="link-btn" data-go="poster">Go to the poster</button></li>
+        </ol>
+      </div>
+      <figure class="thumb" style="margin:0">
+        <div class="poster-frame" id="thumbFrame" data-go="poster" role="img" aria-label="Poster preview of ${esc(pick.title || "Untitled A3")}"></div>
+        <figcaption>The poster for “${esc(pick.title || "Untitled A3")}”</figcaption>
+      </figure>
+    </section>
+    <section aria-labelledby="h-habits">
+      <h2 id="h-habits">Good A3 habits</h2>
+      <p class="sub">The coach notes check for these as you write.</p>
+      <div class="dodont">
+        <div class="dd do"><h3>Do</h3><ul>
+          <li>Name the problem, not the fix.</li>
+          <li>Use numbers: time, %, count or cost.</li>
+          <li>Go and see where the work happens.</li>
+          <li>Check each why against evidence.</li>
+          <li>Give every task one owner and a date.</li>
+        </ul></div>
+        <div class="dd dont"><h3>Don't</h3><ul>
+          <li>Put a solution in the title.</li>
+          <li>Blame people. Ask what in the system allowed it.</li>
+          <li>Rely on training alone to fix it.</li>
+          <li>Skip the check on whether it worked.</li>
+        </ul></div>
+      </div>
+    </section>
+    <p class="home-note">${where}</p>
+    <div class="home-foot"><span>A3 Workbench · a prototype for feedback</span><span>Built on the NHS.UK design system</span></div>
+  </div></div>`;
+  clearTimeout(thumbTimer);
+  thumbTimer = setTimeout(() => {
+    const f = $("#thumbFrame"); if (!f || mode !== "home") return;
+    const p = renderPoster(active(), f); scalePoster(p, f);
+  }, 60);
+}
+let thumbTimer;
+function openA3(id) { if (store.a3s.find(a => a.id === id)) store.activeId = id; renderPicker(); renderNotices(); renderSheet(active(), $("#sheet")); setMode("present"); window.scrollTo(0, 0); }
+$("#home").addEventListener("click", (e) => {
+  const t = e.target.closest("[data-open],[data-jump],[data-go],#homeNew,#homeNew2"); if (!t) return;
+  if (t.id === "homeNew" || t.id === "homeNew2") { newA3(); window.scrollTo(0, 0); return; }
+  if (t.dataset.open) return openA3(t.dataset.open);
+  if (t.dataset.go) { setMode(t.dataset.go); renderNotices(); window.scrollTo(0, 0); return; }
+  if (t.dataset.jump) {
+    const k = t.dataset.jump; openSecs.add(k); setMode("edit"); renderNotices();
+    setTimeout(() => { const d = document.querySelector(`details[data-k="${k}"]`); if (d) { d.open = true; d.scrollIntoView({ block: "start" }); window.scrollBy(0, -150); } }, 30);
+  }
+});
 
 /* ---------- form ---------- */
 const txt = (path, label, val, ph = "", rows = 0) => rows
@@ -1105,6 +1319,7 @@ function renderAll() {
   renderNotices();
   if (mode === "edit") renderForm();
   if (mode === "poster") showPoster();
+  if (mode === "home") renderHome();
 }
 function scheduleSheet() {
   clearTimeout(renderTimer);
@@ -1126,8 +1341,13 @@ function renderNotices() {
   n.hidden = !h;
 }
 function setMode(m) {
-  mode = m === "poster" ? "poster" : (m === "edit" && canEdit) ? "edit" : "present";
+  mode = m === "home" || m === "poster" ? m : (m === "edit" && canEdit) ? "edit" : "present";
   lsSet(LS_MODE, mode);
+  $("#modeHome").setAttribute("aria-pressed", String(mode === "home"));
+  $("#home").hidden = mode !== "home";
+  $("#app").hidden = mode === "home";
+  $("#toolbar").hidden = mode === "home";
+  if (mode === "home") renderHome(); else $("#home").innerHTML = "";
   $("#modeEdit").setAttribute("aria-pressed", String(mode === "edit"));
   $("#modePresent").setAttribute("aria-pressed", String(mode === "present"));
   $("#modePoster").setAttribute("aria-pressed", String(mode === "poster"));
@@ -1295,8 +1515,10 @@ $("#a3pick").addEventListener("change", (e) => { store.activeId = e.target.value
 $("#modeEdit").addEventListener("click", () => { setMode("edit"); renderNotices(); });
 $("#modePresent").addEventListener("click", () => setMode("present"));
 $("#modePoster").addEventListener("click", () => setMode("poster"));
+$("#modeHome").addEventListener("click", () => setMode("home"));
+$("#brandHome").addEventListener("click", (e) => { e.preventDefault(); setMode("home"); window.scrollTo(0, 0); });
 let resizeT;
-window.addEventListener("resize", () => { clearTimeout(resizeT); resizeT = setTimeout(() => { if (mode === "poster") scalePoster(); }, 80); });
+window.addEventListener("resize", () => { clearTimeout(resizeT); resizeT = setTimeout(() => { if (mode === "poster") scalePoster(); if (mode === "home") scalePoster($("#thumbFrame .poster"), $("#thumbFrame")); }, 80); });
 $("#saveBtn").addEventListener("click", save);
 $("#pdfBtn").addEventListener("click", downloadPdf);
 window.addEventListener("beforeunload", () => { if (dirty) lsSet(LS_KEY, JSON.stringify({ dirty: true, store })); });
@@ -1310,7 +1532,7 @@ async function boot() {
   store.a3s = store.a3s.map(normalize);
   if (!store.a3s.find(a => a.id === store.activeId)) store.activeId = store.a3s[0].id;
   renderAll();
-  setMode("present");
+  setMode("home");
 
   const claude = window.claude;
   if (!claude || !claude.use) {
@@ -1341,8 +1563,7 @@ function showEditing() {
   $("#modeEdit").hidden = false;
   $("#newA3").hidden = false;
   renderNotices();
-  const want = lsGet(LS_MODE);
-  setMode(want === "edit" || want === "poster" ? want : "present");
+  setMode(mode); // stay on the current view (Home on first load), now with editing turned on
   if (!saver) setStatus("Changes are saved in this browser only", "");
   else if (restored) { setStatus("Restored unsaved changes from this browser", "warn"); if (canSaveRemote) saveTimer = setTimeout(save, 4000); }
 }

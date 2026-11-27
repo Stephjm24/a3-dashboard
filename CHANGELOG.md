@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- Added a Home view to the A3 Workbench prototype. It opens first and lists the A3s on the page, shows how an A3 reads, walks through the three steps from draft to poster with a live poster preview, lists good A3 habits and says where work is saved.
 - Redesigned the A3 Workbench prototype on the NHS.UK design system, added section 8, Insights, after Follow-up, and added a Poster view. **Download PDF** now produces that poster, filling one A3 landscape page edge to edge with the key insight across the top.
 - Added screenshots of the app and the A3 Workbench prototype to the README, using the synthetic example, with diagrams of the intended coach design.
 - Added the Prototype Pages workflow, which publishes the A3 Workbench prototype to GitHub Pages when it changes on `main`.

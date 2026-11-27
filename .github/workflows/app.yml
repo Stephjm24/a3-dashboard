@@ -44,5 +44,5 @@ jobs:
         run: npm test
       - name: Apply database migrations
         run: npm run db:deploy
-      - name: Production build
-        run: npm run build
+      - name: Build production container
+        run: docker build --target runner --tag a3-dashboard:ci .

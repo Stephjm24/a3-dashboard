@@ -11,13 +11,13 @@ The app is built in six phases, agreed in [0002](decisions/0002-system-architect
 | 5 · Testers | Deploy to Render with test data. Collect feedback, including on the screen layout. | Testers can sign in on Render and complete an A3; feedback is recorded as issues. |
 | 6 · Azure | Azure Container Apps, Azure Database for PostgreSQL, Blob Storage, Key Vault, Entra ID sign-in, Claude on Microsoft Foundry. Needs Azure and Foundry approval. | The same build runs on Azure, the AI connector uses Foundry, and real A3 data is allowed. |
 
-## Hosting decision
+## Planned hosting by environment
 
 | Environment | Host | Data | AI |
 | --- | --- | --- | --- |
-| Local | Laptop or GitHub Codespaces, Postgres in Docker | Test only | Anthropic API, development key |
+| Local | Laptop or GitHub Codespaces, Postgres in Docker | Test only | Anthropic API development key from the coaching phase |
 | Test | Render, running the same Docker container, with managed Postgres | Test only | Anthropic API |
-| Azure | Azure Container Apps with Azure Database for PostgreSQL | Real A3s allowed | Claude on Microsoft Foundry |
+| Azure | Azure Container Apps with Azure Database for PostgreSQL | Real A3s after approval | Claude on Microsoft Foundry |
 
 GitHub Pages is not used: the app needs a server to hold the AI key, run the coach and reach the database. Secrets live in each host's environment settings, and in Azure Key Vault later, never in the repository.
 
@@ -26,8 +26,6 @@ GitHub Pages is not used: the app needs a server to hold the AI key, run the coa
 1. Run validation, application tests and the production build on a PR using synthetic data. Keep preview credentials separate from production.
 2. Review the preview against the baseline. For private workloads test authorised and unauthorised access, including direct API and deep-link requests.
 3. Merge the approved revision and build once for production, or promote a previously built production-configured artifact for that exact revision. Record the commit and immutable deployment ID. Configure the host so a branch push cannot bypass release approval.
-4. Smoke-test the production URL and confirm expected access and data version. On failure, select the previous compatible deployment and follow the recovery steps in CONTRIBUTING.md.
+4. Smoke-test the production URL and confirm expected access and data version. On failure, select the previous compatible deployment and follow the [recovery steps](../CONTRIBUTING.md#release-and-recover).
 
-The foundation workflow checks repository and sample data quality. Add deploy automation after the hosting decision, including any required environment approval and least-privilege deploy identity.
-
-Provider documentation: [GitHub Pages](https://docs.github.com/en/pages/getting-started-with-github-pages/what-is-github-pages), [Vercel environments](https://vercel.com/docs/deployments/environments), [Netlify previews](https://docs.netlify.com/deploy/deploy-types/deploy-previews/), [Cloudflare Functions](https://developers.cloudflare.com/pages/functions/), [protected branches](https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/managing-protected-branches/about-protected-branches), [Actions security](https://docs.github.com/en/actions/reference/security/secure-use).
+[App checks](../.github/workflows/app.yml) and [Foundation checks](../.github/workflows/foundation.yml) validate the repository today. Configure deployment during the tester phase and record how to promote and roll back a release before inviting testers.

@@ -1,14 +1,28 @@
 # Data and population
 
-The only implemented dataset is a fictional list used to exercise validation. No A3 business entities, measures or permitted values have been confirmed. A proposed category becomes a product contract when its owner supplies a definition and a consumer needs it.
+## Application data
+
+Each A3 has an owner and a current version in PostgreSQL. Creating an A3 writes its header and first JSON document in a transaction. The application loads a version for its owner and validates the document with Zod before rendering the sheet.
+
+| Question | Source of truth |
+| --- | --- |
+| What fields make up an A3 document? | [A3 document schema](../src/lib/a3/schema.ts) |
+| Which sections does the workspace display? | [Section definitions](../src/lib/a3/sections.ts) |
+| How are versions created and read? | [A3 repository functions](../src/lib/a3/repository.ts) |
+| How are records, sessions and invites stored? | [Prisma schema](../prisma/schema.prisma) and [migrations](../prisma/migrations) |
+
+Keep operational records in the database. Use synthetic data for local development and tester sessions. CSV and Excel import is planned for phase 2.
+
+## Reference data in Git
+
+The fictional labels list exercises the static reference validator. Each future reference dataset needs a consumer, an agreed definition and a source owner.
 
 | Category and status | Authoritative location and format | Validation and proposed ownership |
 | --- | --- | --- |
-| Contract definitions · implemented | `data/schemas/<dataset>.vN.schema.json`, JSON Schema Draft 2020-12 | Engineering maintainer checks the schema. The information owner signs off field meanings before a real dataset is introduced. |
+| Static reference contracts · implemented | `data/schemas/<dataset>.vN.schema.json`, JSON Schema Draft 2020-12 | Engineering maintainer checks the schema. The information owner signs off field meanings before a real dataset is introduced. |
 | Synthetic development samples · implemented | `tests/fixtures/<dataset>.vN/<case>.json` | Same schema as the consumer. Developer owns coverage. Create fictitious records from scratch. |
 | Small, approved, rarely changed reference lists · supported once supplied | One canonical reviewed JSON file or a documented set of disjoint files under `data/reference/<dataset>.vN/` | Information owner confirms source, reuse rights, meanings and refresh cadence. CI checks each file. |
 | Tabular deliveries · conditional | Incoming CSV in an approved external landing area. A versioned importer can map headers and types to the JSON contract. | Source owner documents encoding, keys, dates, units, nulls and rejected rows. Engineering owns repeatable conversion. |
-| Operational records, writes, user-specific views · conditional | Existing authoritative API if available. Otherwise an authenticated service and managed database for durable records. Private object storage for uploads or large exports. | Service owner handles authorisation, transactional constraints, retention, backups and restore tests. |
 | Repository and deployment settings · implemented as needed | YAML for CI. Non-secret settings can be versioned. Secret values belong in an environment secret store. | Maintainer reviews configuration changes and environment boundaries. |
 
 ## Validate a dataset
@@ -17,7 +31,7 @@ The contract stem is the binding. For example, `example-labels.v1.schema.json` g
 
 Use one canonical field name, type and meaning for each concept. Register key uniqueness, missing-value semantics, ordering, units and any relationship checks in the dataset description. Use semantic checks when JSON Schema cannot express a rule, such as uniqueness of an identifier across files. Record breaking renames, required-field additions and changed units in a new major contract version. Keep the previous version until every consumer has migrated. A change to values with the same meaning goes through an ordinary reviewed commit.
 
-## From source to screen
+## Adding a data source
 
 1. Record the dataset name, purpose, upstream source and revision, owner, permitted audience, rights, update cadence, contract version and intended consumer in this document or a linked dataset page. Record the reason for choosing static delivery or service-backed delivery.
 2. Start with a synthetic fixture. Include missing/empty cases where allowed and a regression test for one meaningful invalid case. Confirm field meanings with the owner before importing any records.

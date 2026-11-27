@@ -1,6 +1,6 @@
 # A3 dashboard
 
-This repository holds the source and contracts for the A3 web application dashboard. The current foundation can validate data changes before the first application import. The example contains two fictional labels. No dashboard records have been supplied.
+This repository holds the A3 coach app: a web app where a person describes a problem in plain language and a guided AI coach turns it into a problem-solving A3 on a live dashboard. The system design is in [docs/architecture.md](docs/architecture.md). The app itself is being built in phases; this foundation already validates data changes. No real A3 records have been supplied.
 
 ## Run the foundation checks
 
@@ -24,14 +24,16 @@ py -3.12 -m venv .venv
 .\.venv\Scripts\python.exe -m unittest discover -s tests -v
 ```
 
-A successful run prints `Foundation checks passed.` and a passing test summary. Python is a development tool for this foundation. The application runtime and build command will be documented here when its existing source is imported.
+A successful run prints `Foundation checks passed.` and a passing test summary. Python is a development tool for this foundation. The application's run and build commands will be documented here when phase 1 lands.
 
 ## Where to start
 
-- [Architecture and integration decisions](docs/decisions/0001-repository-boundaries.md) records the evidence, annotated tree and where to place the existing app.
+- [System architecture](docs/architecture.md) has the diagrams: system context, a coach turn, the coaching flow, environments and stored data.
+- [0002 · System architecture](docs/decisions/0002-system-architecture.md) records the agreed design decisions.
+- [0001 · Repository boundaries](docs/decisions/0001-repository-boundaries.md) records the repository layout and placement conventions.
 - [Data handbook](docs/data.md) defines contracts, ownership, fixture isolation and the first real dataset review.
 - [Development and release workflow](CONTRIBUTING.md) covers branches, review, settings and recovery.
-- [Delivery plan](docs/delivery.md) sets out the six phases, hosting options and completion criteria.
+- [Delivery plan](docs/delivery.md) sets out the build phases, hosting and completion criteria.
 - [Changelog](CHANGELOG.md) records changes intended for release.
 
-The next application contribution should be a baseline import of the working Claude export. Include its entry point, assets, manifests, lockfile if present, and the instructions originally used to run it.
+The next application contribution is phase 1: the Next.js app, database, sign-in by invite link, the My A3s list and the empty A3 page.

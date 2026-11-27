@@ -13,16 +13,21 @@ You fill in the header and the seven problem-solving sections in a form. The pag
 
 Coach notes under each section flag the common mistakes listed in the A3 knowledge base. **Download PDF** saves the A3 as one landscape A3 page.
 
-## Two ways to use it
+## Three ways to use it
 
-| | Hosted copy on claude.ai | Opened from this folder |
-| --- | --- | --- |
-| Who can open it | People the owner shares it with | Anyone with the files |
-| Where edits are saved | On the hosted page, for everyone who opens it | In that person's browser only |
-| Comments | Comment button on each section | Not available |
-| PDF | Download PDF | Download PDF |
+| | Hosted copy on claude.ai | GitHub Pages | Opened from this folder |
+| --- | --- | --- | --- |
+| Address | Shared by the owner | https://stephjm24.github.io/a3-dashboard/ | http://localhost:8000 |
+| Who can open it | People the owner shares it with | Anyone with the address | Anyone with the files |
+| Where edits are saved | On the hosted page, for everyone who opens it | In that person's browser only | In that person's browser only |
+| Comments | Comment button on each section | Not available | Not available |
+| PDF | Download PDF | Download PDF | Download PDF |
 
-Share the hosted copy with colleagues for live feedback. Use the files here to keep the prototype under version control, or to try it locally:
+Share the hosted copy for live feedback on one A3. Send the GitHub Pages address when colleagues should try the tool with their own A3. Nothing they type leaves their browser. Because the Pages address is public, keep real or sensitive A3s out of `a3.json`.
+
+The [Prototype Pages workflow](../../.github/workflows/prototype-pages.yml) publishes `index.html` and `a3.json` from this folder when a change to them reaches `main`. It can also be run by hand from the Actions tab. Before the first run, a maintainer sets **Settings > Pages > Build and deployment > Source** to **GitHub Actions**.
+
+To try it locally:
 
 ```sh
 cd prototype/a3-workbench

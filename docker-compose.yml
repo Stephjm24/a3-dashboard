@@ -1,0 +1,40 @@
+# Local development services. Start the database with: docker compose up -d db
+services:
+  db:
+    image: postgres:17-alpine
+    environment:
+      POSTGRES_USER: a3
+      POSTGRES_PASSWORD: a3local
+      POSTGRES_DB: a3
+    ports:
+      - "5432:5432"
+    volumes:
+      - a3-db:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U a3"]
+      interval: 5s
+      retries: 10
+
+  # Optional: run the production image locally.
+  # docker compose run --rm migrate && docker compose up app
+  migrate:
+    build: { context: ., target: migrate }
+    environment:
+      DATABASE_URL: postgresql://a3:a3local@db:5432/a3
+    depends_on:
+      db: { condition: service_healthy }
+    profiles: ["app"]
+
+  app:
+    build: { context: ., target: runner }
+    environment:
+      DATABASE_URL: postgresql://a3:a3local@db:5432/a3
+      APP_URL: http://localhost:3000
+    ports:
+      - "3000:3000"
+    depends_on:
+      db: { condition: service_healthy }
+    profiles: ["app"]
+
+volumes:
+  a3-db:

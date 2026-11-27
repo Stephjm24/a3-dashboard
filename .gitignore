@@ -30,3 +30,11 @@ coverage/
 .wrangler/
 .DS_Store
 *.log
+
+# Next.js and TypeScript
+/out/
+*.tsbuildinfo
+next-env.d.ts
+/src/generated/
+/playwright-report/
+/test-results/

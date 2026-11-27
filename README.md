@@ -1,12 +1,36 @@
 # A3 dashboard
 
-An invite-only workspace for developing a seven-section problem-solving A3. In the current version, a tester can sign in, create an A3 and fill in every section by hand. Each save becomes a new version that can be reopened or restored from **Version history**, and the charts redraw from the version on screen. Metric values can be typed or imported from CSV or Excel. The coach pane shows the opening prompt; interactive coaching follows in phase 3. Use synthetic test data for local development and tester sessions.
+Use the **[public A3 Workbench](https://stephjm24.github.io/a3-dashboard/)** to try a problem-solving A3 with synthetic data, or [run the full app locally](#run-locally) to work through an invite-only, versioned A3.
 
-To try the A3 layout without installing anything, open the [A3 Workbench prototype](https://stephjm24.github.io/a3-dashboard/) ([source](prototype/a3-workbench)).
+| | GitHub Pages Workbench | Full Next.js app |
+| --- | --- | --- |
+| Access and saving | Opens on Home without sign-in. Edits are saved in the current browser. | Sign in with a one-time invite. Each user’s A3s and saved versions live in PostgreSQL. |
+| Editing and review | Edit the seven sections and an eighth Insights section. Switch between Edit, A3 sheet and Poster views. | Edit all seven sections, import metric values from CSV or Excel, then open or restore an earlier version with its charts. |
+| Coaching and export | Rule-based coach notes and a downloadable one-page landscape poster PDF. | The coach pane shows its opening prompt. Interactive coaching and PDF export are planned for phases 3 and 4 respectively. |
+| Source | [Workbench files and usage](prototype/a3-workbench) | [Application source](src) and [delivery plan](docs/delivery.md) |
 
-## What it looks like
+Use synthetic test data for local development, the public example and tester sessions.
 
-These screenshots show the app as it runs today, filled in with the synthetic example "Late lab results delay ER discharges". None of the people, numbers or dates are real.
+## GitHub Pages Workbench
+
+The [prototype](prototype/a3-workbench) is a single page for quick feedback from colleagues, styled on the NHS.UK design system. You fill in a form on the left and the A3 builds on the right. Coach notes flag common mistakes, and section 8, Insights, adds the key takeaway to the standard seven. **Download PDF** saves a poster that fills one A3 landscape page. A home page opens first. The prototype is separate from the app and shares no code with it.
+
+![A3 Workbench in edit mode, with the form on the left and the live A3 on the right](docs/images/workbench-edit.png)
+
+<details>
+<summary>The home page, the finished A3 and the poster PDF in the prototype</summary>
+
+![A3 Workbench home page, listing the A3s and showing how an A3 reads](docs/images/workbench-home.png)
+
+![A3 Workbench sheet view of the synthetic example](docs/images/workbench-a3.png)
+
+![The poster that Download PDF produces, on one A3 landscape page](docs/images/workbench-poster.png)
+
+</details>
+
+## Full application
+
+The app screenshots below use the synthetic example “Late lab results delay ER discharges”.
 
 ### The A3 workspace
 
@@ -42,23 +66,6 @@ Each section opens in its own editor. A save becomes the next version, and the b
 Every save is kept. Any version can be opened read-only or restored.
 
 ![Version history listing each saved version with its change summary](docs/images/app-history.png)
-
-### A3 Workbench prototype
-
-The [prototype](prototype/a3-workbench) is a single page for quick feedback from colleagues, styled on the NHS.UK design system. You fill in a form on the left and the A3 builds on the right. Coach notes flag common mistakes, and section 8, Insights, adds the key takeaway to the standard seven. **Download PDF** saves a poster that fills one A3 landscape page. A home page opens first. The prototype is separate from the app and shares no code with it.
-
-![A3 Workbench in edit mode, with the form on the left and the live A3 on the right](docs/images/workbench-edit.png)
-
-<details>
-<summary>The home page, the finished A3 and the poster PDF in the prototype</summary>
-
-![A3 Workbench home page, listing the A3s and showing how an A3 reads](docs/images/workbench-home.png)
-
-![A3 Workbench sheet view of the synthetic example](docs/images/workbench-a3.png)
-
-![The poster that Download PDF produces, on one A3 landscape page](docs/images/workbench-poster.png)
-
-</details>
 
 ## How it will work
 

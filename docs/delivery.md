@@ -2,14 +2,16 @@
 
 The app is built in six phases, agreed in [0002](decisions/0002-system-architecture.md). Each phase ends with something the product owner can click through and review, and lands as one or more reviewed pull requests.
 
-| Phase | Deliverables | Complete when |
-| --- | --- | --- |
-| 1 · Foundation | Next.js app, PostgreSQL with Prisma, sign-in by email invite link, the My A3s list, and the empty A3 page laid out from the knowledge base. Docker setup and CI build. | A fresh checkout starts the app locally with one documented command, a tester can sign in, create an A3 and see the empty A3 page. |
-| 2 · Manual A3 | Every section editable by hand, saved with version history. Charts drawn from typed data and CSV or Excel uploads. | All seven sections can be filled and saved without AI, and the charts redraw from the saved version. |
-| 3 · Coach | Intake and synthesis, section-by-section coach turns, draft and accept, the AI connector, and the sample-problem checks. Needs an Anthropic API development key. | A sample problem can be taken from intake to a complete Plan section with the coach, and no number appears that the person did not supply. |
-| 4 · Review and export | Rubric and read-in-reverse checks, flags beside sections, one-page PDF export. | The PDF matches the screen and the rubric flags known mistakes in the sample problems. |
-| 5 · Testers | Deploy to Render with test data. Collect feedback, including on the screen layout. | Testers can sign in on Render and complete an A3; feedback is recorded as issues. |
-| 6 · Azure | Azure Container Apps, Azure Database for PostgreSQL, Blob Storage, Key Vault, Entra ID sign-in, Claude on Microsoft Foundry. Needs Azure and Foundry approval. | The same build runs on Azure, the AI connector uses Foundry, and real A3 data is allowed. |
+| Phase | Implementation status | Deliverables | Complete when |
+| --- | --- | --- | --- |
+| 1 · Foundation | Built | Next.js app, PostgreSQL with Prisma, sign-in by email invite link, the My A3s list, and the empty A3 page laid out from the knowledge base. Docker setup and CI build. | A fresh checkout starts the app using the documented local setup, a tester can sign in, create an A3 and see the empty A3 page. |
+| 2 · Manual A3 | Built | Every section editable by hand, saved with version history. Charts drawn from typed data and CSV or Excel uploads. | All seven sections can be filled and saved without AI, and the charts redraw from the saved version. |
+| 3 · Coach | Planned | Intake and synthesis, section-by-section coach turns, draft and accept, the AI connector, and the sample-problem checks. Needs an Anthropic API development key. | A sample problem can be taken from intake to a complete Plan section with the coach, and no number appears that the person did not supply. |
+| 4 · Review and export | Planned | Rubric and read-in-reverse checks, flags beside sections, one-page PDF export. | The PDF matches the screen and the rubric flags known mistakes in the sample problems. |
+| 5 · Testers | Planned | Deploy to Render with test data. Collect feedback, including on the screen layout. | Testers can sign in on Render and complete an A3; feedback is recorded as issues. |
+| 6 · Azure | Planned | Azure Container Apps, Azure Database for PostgreSQL, Blob Storage, Key Vault, Entra ID sign-in, Claude on Microsoft Foundry. Needs Azure and Foundry approval. | The same build runs on Azure, the AI connector uses Foundry, and real A3 data is allowed. |
+
+The [public Workbench](https://stephjm24.github.io/a3-dashboard/) is a separate feedback prototype. Its Insights section and poster PDF are available today. The phase statuses above apply to the Next.js application.
 
 ## Planned hosting by environment
 

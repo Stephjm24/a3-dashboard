@@ -1,6 +1,6 @@
 # 0003 · Manual A3 editing, versions and spreadsheet imports
 
-Status: proposed on 27 November 2026 with the phase 2 pull request, for the product owner's review. Amends the SheetJS choice in [0002](0002-system-architecture.md).
+Implemented on 27 November 2026 in [the merged phase 2 pull request](https://github.com/Stephjm24/a3-dashboard/pull/5). Amends the SheetJS choice in [0002](0002-system-architecture.md).
 
 ## Context
 

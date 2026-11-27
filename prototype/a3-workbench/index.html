@@ -14,152 +14,191 @@ img { max-width: 100%; }
 <title>A3 Workbench</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <style>
-/* Layout: NHS-style A3 sheet (Arial, black and NHS Blue text, pale grey-green bands, thin black rules). Title block on top, Plan on the left half, Do / Check-Act on the right. Title block on top, Plan on the left half, Do / Check-Act on the right, numbered boxes in A3 reading order. Edit mode puts the form beside the live sheet. */
+/* Layout: built on the NHS.UK design system (frontend and service manual): NHS Blue header band, square 2px-bordered inputs, green primary button with a hard shadow, yellow focus, tags and inset text. The A3 itself is a ruled engineering sheet: a gridded title block, numbered boxes in reading order, Plan on the left, Do / Check / Act and Insights on the right. A poster view lays the same A3 out to fill an A3 landscape page for the PDF. */
 :root {
-  --bg: #f0f4f5;
+  --bg: #f0f4f5;            /* NHS grey 5 */
   --paper: #ffffff;
-  --ink: #000000;
-  --muted: #4c6272;
-  --line: #d8dde0;
-  --line-strong: #aeb7bd;
-  --accent: #005eb8;
-  --accent-strong: #003087;
+  --ink: #212b32;           /* NHS text */
+  --muted: #4c6272;         /* NHS secondary text */
+  --line: #d8dde0;          /* NHS grey 4 */
+  --line-strong: #aeb7bd;   /* NHS grey 3 */
+  --rule: #212b32;
+  --accent: #005eb8;        /* NHS Blue */
+  --accent-strong: #003087; /* NHS Dark Blue */
   --on-accent: #ffffff;
-  --accent-soft: #e6eeec;
-  --gap: #b74919;
-  --gap-soft: rgba(183, 73, 25, 0.16);
-  --good: #1d9a78;
-  --warn: #a35f00;
-  --field: #f7f9fa;
-  --shadow: 0 1px 2px rgba(0, 48, 135, .06), 0 6px 18px rgba(0, 48, 135, .06);
-  --f-display: Arial, "Helvetica Neue", Helvetica, sans-serif;
-  --f-body: Arial, "Helvetica Neue", Helvetica, sans-serif;
-  --f-mono: Arial, "Helvetica Neue", Helvetica, sans-serif;
+  --accent-soft: #e8edee;   /* NHS pale grey */
+  --tint: #e0ecf7;          /* pale blue tint */
+  --gap: #d5281b;           /* NHS red */
+  --gap-soft: rgba(213, 40, 27, 0.13);
+  --good: #007f3b;          /* NHS green */
+  --good-dark: #00401e;
+  --warn: #ffb81c;          /* NHS warm yellow */
+  --warn-ink: #6b4c00;
+  --focus: #ffeb3b;         /* NHS focus yellow */
+  --focus-ink: #212b32;
+  --field: #ffffff;
+  --f-display: Frutiger, "Frutiger W01", Arial, "Helvetica Neue", Helvetica, sans-serif;
+  --f-body: Frutiger, "Frutiger W01", Arial, "Helvetica Neue", Helvetica, sans-serif;
+  --f-mono: Frutiger, "Frutiger W01", Arial, "Helvetica Neue", Helvetica, sans-serif;
 }
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
-    --bg: #0b1622; --paper: #13202d; --ink: #ffffff; --muted: #a9bac6; --line: #2a3a4a; --line-strong: #4a5f72;
-    --accent: #41b6e6; --accent-strong: #8fd3f2; --on-accent: #0b1622; --accent-soft: #1b2c3a; --gap: #e0773f; --gap-soft: rgba(224, 119, 63, 0.22); --good: #3fc49d; --warn: #f19d19;
-    --field: #0f1a25; --shadow: 0 1px 2px rgba(0,0,0,.3), 0 6px 18px rgba(0,0,0,.25); color-scheme: dark;
+    --bg: #0d1820; --paper: #15232e; --ink: #f0f4f5; --muted: #aab8c3; --line: #2b3d4b; --line-strong: #4c6272; --rule: #d8dde0;
+    --accent: #41b6e6; --accent-strong: #8fd3f2; --on-accent: #0d1820; --accent-soft: #1d2f3c; --tint: #17344a;
+    --gap: #ff7b6e; --gap-soft: rgba(255, 123, 110, 0.2); --good: #4cc38a; --good-dark: #1d6b44; --warn: #ffb81c; --warn-ink: #ffd56b;
+    --focus: #ffeb3b; --focus-ink: #0d1820; --field: #0f1c25; color-scheme: dark;
   }
 }
 :root[data-theme="dark"] {
-  --bg: #0b1622; --paper: #13202d; --ink: #ffffff; --muted: #a9bac6; --line: #2a3a4a; --line-strong: #4a5f72;
-    --accent: #41b6e6; --accent-strong: #8fd3f2; --on-accent: #0b1622; --accent-soft: #1b2c3a; --gap: #e0773f; --gap-soft: rgba(224, 119, 63, 0.22); --good: #3fc49d; --warn: #f19d19;
-    --field: #0f1a25; --shadow: 0 1px 2px rgba(0,0,0,.3), 0 6px 18px rgba(0,0,0,.25); color-scheme: dark;
+  --bg: #0d1820; --paper: #15232e; --ink: #f0f4f5; --muted: #aab8c3; --line: #2b3d4b; --line-strong: #4c6272; --rule: #d8dde0;
+  --accent: #41b6e6; --accent-strong: #8fd3f2; --on-accent: #0d1820; --accent-soft: #1d2f3c; --tint: #17344a;
+  --gap: #ff7b6e; --gap-soft: rgba(255, 123, 110, 0.2); --good: #4cc38a; --good-dark: #1d6b44; --warn: #ffb81c; --warn-ink: #ffd56b;
+  --focus: #ffeb3b; --focus-ink: #0d1820; --field: #0f1c25; color-scheme: dark;
 }
-/* The exported PDF is always printed light. */
+/* Print colours: the poster and the PDF are always light. */
 .force-light {
-  --bg: #ffffff; --paper: #ffffff; --ink: #000000; --muted: #4c6272; --line: #d8dde0; --line-strong: #aeb7bd;
-  --accent: #005eb8; --accent-strong: #003087; --on-accent: #ffffff; --accent-soft: #e6eeec; --gap: #b74919; --gap-soft: rgba(183, 73, 25, 0.16); --good: #1d9a78; --warn: #a35f00; --field: #f7f9fa;
-  color-scheme: light;
+  --bg: #ffffff; --paper: #ffffff; --ink: #212b32; --muted: #4c6272; --line: #d8dde0; --line-strong: #aeb7bd; --rule: #212b32;
+  --accent: #005eb8; --accent-strong: #003087; --on-accent: #ffffff; --accent-soft: #e8edee; --tint: #e0ecf7;
+  --gap: #d5281b; --gap-soft: rgba(213, 40, 27, 0.13); --good: #007f3b; --good-dark: #00401e; --warn: #ffb81c; --warn-ink: #6b4c00;
+  --field: #ffffff; color-scheme: light;
 }
 
 * { box-sizing: border-box; }
-body { background: var(--bg); color: var(--ink); font-family: var(--f-body); font-size: 14px; line-height: 1.5; }
-body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 10; background: var(--paper); }
+[hidden] { display: none !important; }
+body { background: var(--bg); color: var(--ink); font-family: var(--f-body); font-size: 16px; line-height: 1.5; }
+body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 10; background: var(--accent); }
 button, input, textarea, select { font: inherit; color: inherit; }
-:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+a { color: var(--accent); }
+/* NHS focus: yellow fill with a dark underline for controls, yellow ring with dark inset for fields */
+button:focus-visible, a:focus-visible, summary:focus-visible { outline: 4px solid transparent; background-color: var(--focus) !important; color: var(--focus-ink) !important; box-shadow: 0 -2px var(--focus), 0 4px var(--focus-ink) !important; }
+input:focus-visible, select:focus-visible, textarea:focus-visible { outline: 4px solid var(--focus); outline-offset: 0; box-shadow: inset 0 0 0 2px var(--focus-ink); }
 
-/* Top bar */
-.bar { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 5; background: var(--paper); border-bottom: 1px solid var(--line); }
-.bar-in { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 16px; padding-block: 10px; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
-.brand { display: flex; align-items: center; gap: 10px; font-family: var(--f-display); font-weight: 700; font-size: 18px; color: var(--accent); }
-.brand-mark { display: inline-grid; place-items: center; width: 32px; height: 24px; background: var(--accent); color: var(--on-accent); font-size: 12px; font-weight: 700; }
-.bar-mid { display: flex; align-items: center; gap: 8px; flex: 1 1 260px; min-width: 0; }
-.bar-mid select { flex: 1 1 auto; min-width: 0; max-width: 380px; }
-.bar-end { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
-.seg { display: inline-flex; border: 1px solid var(--line-strong); border-radius: 6px; overflow: hidden; }
-.seg button { border: 0; background: transparent; padding: 6px 14px; cursor: pointer; font-weight: 500; }
-.seg button[aria-pressed="true"] { background: var(--accent); color: var(--on-accent); }
-.btn { border: 1px solid var(--line-strong); background: var(--paper); border-radius: 6px; padding: 6px 12px; cursor: pointer; font-weight: 500; white-space: nowrap; }
-.btn:hover { border-color: var(--accent); color: var(--accent); }
-.btn.primary { background: var(--accent); border-color: var(--accent); color: var(--on-accent); font-weight: 700; }
-.btn.primary:hover { background: var(--accent-strong); border-color: var(--accent-strong); color: var(--on-accent); }
-.btn.small { padding: 3px 9px; font-size: 12.5px; }
-.btn.ghost { border-color: transparent; background: transparent; color: var(--muted); }
-.btn.ghost:hover { color: var(--gap); border-color: transparent; }
+/* Header band */
+.topbar { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 5; }
+@media (max-width: 700px) { .topbar { position: static; } }
+.masthead { background: var(--accent); color: var(--on-accent); }
+.mast-in { display: flex; flex-wrap: wrap; align-items: flex-end; gap: 8px 24px; padding-top: 14px; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+.brand { display: flex; align-items: center; gap: 12px; padding-bottom: 12px; font-family: var(--f-display); font-weight: 700; font-size: 21px; letter-spacing: -.01em; margin-right: auto; }
+.brand-mark { display: inline-grid; place-items: center; width: 40px; height: 28px; background: var(--on-accent); color: var(--accent); font-size: 15px; font-weight: 700; }
+.brand small { display: block; font-weight: 400; font-size: 14px; opacity: .9; letter-spacing: 0; }
+.tabs { display: flex; gap: 2px; }
+.tabs button { border: 0; background: transparent; color: var(--on-accent); padding: 10px 16px 12px; cursor: pointer; font-weight: 700; font-size: 16px; border-bottom: 4px solid transparent; }
+.tabs button:hover { text-decoration: underline; }
+.tabs button[aria-pressed="true"] { background: var(--paper); color: var(--ink); border-bottom-color: var(--paper); }
+
+/* Toolbar under the band */
+.toolbar { background: var(--paper); border-bottom: 1px solid var(--line); }
+.tool-in { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 16px; padding-block: 10px; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+.picker { display: flex; align-items: center; gap: 8px; flex: 1 1 280px; min-width: 0; }
+.picker label { font-weight: 700; white-space: nowrap; }
+.picker select { flex: 1 1 auto; min-width: 0; max-width: 420px; }
+.tool-end { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; }
+
+/* NHS buttons: square, bold, hard bottom shadow */
+.btn { position: relative; border: 0; border-radius: 4px; padding: 8px 14px; cursor: pointer; font-weight: 700; font-size: 16px; line-height: 1.25; white-space: nowrap; background: #4c6272; color: #ffffff; box-shadow: 0 4px 0 #263139; margin-bottom: 4px; }
+.btn:hover { background: #384853; }
+.btn:active { top: 4px; box-shadow: none; }
+.btn.primary { background: var(--good); box-shadow: 0 4px 0 var(--good-dark); }
+.btn.primary:hover { background: #00662f; }
+.btn.reverse { background: var(--paper); color: var(--ink); box-shadow: 0 4px 0 var(--muted); }
+.btn.reverse:hover { background: var(--accent-soft); }
+.btn.small { padding: 5px 10px; font-size: 14px; }
+.btn.ghost { background: transparent; color: var(--accent); box-shadow: none; margin: 0; padding: 4px 6px; text-decoration: underline; font-weight: 400; }
+.btn.ghost:hover { background: transparent; color: var(--accent-strong); text-decoration-thickness: 3px; }
 .btn:disabled { opacity: .5; cursor: default; }
-select, input[type="text"], input[type="number"], input[type="date"], textarea {
-  background: var(--field); border: 1px solid var(--line); border-radius: 5px; padding: 6px 8px; width: 100%; min-width: 0;
-}
-select:focus, input:focus, textarea:focus { border-color: var(--accent); outline: none; box-shadow: 0 0 0 2px var(--accent-soft); }
-textarea { resize: vertical; min-height: 64px; line-height: 1.45; }
-.status { font-size: 12.5px; color: var(--muted); font-variant-numeric: tabular-nums; }
-.status.warn { color: var(--warn); }
-.status.ok { color: var(--good); }
+.btn.danger { background: var(--gap); box-shadow: 0 4px 0 #6b140e; }
 
-.notice { border-left: 6px solid var(--accent) !important; display: flex; flex-wrap: wrap; gap: 8px 14px; align-items: center; justify-content: space-between; background: var(--accent-soft); border: 1px solid var(--line); border-radius: 8px; padding: 10px 14px; font-size: 13.5px; }
+select, input[type="text"], input[type="number"], input[type="date"], textarea {
+  background: var(--field); border: 2px solid var(--muted); border-radius: 0; padding: 6px 8px; width: 100%; min-width: 0; font-size: 16px; min-height: 40px;
+}
+textarea { resize: vertical; min-height: 72px; line-height: 1.45; }
+.status { font-size: 14px; color: var(--muted); font-variant-numeric: tabular-nums; }
+.status.warn { color: var(--ink); background: #fff4cc; padding: 2px 6px; }
+.status.ok { color: var(--good); font-weight: 700; }
+
+/* NHS inset text */
+.notice { display: flex; flex-wrap: wrap; gap: 8px 16px; align-items: center; justify-content: space-between; background: var(--paper); border-left: 10px solid var(--accent); padding: 14px 18px; }
+.notice p { margin: 0; max-width: 70ch; }
 
 /* Workspace */
-.wrap { padding-block: 18px 48px; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); display: grid; gap: 14px; }
-.work { display: grid; gap: 18px; align-items: start; }
+.wrap { padding-block: 24px 56px; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); display: grid; gap: 20px; }
+.work { display: grid; gap: 24px; align-items: start; }
 .work.editing { grid-template-columns: minmax(0, 1fr); }
 @media (min-width: 1180px) {
-  .work.editing { grid-template-columns: 440px minmax(0, 1fr); }
-  .work.editing .form { position: sticky; top: calc(env(safe-area-inset-top, 0px) + 70px); max-height: calc(100vh - 90px); overflow-y: auto; }
+  .work.editing { grid-template-columns: 460px minmax(0, 1fr); }
+  .work.editing .form { position: sticky; top: calc(env(safe-area-inset-top, 0px) + 140px); max-height: calc(100vh - 160px); overflow-y: auto; }
 }
 .preview-wrap { min-width: 0; container-type: inline-size; }
 
-/* Form */
-.form { background: var(--paper); border: 1px solid var(--line); border-radius: 10px; padding: 4px 0; min-width: 0; }
-.form details { border-bottom: 1px solid var(--line); }
-.form details:last-child { border-bottom: 0; }
-.form summary { display: flex; align-items: center; gap: 10px; padding: 12px 16px; cursor: pointer; list-style: none; font-family: var(--f-display); font-weight: 700; font-size: 15px; }
+/* Form: NHS expanders */
+.form { display: grid; gap: 8px; min-width: 0; }
+.form details { background: var(--paper); border: 1px solid var(--line); border-bottom-width: 4px; }
+.form summary { display: flex; align-items: center; gap: 12px; padding: 14px 16px; cursor: pointer; list-style: none; font-weight: 700; font-size: 18px; color: var(--accent); }
+.form summary .ttl { text-decoration: underline; text-underline-offset: 3px; }
+.form summary:hover .ttl { text-decoration-thickness: 3px; }
 .form summary::-webkit-details-marker { display: none; }
-.form summary::after { content: "+"; margin-left: auto; color: var(--accent); font-weight: 700; font-size: 18px; }
-.form details[open] summary::after { content: "–"; }
-.fbody { display: grid; gap: 12px; padding: 0 16px 16px; }
-.prompt { font-size: 13px; color: var(--muted); border-left: 2px solid var(--accent); padding-left: 10px; }
+.form summary::before { content: ""; width: 0; height: 0; border-style: solid; border-width: 7px 0 7px 12px; border-color: transparent transparent transparent currentColor; flex: none; }
+.form details[open] summary::before { border-width: 12px 7px 0 7px; border-color: currentColor transparent transparent transparent; }
+.form summary .tag { margin-left: auto; }
+.fbody { display: grid; gap: 16px; padding: 0 16px 20px 40px; }
+.prompt { margin: 0; color: var(--ink); border-left: 8px solid var(--line-strong); padding: 4px 0 4px 14px; }
 .field { display: grid; gap: 4px; min-width: 0; }
-.field > span { font-size: 12.5px; font-weight: 700; color: var(--ink); }
-.row2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 10px; }
-.tbl { display: grid; gap: 8px; }
-.trow { display: grid; gap: 6px; padding: 8px; border: 1px solid var(--line); border-radius: 6px; background: var(--field); position: relative; }
-.trow .tcols { display: grid; grid-template-columns: repeat(auto-fit, minmax(90px, 1fr)); gap: 6px; }
-.trow input, .trow select, .trow textarea { background: var(--paper); }
-.trow-head { display: flex; align-items: center; justify-content: space-between; font-size: 12px; font-weight: 700; color: var(--accent); }
-.check { display: flex; align-items: center; gap: 6px; font-size: 13px; }
-.check input { width: auto; }
-.hint { font-size: 12px; color: var(--muted); }
-.coach { display: grid; gap: 6px; padding: 10px 12px; border-radius: 6px; background: var(--field); border: 1px dashed var(--line-strong); font-size: 13px; }
-.coach b { font-size: 13px; color: var(--accent); }
-.coach ul { margin: 0; padding-left: 18px; display: grid; gap: 4px; }
-.coach li.ok { color: var(--good); list-style: "✓  "; }
-.coach li.flag { color: var(--warn); list-style: "!  "; }
-.num { font-family: var(--f-display); display: inline-grid; place-items: center; min-width: 26px; height: 26px; padding: 0 6px; background: var(--accent); color: var(--on-accent); font-size: 13px; font-weight: 700; }
-.tag { font-size: 11px; font-weight: 700; color: var(--accent); padding: 1px 0; }
+.field > span { font-size: 16px; font-weight: 700; color: var(--ink); }
+.row2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 12px; }
+.tbl { display: grid; gap: 10px; }
+.trow { display: grid; gap: 8px; padding: 12px; border: 1px solid var(--line); border-left: 4px solid var(--accent); background: var(--bg); }
+.trow .tcols { display: grid; grid-template-columns: repeat(auto-fit, minmax(100px, 1fr)); gap: 8px; }
+.trow-head { display: flex; align-items: center; justify-content: space-between; font-size: 14px; font-weight: 700; color: var(--ink); }
+.check { display: flex; align-items: center; gap: 8px; font-size: 16px; }
+.check input { width: 24px; height: 24px; accent-color: var(--accent); }
+.hint { font-size: 14px; color: var(--muted); }
+.fbody .hint { margin: -8px 0 0; }
+/* Coach notes as an NHS warning callout */
+.coach { position: relative; margin-top: 10px; padding: 26px 16px 12px; background: #fff9c4; color: #212b32; border: 1px solid #ffeb3b33; font-size: 15px; }
+.coach:empty { display: none; }
+.coach b { position: absolute; top: -12px; left: -1px; background: var(--warn); color: #212b32; padding: 2px 10px; font-size: 15px; }
+.coach ul { margin: 0; padding-left: 20px; display: grid; gap: 4px; }
+.coach li.ok { list-style: "✓  "; }
+.coach li.flag { list-style: "!  "; font-weight: 700; }
+.num { display: inline-grid; place-items: center; min-width: 28px; height: 28px; padding: 0 6px; background: var(--accent); color: var(--on-accent); font-size: 15px; font-weight: 700; flex: none; }
+/* NHS tags */
+.tag { display: inline-block; font-size: 13px; font-weight: 700; line-height: 1.2; padding: 3px 7px; border: 1px solid currentColor; color: var(--accent-strong); background: var(--tint); white-space: nowrap; }
+.tag.do { color: #00401e; background: #cce5d8; }
+.tag.check { color: #4c4000; background: #fff9c4; }
+.tag.learn { color: #330072; background: #e6dcef; }
+.form summary .num { font-size: 15px; }
 
-/* The A3 sheet */
-.sheet { background: var(--paper); color: var(--ink); border: 1px solid var(--line); box-shadow: var(--shadow); padding: 20px; display: grid; gap: 14px; min-width: 0; }
-.tblock { display: grid; grid-template-columns: minmax(0, 1fr); border-bottom: 1.5px solid var(--ink); }
-.tblock-title { padding: 4px 0 14px; display: grid; gap: 4px; min-width: 0; }
-.tblock-title small { font-size: 13px; font-weight: 700; color: var(--accent); }
-.tblock-title h1 { margin: 0; font-family: var(--f-display); font-weight: 700; font-size: clamp(22px, 3.6cqi, 36px); line-height: 1.1; letter-spacing: -.01em; text-wrap: balance; overflow-wrap: anywhere; }
-.tblock-meta { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); align-content: start; background: var(--accent-soft); border-top: 6px solid var(--accent); margin-bottom: 14px; }
-.meta { padding: 7px 12px; min-width: 0; }
-.meta small { display: block; font-size: 11px; font-weight: 700; color: var(--accent); }
-.meta div { overflow-wrap: anywhere; font-size: 13.5px; }
-.halves { display: grid; gap: 14px; grid-template-columns: minmax(0, 1fr); }
-.half { display: grid; gap: 14px; align-content: start; min-width: 0; }
-.half-label { display: flex; align-items: center; gap: 8px; font-size: 12px; font-weight: 700; color: var(--accent); }
-.half-label::after { content: ""; flex: 1; height: 1px; background: var(--line); }
-.box { border: 1px solid var(--line); min-width: 0; display: grid; align-content: start; }
-.box-h { display: flex; align-items: center; gap: 10px; padding: 0 10px 0 0; background: var(--accent-soft); }
-.box-h .num { min-width: 34px; height: 34px; font-size: 15px; }
-.box-h h2 { margin: 0; font-family: var(--f-display); font-size: 16px; font-weight: 700; color: var(--ink); }
+/* The A3 sheet: a ruled engineering drawing */
+.sheet { background: var(--paper); color: var(--ink); border: 1px solid var(--line-strong); padding: 24px; display: grid; gap: 18px; min-width: 0; }
+.tblock { display: grid; grid-template-columns: minmax(0, 1fr); border: 2px solid var(--rule); }
+.tblock-title { padding: 14px 16px; display: grid; gap: 4px; min-width: 0; }
+.tblock-title small { font-size: 14px; font-weight: 700; color: var(--accent); }
+.tblock-title h1 { margin: 0; font-family: var(--f-display); font-weight: 700; font-size: clamp(24px, 3.8cqi, 40px); line-height: 1.1; letter-spacing: -.015em; text-wrap: balance; overflow-wrap: anywhere; }
+.tblock-meta { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); border-top: 2px solid var(--rule); }
+.meta { padding: 6px 12px; min-width: 0; border-right: 1px solid var(--rule); border-bottom: 1px solid var(--rule); }
+.meta:nth-child(2n) { border-right: 0; }
+.meta:nth-last-child(-n+2) { border-bottom: 0; }
+.meta small { display: block; font-size: 12px; color: var(--muted); }
+.meta div { overflow-wrap: anywhere; font-size: 15px; font-weight: 700; }
+.halves { display: grid; gap: 18px; grid-template-columns: minmax(0, 1fr); }
+.half { display: grid; gap: 18px; align-content: start; min-width: 0; }
+.half-label { display: flex; align-items: baseline; gap: 10px; font-size: 15px; color: var(--muted); border-bottom: 2px solid var(--rule); padding-bottom: 4px; }
+.half-label b { color: var(--ink); font-size: 17px; }
+.box { border: 1px solid var(--line-strong); min-width: 0; display: grid; align-content: start; background: var(--paper); }
+.box-h { display: flex; align-items: center; gap: 10px; padding: 0 10px 0 0; border-bottom: 1px solid var(--line-strong); }
+.box-h .num { min-width: 36px; height: 36px; font-size: 17px; }
+.box-h h2 { margin: 0; font-family: var(--f-display); font-size: 18px; font-weight: 700; color: var(--ink); }
 .box-h .tag { margin-left: auto; }
-.box-h .cbtn { border: 1px solid var(--line-strong); background: var(--paper); border-radius: 4px; font-size: 11.5px; padding: 1px 7px; cursor: pointer; color: var(--muted); }
-.box-h .cbtn:hover { color: var(--accent); border-color: var(--accent); }
-.box-b { padding: 10px 12px; display: grid; gap: 10px; min-width: 0; container-type: inline-size; }
+.box-h .cbtn { border: 0; background: transparent; font-size: 14px; padding: 2px 4px; cursor: pointer; color: var(--accent); text-decoration: underline; }
+.box-b { padding: 12px 14px 14px; display: grid; gap: 12px; min-width: 0; container-type: inline-size; }
 .box-b p { margin: 0; white-space: pre-wrap; overflow-wrap: anywhere; }
-.lbl { font-size: 12px; font-weight: 700; color: var(--accent); display: block; margin-bottom: 2px; }
-.ps { border-left: 4px solid var(--gap); padding: 4px 0 4px 10px; font-weight: 700; }
-.goal-st { border-left: 4px solid var(--good); padding: 4px 0 4px 10px; font-weight: 700; }
-.empty { color: var(--muted); font-style: italic; font-size: 13px; }
-.kpi { display: flex; flex-wrap: wrap; gap: 8px 18px; align-items: baseline; }
-.kpi .big { font-family: var(--f-display); font-weight: 700; font-size: 26px; line-height: 1; font-variant-numeric: tabular-nums; }
-.kpi .unit { font-size: 13px; color: var(--ink); }
+.lbl { font-size: 13px; font-weight: 700; color: var(--muted); display: block; margin-bottom: 2px; }
+.ps { border-left: 6px solid var(--gap); padding: 2px 0 2px 12px; font-weight: 700; }
+.goal-st { border-left: 6px solid var(--good); padding: 2px 0 2px 12px; font-weight: 700; }
+.empty { color: var(--muted); font-style: italic; font-size: 15px; }
+.kpi { display: flex; flex-wrap: wrap; gap: 8px 24px; align-items: baseline; }
+.kpi .big { font-family: var(--f-display); font-weight: 700; font-size: 30px; line-height: 1; font-variant-numeric: tabular-nums; letter-spacing: -.02em; }
+.kpi .unit { font-size: 14px; color: var(--muted); }
 .chart { width: 100%; height: auto; display: block; overflow: visible; }
 .chart text { font-family: var(--f-body); font-size: 11px; fill: var(--ink); }
 .chart .t-ink { fill: var(--ink); }
@@ -167,71 +206,81 @@ textarea { resize: vertical; min-height: 64px; line-height: 1.45; }
 .chart .t-good { fill: var(--ink); font-weight: 700; }
 .chart .t-acc { fill: var(--accent); }
 .chart .grid { stroke: var(--line); stroke-width: 1; fill: none; }
-.chart .axis { stroke: var(--line-strong); stroke-width: 1; fill: none; }
-.chart .std { stroke: var(--good); stroke-width: 1.5; stroke-dasharray: 5 4; fill: none; }
-.chart .tgt { stroke: var(--good); stroke-width: 1.5; stroke-dasharray: 5 4; fill: none; }
-.chart .base { stroke: var(--line-strong); stroke-width: 1; stroke-dasharray: 2 3; fill: none; }
-.chart .act { stroke: var(--accent); stroke-width: 2.2; fill: none; }
-.chart .pred { stroke: var(--muted); stroke-width: 1.6; stroke-dasharray: 6 4; fill: none; }
+.chart .axis { stroke: var(--rule); stroke-width: 1; fill: none; }
+.chart .std { stroke: var(--good); stroke-width: 1.8; stroke-dasharray: 6 4; fill: none; }
+.chart .tgt { stroke: var(--good); stroke-width: 1.8; stroke-dasharray: 6 4; fill: none; }
+.chart .base { stroke: var(--line-strong); stroke-width: 1.2; stroke-dasharray: 2 3; fill: none; }
+.chart .act { stroke: var(--accent); stroke-width: 2.6; fill: none; }
+.chart .pred { stroke: var(--muted); stroke-width: 1.8; stroke-dasharray: 6 4; fill: none; }
 .chart .dot { fill: var(--accent); stroke: var(--paper); stroke-width: 1.5; }
 .chart .dot-end { fill: var(--accent); stroke: var(--paper); stroke-width: 2; }
 .chart .gapfill { fill: var(--gap-soft); stroke: none; }
 .chart .bone { stroke: var(--line-strong); stroke-width: 1.4; fill: none; }
 .chart .spine { stroke: var(--ink); stroke-width: 2; fill: none; }
 .chart .head { fill: var(--gap-soft); stroke: var(--gap); stroke-width: 1.4; }
-.chart .quad { fill: var(--field); stroke: var(--line); stroke-width: 1; }
-.chart .quad-win { fill: var(--accent-soft); stroke: var(--line); stroke-width: 1; }
+.chart .quad { fill: var(--paper); stroke: var(--line); stroke-width: 1; }
+.chart .quad-win { fill: var(--tint); stroke: var(--line); stroke-width: 1; }
 .chart .pt { fill: var(--paper); stroke: var(--accent); stroke-width: 2; }
 .chart .pt-on { fill: var(--accent); stroke: var(--accent); stroke-width: 2; }
 .chart .pt-label { font-size: 11px; font-weight: 700; }
-.chart .b-track { fill: var(--field); stroke: var(--line); }
+.chart .b-track { fill: var(--accent-soft); stroke: var(--line); }
 .chart .b-band { fill: var(--gap-soft); }
 .chart .b-bar { fill: var(--accent); }
 .chart .b-tgt { stroke: var(--good); stroke-width: 3; }
 .chart .b-base { stroke: var(--ink); stroke-width: 2; }
-.chart .g-row { fill: var(--field); }
+.chart .g-row { fill: var(--accent-soft); }
 .chart .g-done { fill: var(--good); }
 .chart .g-prog { fill: var(--accent); }
 .chart .g-not { fill: var(--paper); stroke: var(--line-strong); stroke-width: 1.2; }
 .chart .g-late { fill: var(--gap); }
 .chart .today { stroke: var(--gap); stroke-width: 1.2; stroke-dasharray: 3 3; }
-.legend { display: flex; flex-wrap: wrap; gap: 4px 14px; font-size: 12px; color: var(--ink); }
-.legend i { display: inline-block; width: 16px; height: 0; border-top: 2px solid var(--accent); vertical-align: middle; margin-right: 5px; }
+.legend { display: flex; flex-wrap: wrap; gap: 4px 16px; font-size: 13px; color: var(--ink); }
+.legend i { display: inline-block; width: 18px; height: 0; border-top: 3px solid var(--accent); vertical-align: middle; margin-right: 6px; }
 .legend i.std { border-top: 2px dashed var(--good); }
 .legend i.pred { border-top: 2px dashed var(--muted); }
-.legend i.gapk { height: 9px; border: 0; background: var(--gap-soft); }
-.legend i.sq { width: 10px; height: 10px; border: 0; }
+.legend i.gapk { height: 10px; border: 0; background: var(--gap-soft); }
+.legend i.sq { width: 11px; height: 11px; border: 0; }
 .whys { display: grid; gap: 0; }
-.why { display: grid; grid-template-columns: 52px minmax(0, 1fr); border: 1px solid var(--line); border-top: 0; }
+.why { display: grid; grid-template-columns: 58px minmax(0, 1fr); border-bottom: 1px solid var(--line); }
 .why:first-child { border-top: 1px solid var(--line); }
-.why .wn { display: grid; place-items: center; font-weight: 700; font-size: 12px; color: var(--accent); background: var(--accent-soft); border-right: 1px solid var(--line); }
-.why .wt { padding: 5px 9px; font-size: 13px; overflow-wrap: anywhere; }
-.why .we { display: block; font-size: 12px; color: var(--accent); }
-.why.root .wn { background: var(--accent); color: var(--on-accent); }
-.rc { border: 2px solid var(--accent); padding: 6px 10px; font-weight: 700; overflow-wrap: anywhere; }
-.cm-table, .res-table { width: 100%; border-collapse: collapse; font-size: 12.5px; }
-.cm-table th, .cm-table td, .res-table th, .res-table td { border: 1px solid var(--line); padding: 4px 7px; text-align: left; vertical-align: top; overflow-wrap: break-word; }
+.why .wn { display: grid; place-items: center; font-weight: 700; font-size: 13px; color: var(--accent-strong); background: var(--tint); }
+.why .wt { padding: 6px 10px; font-size: 15px; overflow-wrap: anywhere; }
+.why .we { display: block; font-size: 13px; color: var(--muted); }
+.why.root .wn { background: var(--accent-strong); color: #ffffff; }
+.rc { border: 2px solid var(--rule); padding: 8px 12px; font-weight: 700; overflow-wrap: anywhere; }
+/* NHS tables: rules between rows, no boxes */
+.cm-table, .res-table { width: 100%; border-collapse: collapse; font-size: 14px; }
+.cm-table th, .cm-table td, .res-table th, .res-table td { border-bottom: 1px solid var(--line); padding: 6px 8px 6px 0; text-align: left; vertical-align: top; overflow-wrap: break-word; }
 .cm-table { min-width: 340px; }
 .res-table { min-width: 420px; }
 .scroll-x > .chart { min-width: 380px; }
-.cm-table th, .res-table th { font-size: 11.5px; color: var(--ink); font-weight: 700; background: var(--accent-soft); }
-.cm-table td.n { font-weight: 700; color: var(--accent); width: 26px; text-align: center; }
+.cm-table th, .res-table th { font-size: 13px; color: var(--ink); font-weight: 700; border-bottom: 2px solid var(--rule); }
+.cm-table td.n { font-weight: 700; color: var(--accent); width: 26px; }
 .cm-table tr.off td { color: var(--muted); }
-.pill { display: inline-block; font-size: 11px; font-weight: 700; padding: 0 7px; border-radius: 9px; border: 1.5px solid var(--line-strong); white-space: nowrap; color: var(--ink); }
-.pill.cont { border-color: var(--warn); }
-.pill.perm { border-color: var(--accent); }
-.pill.done { border-color: var(--good); }
-.pill.prog { border-color: var(--accent); }
-.pill.late { border-color: var(--gap); }
-.two { display: grid; gap: 10px; grid-template-columns: minmax(0, 1fr); }
+.pill { display: inline-block; font-size: 12px; font-weight: 700; padding: 1px 6px; border: 1px solid currentColor; white-space: nowrap; color: var(--accent-strong); background: var(--tint); }
+.pill.cont { color: #4c4000; background: #fff9c4; }
+.pill.perm { color: var(--accent-strong); background: var(--tint); }
+.pill.done { color: #00401e; background: #cce5d8; }
+.pill.prog { color: var(--accent-strong); background: var(--tint); }
+.pill.late { color: #6b140e; background: #f7d4d1; }
+.two { display: grid; gap: 12px; grid-template-columns: minmax(0, 1fr); }
 .scroll-x { overflow-x: auto; min-width: 0; }
-.foot { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 6px; font-size: 12px; font-weight: 700; color: var(--ink); border-top: 1.5px solid var(--ink); padding-top: 8px; }
-.foot span:last-child { color: var(--accent); }
+.foot { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 6px; font-size: 13px; color: var(--muted); border-top: 2px solid var(--rule); padding-top: 8px; }
+.foot b { color: var(--ink); }
+
+/* Section 8: Insights */
+.insight-head { margin: 0; background: var(--accent-strong); color: #ffffff; padding: 14px 16px; font-size: 20px; line-height: 1.3; font-weight: 700; text-wrap: pretty; }
+.stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(118px, 1fr)); gap: 0; border-top: 2px solid var(--rule); border-bottom: 1px solid var(--line); }
+.stat { padding: 8px 10px 10px; border-right: 1px solid var(--line); min-width: 0; }
+.stat:last-child { border-right: 0; }
+.stat .v { display: block; white-space: nowrap; font-size: 23px; font-weight: 700; line-height: 1.1; letter-spacing: -.02em; font-variant-numeric: tabular-nums; }
+.stat .k { display: block; font-size: 12.5px; color: var(--muted); }
+.meter { height: 6px; background: var(--accent-soft); margin-top: 6px; }
+.meter i { display: block; height: 100%; background: var(--good); }
 
 @container (min-width: 620px) {
-  .tblock { grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr); }
-  .tblock-meta { margin: 0 0 14px 0; }
-  .tblock-title { padding-right: 20px; }
+  .tblock { grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr); }
+  .tblock-meta { border-top: 0; border-left: 2px solid var(--rule); }
 }
 @container (min-width: 900px) {
   .halves { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
@@ -240,48 +289,105 @@ textarea { resize: vertical; min-height: 64px; line-height: 1.45; }
   .two { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
   .two.cm { grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr); }
 }
-/* Fixed A3-landscape layout used for the PDF capture */
-.sheet.export { width: 1587px; box-shadow: none; border: 0; padding: 26px; }
-.sheet.export .tblock { grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr); }
-.sheet.export .tblock-meta { margin: 0 0 14px 0; }
-.sheet.export .halves { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
-.sheet.export .two { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
-.sheet.export .two.cm { grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr); }
-.sheet.export .tblock-title h1 { font-size: 40px; }
-.sheet.export .cbtn { display: none; }
-.capture-host { position: fixed; left: -20000px; top: 0; }
 
-/* Confirm strip (in-page, the viewer has no dialogs) */
-.confirm { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; padding: 8px 12px; border: 1px solid var(--gap); border-radius: 6px; font-size: 13px; }
-.toast { position: fixed; bottom: calc(16px + env(safe-area-inset-bottom, 0px)); left: 50%; transform: translateX(-50%); background: var(--ink); color: var(--paper); padding: 8px 14px; border-radius: 6px; font-size: 13px; z-index: 20; max-width: calc(100vw - 32px); }
+/* Poster: a fixed A3 landscape canvas (420 x 297 mm at 96 dpi) */
+.poster-stage { min-width: 0; }
+.poster-note { margin: 0 0 12px; color: var(--muted); font-size: 15px; }
+.poster-frame { position: relative; overflow: hidden; box-shadow: 0 0 0 1px var(--line-strong); background: #ffffff; }
+.poster-frame > .poster { position: absolute; left: 0; top: 0; transform-origin: 0 0; }
+.poster { width: 1587px; height: 1123px; background: var(--paper); color: var(--ink); display: grid; grid-template-rows: auto minmax(0, 1fr) auto; font-size: calc(var(--pfs, 14) * 1px); line-height: 1.38; }
+.p-banner { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.08fr); gap: 0; background: var(--accent); color: #ffffff; }
+.p-title { display: flex; flex-direction: column; justify-content: space-between; gap: 14px; padding: 20px 28px 16px 24px; min-width: 0; }
+.p-banner small { display: block; font-size: 15px; font-weight: 700; opacity: .92; margin-bottom: 6px; }
+.p-banner h1 { margin: 0; font-size: 46px; line-height: 1.04; letter-spacing: -.02em; font-weight: 700; text-wrap: balance; }
+.p-meta { display: flex; flex-wrap: wrap; gap: 6px 26px; font-size: 14px; border-top: 1px solid rgba(255,255,255,.45); padding-top: 10px; }
+.p-meta span { display: block; opacity: .85; font-size: 12px; }
+.p-meta b { display: block; font-size: 15px; }
+.p-body { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.12fr) minmax(0, 1fr); gap: 16px; padding: 14px 20px 10px; min-height: 0; }
+.pcol { display: flex; flex-direction: column; gap: 12px; min-height: 0; overflow: hidden; }
+.pcol > .box:last-child { flex: 1 1 auto; }
+.poster .box-h { padding-right: 8px; }
+.poster .box-h .num { min-width: 30px; height: 30px; font-size: 15px; }
+.poster .box-h h2 { font-size: 1.2em; }
+.poster .box-h .tag { font-size: 11px; padding: 2px 6px; }
+.poster .box-b { padding: 8px 10px 10px; gap: 8px; }
+.poster .lbl { font-size: .82em; margin-bottom: 0; }
+.poster .kpi .big { font-size: 2em; }
+.poster .kpi .unit { font-size: .85em; }
+.poster .why .wt { font-size: .95em; padding: 3px 8px; }
+.poster .why .we { font-size: .85em; }
+.poster .why { grid-template-columns: 52px minmax(0, 1fr); }
+.poster .cm-table, .poster .res-table { font-size: .88em; min-width: 0; }
+.poster .cm-table th { font-size: .85em; }
+.poster .legend { font-size: .82em; }
+.poster .chart { max-height: calc(var(--pch, 260) * 1px); }
+.poster .scroll-x { overflow: visible; }
+.poster .scroll-x > .chart { min-width: 0; }
+.poster .two { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
+.poster .two.cm { grid-template-columns: minmax(0, 1.55fr) minmax(0, 1fr); }
+.poster .cbtn { display: none; }
+.poster .chart text { font-size: 12px; }
+.poster .hint, .poster .empty { font-size: .85em; }
+.poster .ps, .poster .goal-st { border-left-width: 5px; padding-left: 10px; }
+.poster .rc { padding: 6px 10px; }
+.ins-list { display: grid; gap: 8px; }
+.p-key .k-empty { font-weight: 400; font-style: italic; opacity: .85; }
+.p-key { background: var(--accent-strong); color: #ffffff; padding: 18px 24px 14px; display: grid; gap: 10px; align-content: start; }
+.p-key .k-label { font-size: 13px; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; opacity: .85; }
+.p-key .k-text { margin: 0; font-size: 25px; line-height: 1.2; font-weight: 700; letter-spacing: -.01em; text-wrap: pretty; }
+.p-key .stats { border-top: 1px solid rgba(255,255,255,.45); border-bottom: 0; }
+.p-key .stat { border-right-color: rgba(255,255,255,.3); padding: 8px 10px 0 0; }
+.p-key .stat + .stat { padding-left: 10px; }
+.p-key .stat .v { font-size: 24px; }
+.p-key .stat .k { color: #ffffff; opacity: .85; }
+.p-key .meter { background: rgba(255,255,255,.25); }
+.p-key .meter i { background: #ffffff; }
+.p-foot { display: flex; justify-content: space-between; gap: 16px; padding: 8px 24px 12px; font-size: 12px; color: var(--muted); border-top: 2px solid var(--rule); margin: 0 20px; padding-inline: 0; }
+.p-foot b { color: var(--ink); }
+
+/* In-page confirm and toast (the viewer shows no dialogs) */
+.confirm { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; padding: 12px 14px; border-left: 6px solid var(--gap); background: var(--paper); font-size: 15px; }
+.toast { position: fixed; bottom: calc(16px + env(safe-area-inset-bottom, 0px)); left: 50%; transform: translateX(-50%); background: var(--ink); color: var(--paper); padding: 10px 16px; font-size: 15px; z-index: 20; max-width: calc(100vw - 32px); }
+.capture-host { position: fixed; left: -20000px; top: 0; }
 @media (prefers-reduced-motion: no-preference) { .toast { transition: opacity .2s; } }
 </style>
 
-<header class="bar">
-  <div class="bar-in">
-    <div class="brand"><span class="brand-mark">A3</span>A3 Workbench</div>
-    <div class="bar-mid">
-      <label for="a3pick" class="hint" style="white-space:nowrap">A3</label>
-      <select id="a3pick" aria-label="Choose an A3"></select>
-      <button class="btn small" id="newA3" hidden>New A3</button>
-    </div>
-    <div class="bar-end">
-      <span class="status" id="status" aria-live="polite"></span>
-      <div class="seg" role="group" aria-label="Mode" id="modeSeg" hidden>
-        <button id="modeEdit" aria-pressed="false">Edit</button>
-        <button id="modePresent" aria-pressed="true">Present</button>
-      </div>
-      <button class="btn primary" id="saveBtn" hidden>Save</button>
-      <button class="btn" id="pdfBtn">Download PDF</button>
-    </div>
+<div class="topbar">
+<header class="masthead">
+  <div class="mast-in">
+    <div class="brand"><span class="brand-mark">A3</span><span>A3 Workbench<small>Problem solving on one page</small></span></div>
+    <nav class="tabs" role="group" aria-label="View">
+      <button type="button" id="modeEdit" aria-pressed="false" hidden>Edit</button>
+      <button type="button" id="modePresent" aria-pressed="true">A3 sheet</button>
+      <button type="button" id="modePoster" aria-pressed="false">Poster</button>
+    </nav>
   </div>
 </header>
+<div class="toolbar">
+  <div class="tool-in">
+    <div class="picker">
+      <label for="a3pick">A3</label>
+      <select id="a3pick"></select>
+      <button type="button" class="btn small reverse" id="newA3" hidden>New A3</button>
+    </div>
+    <div class="tool-end">
+      <span class="status" id="status" aria-live="polite"></span>
+      <button type="button" class="btn primary" id="saveBtn" hidden>Save</button>
+      <button type="button" class="btn" id="pdfBtn">Download PDF</button>
+    </div>
+  </div>
+</div>
+</div>
 
 <main class="wrap">
   <div id="notices"></div>
   <div class="work" id="work">
     <form class="form" id="form" hidden></form>
-    <div class="preview-wrap"><article class="sheet" id="sheet"></article></div>
+    <div class="preview-wrap" id="sheetWrap"><article class="sheet" id="sheet"></article></div>
+    <div class="poster-stage" id="posterStage" hidden>
+      <p class="poster-note">This is the page <b>Download PDF</b> produces: one A3 landscape sheet, filled edge to edge.</p>
+      <div class="poster-frame" id="posterFrame"></div>
+    </div>
   </div>
 </main>
 <div id="captureHost" class="capture-host" aria-hidden="true"></div>
@@ -317,13 +423,14 @@ function blankA3() {
     countermeasures: [{ name: "", cause: "", kind: "Permanent", effect: 3, effort: 3, chosen: true }],
     tasks: [{ task: "", owner: "", start: "", end: "", status: "Not started" }],
     results: [{ label: "", predicted: null, actual: null }],
-    followup: { checkPlan: "", checkDate: "", standardize: "", yokoten: "", lessons: "" }
+    followup: { checkPlan: "", checkDate: "", standardize: "", yokoten: "", lessons: "" },
+    insights: { headline: "", surprised: "", differently: "", nextStep: "" }
   };
 }
 function normalize(a) { // fill any missing fields so older data keeps working
   const b = blankA3();
   const out = Object.assign({}, b, a || {});
-  for (const k of ["metric", "goal", "fishbone", "followup"]) out[k] = Object.assign({}, b[k], (a || {})[k] || {});
+  for (const k of ["metric", "goal", "fishbone", "followup", "insights"]) out[k] = Object.assign({}, b[k], (a || {})[k] || {});
   for (const k of ["current", "whys", "countermeasures", "tasks", "results"]) if (!Array.isArray(out[k])) out[k] = b[k];
   return out;
 }
@@ -348,8 +455,11 @@ const SECTIONS = [
   { n: 4, key: "rca", title: "Root cause analysis", phase: "Plan", prompt: "Why does the gap exist? Ask why several times, check each answer against facts, and blame conditions, not people." },
   { n: 5, key: "cm", title: "Countermeasures", phase: "Plan", prompt: "For each root cause, what could you change? Compare two or three options on effect and effort. Keep containment separate from permanent fixes." },
   { n: 6, key: "plan", title: "Implementation plan", phase: "Do", prompt: "What needs to happen, who owns each step, and when will it be done? Every task needs one owner and a date." },
-  { n: 7, key: "follow", title: "Follow-up", phase: "Check · Act", prompt: "How will you know it worked, and when will you check? Compare predicted and actual on the goal metric. How will you sustain and share it?" }
+  { n: 7, key: "follow", title: "Follow-up", phase: "Check · Act", prompt: "How will you know it worked, and when will you check? Compare predicted and actual on the goal metric. How will you sustain and share it?" },
+  { n: 8, key: "insights", title: "Insights", phase: "Learn", extra: true, prompt: "What is the one thing a colleague should take away from this A3? Write it as a sentence they could repeat. Then note what surprised you, what you would do differently and what happens next." }
 ];
+const phaseClass = (p) => p === "Do" ? "do" : p === "Check · Act" ? "check" : p === "Learn" ? "learn" : "";
+const CHECK_KEYS = ["header", "background", "current", "goal", "rca", "cm", "plan", "follow", "insights"];
 
 /* ---------- coaching checks (common mistakes from the knowledge base) ---------- */
 const SOLUTION_WORDS = /\b(implement|buy|install|purchase|new system|deploy|introduce|roll out|rollout)\b/i;
@@ -417,6 +527,14 @@ function checks(a, key) {
     if (!f.standardize.trim()) flag("Say how the change will be standardized.");
     if (!f.yokoten.trim()) flag("Name who else should learn from this (yokoten).");
     if (f.checkDate && f.standardize.trim() && f.yokoten.trim()) ok("Check, sustain and share are planned.");
+  }
+  if (key === "insights") {
+    const n = a.insights;
+    if (!n.headline.trim()) flag("Write the one key insight as a full sentence.");
+    else if (n.headline.trim().split(/\s+/).length < 6) flag("The key insight is very short. Say what you learned, not just the topic.");
+    else if (n.headline.length > 220) flag("Keep the key insight under about 30 words, so it reads at a glance.");
+    else ok("Key insight reads as a sentence.");
+    if (!n.nextStep.trim()) flag("Name the next step and who owns it.");
   }
   return out;
 }
@@ -613,27 +731,72 @@ function gantt(tasks) {
   return s;
 }
 
+/* ---------- section 8: figures the page works out ---------- */
+function computeInsights(a) {
+  const better = a.metric.better;
+  const base = num(a.goal.baseline), tgt = num(a.goal.target);
+  const curVals = a.current.map(p => num(p.value)).filter(v => v !== null);
+  const actVals = a.results.map(r => num(r.actual)).filter(v => v !== null);
+  let latest = null, latestFrom = "";
+  const lastRes = [...a.results].reverse().find(r => num(r.actual) !== null);
+  if (lastRes) { latest = num(lastRes.actual); latestFrom = lastRes.label; }
+  else if (num(a.goal.current) !== null) { latest = num(a.goal.current); latestFrom = "goal"; }
+  else if (curVals.length) { latest = curVals[curVals.length - 1]; latestFrom = "current"; }
+  let gap = null;
+  if (base !== null && tgt !== null && latest !== null && base !== tgt) gap = (base - latest) / (base - tgt);
+  // trend: the current-condition run continued by actual results, last three points
+  const run = curVals.concat(actVals).slice(-3);
+  let trend = null;
+  if (run.length >= 2) {
+    const d = run[run.length - 1] - run[0];
+    const span = Math.max(...curVals.concat(actVals)) - Math.min(...curVals.concat(actVals)) || 1;
+    if (Math.abs(d) < span * 0.1) trend = { word: "Flat", arrow: "→", good: null };
+    else {
+      const up = d > 0;
+      const good = better === "higher" ? up : !up;
+      trend = { word: good ? "Improving" : "Worsening", arrow: up ? "↑" : "↓", good };
+    }
+  }
+  const t = a.tasks.filter(x => x.task.trim());
+  const now = new Date(); now.setHours(0, 0, 0, 0);
+  const done = t.filter(x => x.status === "Done").length;
+  const overdue = t.filter(x => x.status !== "Done" && parseDate(x.end) && parseDate(x.end) < now).length;
+  const clear = CHECK_KEYS.filter(k => !checks(a, k).some(c => c[0] === "flag")).length;
+  return { latest, latestFrom, gap, trend, tasks: t.length, done, overdue, clear, of: CHECK_KEYS.length };
+}
+function statTiles(ins, unit) {
+  const pct = ins.gap === null ? null : Math.round(ins.gap * 100);
+  const tiles = [];
+  tiles.push(`<div class="stat"><span class="v">${pct === null ? "–" : pct + "%"}</span><span class="k">of the gap closed${ins.latest !== null ? ` (now ${esc(fmt(ins.latest))}${unit ? " " + esc(unit) : ""})` : ""}</span>${pct === null ? "" : `<div class="meter" aria-hidden="true"><i style="width:${Math.max(0, Math.min(100, pct))}%"></i></div>`}</div>`);
+  tiles.push(`<div class="stat"><span class="v">${ins.trend ? esc(ins.trend.arrow + " " + ins.trend.word) : "–"}</span><span class="k">trend, last three points</span></div>`);
+  tiles.push(`<div class="stat"><span class="v">${ins.tasks ? ins.done + " of " + ins.tasks : "–"}</span><span class="k">tasks done${ins.overdue ? `, <b>${ins.overdue} overdue</b>` : ins.tasks ? ", none overdue" : ""}</span></div>`);
+  tiles.push(`<div class="stat"><span class="v">${ins.clear} of ${ins.of}</span><span class="k">coach checks clear</span></div>`);
+  return `<div class="stats">${tiles.join("")}</div>`;
+}
+
 /* ---------- sheet rendering ---------- */
 function box(sec, inner) {
   return `<section class="box" data-sec="${sec.key}">
-    <div class="box-h"><span class="num">${sec.n}</span><h2>${esc(sec.title)}</h2><span class="tag">${esc(sec.phase)}</span>${comments ? `<button type="button" class="cbtn" data-comment="${sec.key}" title="Comment on this section">Comment</button>` : ""}</div>
+    <div class="box-h"><span class="num">${sec.n}</span><h2>${esc(sec.title)}</h2><span class="tag ${phaseClass(sec.phase)}">${esc(sec.phase)}</span>${comments ? `<button type="button" class="cbtn" data-comment="${sec.key}" title="Comment on this section">Comment</button>` : ""}</div>
     <div class="box-b">${inner}</div></section>`;
 }
 const para = (t, cls = "") => t && t.trim() ? `<p class="${cls}">${esc(t)}</p>` : "";
 const emptyNote = (t) => `<p class="empty">${esc(t)}</p>`;
+const S = Object.fromEntries(SECTIONS.map(s => [s.key, s]));
 
-function renderSheet(a, target) {
-  const S = Object.fromEntries(SECTIONS.map(s => [s.key, s]));
+// The body of each box, shared by the A3 sheet and the poster.
+function sectionBodies(a, poster = false) {
   const unit = a.metric.unit || "";
   const better = a.metric.better;
   const std = num(a.metric.standard);
   const cur = a.current.filter(p => p.label !== "" || num(p.value) !== null);
   const lastVal = [...cur].reverse().find(p => num(p.value) !== null);
   const gapNow = lastVal && std !== null ? num(lastVal.value) - std : null;
+  const B = {};
 
   // 1 Background
-  let b1 = para(a.background) || emptyNote("Why this problem, why now, and why it matters.");
-  if (a.strategicLink) b1 += `<div><span class="lbl">Business link</span><p>${esc(a.strategicLink)}</p></div>`;
+  B.background = para(a.background) || emptyNote("Why this problem, why now, and why it matters.");
+  if (a.strategicLink) B.background += `<div><span class="lbl">Business link</span><p>${esc(a.strategicLink)}</p></div>`;
 
   // 2 Current condition
   let b2 = "";
@@ -644,14 +807,14 @@ function renderSheet(a, target) {
     if (std !== null) b2 += `<div><span class="lbl">Standard</span><span class="big">${esc(fmt(std))}</span> <span class="unit">${esc(unit)}</span></div>`;
     if (gapNow !== null) {
       const bad = better === "lower" ? gapNow > 0 : gapNow < 0;
-      b2 += `<div><span class="lbl">Gap</span><span class="big" style="color:${bad ? "var(--ink)" : "var(--accent)"}">${gapNow > 0 ? "+" : ""}${esc(fmt(gapNow))}</span> <span class="unit">${esc(unit)}</span></div>`;
+      b2 += `<div><span class="lbl">Gap</span><span class="big" style="color:${bad ? "var(--gap)" : "var(--good)"}">${gapNow > 0 ? "+" : ""}${esc(fmt(gapNow))}</span> <span class="unit">${esc(unit)}</span></div>`;
     }
     b2 += `</div>`;
   }
   const chart2 = lineChart({ labels: cur.map(p => p.label), series: [{ values: cur.map(p => num(p.value)), cls: "act", dots: true }], refs: [{ value: std, cls: "std", label: "Std", tcls: "t-good" }], gapRef: std, better, unit });
   if (chart2) b2 += `<div class="scroll-x">${chart2}</div><div class="legend"><span><i></i>${esc(a.metric.name || "Actual")}${unit ? " (" + esc(unit) + ")" : ""}</span><span><i class="std"></i>Standard</span><span><i class="gapk"></i>Gap to standard</span></div>`;
   b2 += para(a.currentText);
-  if (!b2) b2 = emptyNote("Facts about today: standard, actual, the gap, and what you saw at the gemba.");
+  B.current = b2 || emptyNote("Facts about today: standard, actual, the gap, and what you saw at the gemba.");
 
   // 3 Goal
   let b3 = "";
@@ -659,7 +822,7 @@ function renderSheet(a, target) {
   const bc = bulletChart(a.goal, better, unit);
   if (bc) b3 += `<div class="scroll-x">${bc}</div>`;
   if (a.goal.deadline) b3 += `<div class="hint">Deadline: <b>${esc(fmtDate(a.goal.deadline))}</b>${a.metric.name ? " · Metric: " + esc(a.metric.name) : ""}</div>`;
-  if (!b3) b3 = emptyNote("Metric, baseline, target and deadline.");
+  B.goal = b3 || emptyNote("Metric, baseline, target and deadline.");
 
   // 4 Root cause
   let b4 = "";
@@ -667,27 +830,26 @@ function renderSheet(a, target) {
   const showWhys = a.rcaTool !== "fishbone" && whys.length;
   const fb = a.rcaTool !== "whys" ? fishbone(a.fishbone, a.problemStatement ? (a.metric.name || a.title) : a.title) : "";
   if (showWhys) {
-    b4 += `<div class="whys">` + whys.map((w, i) => `<div class="why${i === whys.length - 1 ? " root" : ""}"><div class="wn">WHY ${i + 1}</div><div class="wt">${esc(w.why)}${w.evidence ? `<span class="we">Evidence: ${esc(w.evidence)}</span>` : ""}</div></div>`).join("") + `</div>`;
+    b4 += `<div class="whys">` + whys.map((w, i) => `<div class="why${i === whys.length - 1 ? " root" : ""}"><div class="wn">Why ${i + 1}</div><div class="wt">${esc(w.why)}${w.evidence ? `<span class="we">Evidence: ${esc(w.evidence)}</span>` : ""}</div></div>`).join("") + `</div>`;
   }
   if (fb) b4 += `<div class="scroll-x">${fb}</div>`;
   if (a.rootCauses.trim()) b4 += `<div><span class="lbl">Root cause</span><div class="rc">${esc(a.rootCauses)}</div></div>`;
-  if (!b4) b4 = emptyNote("A chain of whys with evidence, or a fishbone, down to one to three root causes.");
+  B.rca = b4 || emptyNote("A chain of whys with evidence, or a fishbone, down to one to three root causes.");
 
   // 5 Countermeasures
-  let b5 = "";
   const cms = a.countermeasures.filter(c => c.name.trim());
   if (cms.length) {
     const tbl = `<table class="cm-table"><thead><tr><th>#</th><th>Countermeasure</th><th>Root cause</th><th>Type</th></tr></thead><tbody>` +
       cms.map((c, i) => `<tr class="${c.chosen ? "" : "off"}"><td class="n">${i + 1}</td><td>${esc(c.name)}${c.chosen ? "" : " <span class='hint'>(not chosen)</span>"}</td><td>${esc(c.cause)}</td><td><span class="pill ${c.kind === "Containment" ? "cont" : "perm"}">${esc(c.kind)}</span></td></tr>`).join("") + `</tbody></table>`;
-    b5 = `<div class="two cm"><div class="scroll-x">${tbl}</div><div style="max-width:340px">${matrix(a.countermeasures)}</div></div>`;
-  } else b5 = emptyNote("Two or three options, each linked to a root cause, compared on effect and effort.");
+    B.cm = `<div class="two cm"><div class="scroll-x">${tbl}</div><div style="max-width:340px">${matrix(a.countermeasures)}</div></div>`;
+  } else B.cm = emptyNote("Two or three options, each linked to a root cause, compared on effect and effort.");
 
   // 6 Plan
   let b6 = "";
   const tasks = a.tasks.filter(t => t.task.trim());
   const gc = gantt(a.tasks);
   if (gc) b6 += `<div class="scroll-x">${gc}</div><div class="legend"><span><i class="sq" style="background:var(--good)"></i>Done</span><span><i class="sq" style="background:var(--accent)"></i>In progress</span><span><i class="sq" style="border:1.2px solid var(--line-strong)"></i>Not started</span><span><i class="sq" style="background:var(--gap)"></i>Overdue</span></div>`;
-  if (tasks.length) {
+  if (tasks.length && !(poster && gc)) {
     const now = new Date();
     b6 += `<div class="scroll-x"><table class="res-table"><thead><tr><th>Task</th><th>Owner</th><th>Due</th><th>Status</th></tr></thead><tbody>` + tasks.map(t => {
       const late = t.status !== "Done" && parseDate(t.end) && parseDate(t.end) < now;
@@ -695,7 +857,7 @@ function renderSheet(a, target) {
       return `<tr><td>${esc(t.task)}</td><td>${esc(t.owner) || "<span class='empty'>none</span>"}</td><td style="white-space:nowrap">${esc(fmtDate(t.end)) || "<span class='empty'>none</span>"}</td><td><span class="pill ${pc}">${late ? "Overdue" : esc(t.status)}</span></td></tr>`;
     }).join("") + `</tbody></table></div>`;
   }
-  if (!b6) b6 = emptyNote("Tasks with one owner, start and due dates, and status.");
+  B.plan = b6 || emptyNote("Tasks with one owner, start and due dates, and status.");
 
   // 7 Follow-up
   let b7 = "";
@@ -710,8 +872,25 @@ function renderSheet(a, target) {
   const f = a.followup;
   const fl = [["How and when we check", f.checkPlan + (f.checkDate ? (f.checkPlan ? "\n" : "") + "Check date: " + fmtDate(f.checkDate) : "")], ["Standardize", f.standardize], ["Share (yokoten)", f.yokoten], ["Lessons learned", f.lessons]].filter(x => x[1] && x[1].trim());
   if (fl.length) b7 += `<div class="two">` + fl.map(([l, t]) => `<div><span class="lbl">${esc(l)}</span><p>${esc(t)}</p></div>`).join("") + `</div>`;
-  if (!b7) b7 = emptyNote("Predicted vs actual on the goal metric, the check date, and how it will be sustained and shared.");
+  B.follow = b7 || emptyNote("Predicted vs actual on the goal metric, the check date, and how it will be sustained and shared.");
 
+  // 8 Insights (an addition to the standard seven boxes)
+  const n = a.insights;
+  const ins = computeInsights(a);
+  let b8 = "";
+  if (!poster) b8 += n.headline.trim() ? `<p class="insight-head">${esc(n.headline)}</p>` : emptyNote("The one thing a colleague should take away from this A3.");
+  if (!poster) b8 += statTiles(ins, unit);
+  const nl = [["What surprised us", n.surprised], ["What we would do differently", n.differently], ["Next step", n.nextStep]].filter(x => x[1] && x[1].trim());
+  if (nl.length) b8 += `<div class="${poster ? "ins-list" : "two"}">` + nl.map(([l, t]) => `<div><span class="lbl">${esc(l)}</span><p>${esc(t)}</p></div>`).join("") + `</div>`;
+  else if (poster) b8 += emptyNote("What surprised you, what you would do differently, and the next step.");
+  if (!poster) b8 += `<p class="hint">Section 8 adds to the standard seven boxes. The figures are worked out from sections 2, 3, 6 and 7.</p>`;
+  B.insights = b8;
+  B._ins = ins;
+  return B;
+}
+
+function renderSheet(a, target) {
+  const B = sectionBodies(a);
   const meta = [["Owner", a.owner], ["Mentor", a.mentor], ["Team", a.team], ["Revised", fmtDate(a.date) + (a.revision ? " · Rev " + a.revision : "")]];
   target.innerHTML = `
     <div class="tblock">
@@ -719,10 +898,90 @@ function renderSheet(a, target) {
       <div class="tblock-meta">${meta.map(([l, v]) => `<div class="meta"><small>${l}</small><div>${esc(v) || "–"}</div></div>`).join("")}</div>
     </div>
     <div class="halves">
-      <div class="half"><div class="half-label">Plan · understand the problem</div>${box(S.background, b1)}${box(S.current, b2)}${box(S.goal, b3)}${box(S.rca, b4)}</div>
-      <div class="half"><div class="half-label">Plan · Do · Check · Act</div>${box(S.cm, b5)}${box(S.plan, b6)}${box(S.follow, b7)}</div>
+      <div class="half"><div class="half-label"><b>Plan</b>Understand the problem</div>${box(S.background, B.background)}${box(S.current, B.current)}${box(S.goal, B.goal)}${box(S.rca, B.rca)}</div>
+      <div class="half"><div class="half-label"><b>Do · Check · Act</b>Solve it, check it, learn from it</div>${box(S.cm, B.cm)}${box(S.plan, B.plan)}${box(S.follow, B.follow)}${box(S.insights, B.insights)}</div>
     </div>
     <div class="foot"><span>${esc(a.title || "Untitled A3")}</span><span>A3 Workbench · ${esc(fmtDate(a.date))}</span></div>`;
+}
+
+/* ---------- poster: the A3 laid out to fill one A3 landscape page ---------- */
+function renderPoster(a, target) {
+  const keep = comments; comments = null;
+  const B = sectionBodies(a, true);
+  comments = keep;
+  const unit = a.metric.unit || "";
+  const head = a.insights.headline.trim();
+  const meta = [["Owner", a.owner], ["Mentor", a.mentor], ["Team", a.team], ["Goal by", fmtDate(a.goal.deadline)], ["Revised", fmtDate(a.date) + (a.revision ? " · Rev " + a.revision : "")]];
+  target.innerHTML = `<div class="poster force-light">
+    <header class="p-banner">
+      <div class="p-title">
+        <div><small>Problem-solving A3${a.example ? " (example)" : ""}</small><h1>${esc(a.title) || "Untitled A3"}</h1></div>
+        <div class="p-meta">${meta.filter(m => m[1]).map(([l, v]) => `<div><span>${l}</span><b>${esc(v)}</b></div>`).join("")}</div>
+      </div>
+      <div class="p-key"><div class="k-label">Key insight</div>${head ? `<p class="k-text">${esc(head)}</p>` : `<p class="k-text k-empty">Write the key insight in section 8.</p>`}${statTiles(B._ins, unit)}</div>
+    </header>
+    <div class="p-body">
+      <div class="pcol">${[S.background, S.current, S.goal, S.rca, S.cm, S.plan, S.follow, S.insights].map(x => box(x, B[x.key])).join("")}</div>
+      <div class="pcol"></div>
+      <div class="pcol"></div>
+    </div>
+    <footer class="p-foot"><span><b>${esc(a.title || "Untitled A3")}</b>${a.owner ? " · " + esc(a.owner) : ""}</span><span>Read in order 1 to 8 · Plan, Do, Check, Act, Learn</span><span>A3 Workbench · ${esc(fmtDate(a.date))}</span></footer>
+  </div>`;
+  const el = target.querySelector(".poster");
+  layoutPoster(el);
+  return el;
+}
+// Boxes 1 to 8 go into three columns in reading order (down each column, left to right).
+// Try the most even splits, and keep the one that allows the largest type and charts.
+function layoutPoster(el) {
+  const cols = [...el.querySelectorAll(".pcol")];
+  const boxes = [...el.querySelectorAll(".pcol > .box")];
+  const n = boxes.length;
+  el.style.setProperty("--pfs", 13); el.style.setProperty("--pch", 220);
+  boxes.forEach(b => { b.style.flex = "none"; });
+  const h = boxes.map(b => b.getBoundingClientRect().height);
+  boxes.forEach(b => { b.style.flex = ""; });
+  const gap = 12;
+  const sum = (i, j) => h.slice(i, j).reduce((t, v) => t + v + gap, 0);
+  const splits = [];
+  for (let i = 1; i < n - 1; i++) for (let j = i + 1; j < n; j++) splits.push({ i, j, cost: Math.max(sum(0, i), sum(i, j), sum(j, n)) });
+  splits.sort((x, y) => x.cost - y.cost);
+  const place = (sp) => boxes.forEach((b, k) => cols[k < sp.i ? 0 : k < sp.j ? 1 : 2].appendChild(b));
+  let best = null;
+  for (const sp of splits.slice(0, 4)) {
+    place(sp);
+    const r = fitPoster(el);
+    if (!best || r.fs > best.fs || (r.fs === best.fs && r.ch > best.ch)) best = Object.assign(r, { sp });
+  }
+  if (best) { place(best.sp); fitPoster(el); }
+}
+// Largest type and charts that let every column fit on the page.
+function fitPoster(el) {
+  const cols = [...el.querySelectorAll(".pcol")];
+  const over = () => cols.some(c => c.scrollHeight > c.clientHeight + 1);
+  const set = (k, v) => el.style.setProperty(k, v);
+  let fs = 18, ch = 300;
+  set("--pfs", fs); set("--pch", ch);
+  while (over() && fs > 13) { fs -= 0.5; set("--pfs", fs); }
+  while (over() && ch > 170) { ch -= 10; set("--pch", ch); }
+  while (over() && fs > 11) { fs -= 0.5; set("--pfs", fs); }
+  while (over() && ch > 130) { ch -= 10; set("--pch", ch); }
+  while (over() && fs > 8) { fs -= 0.5; set("--pfs", fs); }
+  const bad = over();
+  el.dataset.fit = fs + "/" + ch + (bad ? "/over" : "");
+  return { fs, ch, bad };
+}
+function showPoster() {
+  const frame = $("#posterFrame");
+  const el = renderPoster(active(), frame);
+  scalePoster(el);
+}
+function scalePoster(el = $("#posterFrame .poster")) {
+  if (!el) return;
+  const frame = $("#posterFrame");
+  const s = frame.clientWidth / 1587;
+  el.style.transform = `scale(${s})`;
+  frame.style.height = Math.round(1123 * s) + "px";
 }
 
 /* ---------- form ---------- */
@@ -763,10 +1022,9 @@ function renderForm() {
   const a = active();
   const form = $("#form");
   const d = (key, head, inner) => `<details data-k="${key}"${openSecs.has(key) ? " open" : ""}><summary>${head}</summary><div class="fbody">${inner}</div></details>`;
-  const S = Object.fromEntries(SECTIONS.map(s => [s.key, s]));
-  const sh = (s) => `<span class="num">${s.n}</span>${esc(s.title)}<span class="tag">${esc(s.phase)}</span>`;
+  const sh = (s) => `<span class="num">${s.n}</span><span class="ttl">${esc(s.title)}</span><span class="tag ${phaseClass(s.phase)}">${esc(s.phase)}</span>`;
   form.innerHTML =
-    d("header", `<span class="num">A3</span>Title and team`,
+    d("header", `<span class="num">A3</span><span class="ttl">Title and team</span>`,
       `<p class="prompt">In a few words, what problem are you working on? Name the problem, not the solution.</p>` +
       txt("title", "Title", a.title, "e.g. Late lab results delay ER discharges") +
       `<div class="row2">${txt("owner", "Owner", a.owner)}${txt("mentor", "Mentor or coach", a.mentor)}</div>` +
@@ -813,6 +1071,14 @@ function renderForm() {
       txt("followup.standardize", "Standardize", a.followup.standardize, "Standard work, checklists, visual controls", 2) +
       txt("followup.yokoten", "Share with (yokoten)", a.followup.yokoten, "Other teams or sites with the same problem", 2) +
       txt("followup.lessons", "Lessons learned", a.followup.lessons, "", 2) + coachBox(a, "follow")) +
+    d("insights", sh(S.insights),
+      `<p class="prompt">${esc(S.insights.prompt)}</p>` +
+      `<p class="hint">Section 8 adds to the standard seven boxes. The key insight runs across the top of the poster and the PDF.</p>` +
+      txt("insights.headline", "Key insight", a.insights.headline, "The one sentence a colleague should remember", 3) +
+      `<div class="field"><span>Worked out from your A3</span><div data-ins>${statTiles(computeInsights(a), a.metric.unit)}</div></div>` +
+      txt("insights.surprised", "What surprised you", a.insights.surprised, "", 3) +
+      txt("insights.differently", "What you would do differently", a.insights.differently, "", 3) +
+      txt("insights.nextStep", "Next step", a.insights.nextStep, "What happens next, and who owns it", 3) + coachBox(a, "insights")) +
     `<div class="fbody" style="padding-top:14px">
        <div id="delZone"><button type="button" class="btn ghost small" id="delA3">Delete this A3</button></div>
      </div>`;
@@ -820,6 +1086,8 @@ function renderForm() {
 function refreshCoach() {
   const a = active();
   document.querySelectorAll("[data-coach]").forEach(el => { el.innerHTML = coachInner(a, el.dataset.coach); });
+  const ins = document.querySelector("[data-ins]");
+  if (ins) ins.innerHTML = statTiles(computeInsights(a), a.metric.unit);
 }
 
 function setPath(obj, path, val) {
@@ -836,6 +1104,7 @@ function renderAll() {
   renderSheet(active(), $("#sheet"));
   renderNotices();
   if (mode === "edit") renderForm();
+  if (mode === "poster") showPoster();
 }
 function scheduleSheet() {
   clearTimeout(renderTimer);
@@ -851,20 +1120,24 @@ function renderNotices() {
   const n = $("#notices");
   let h = "";
   if (a && a.example) {
-    h += `<div class="notice"><span><b>This is an example A3.</b> It shows how a finished A3 reads. ${canEdit ? "Start your own, or edit this one to learn the layout." : ""}</span>${canEdit ? `<button class="btn primary small" id="startOwn">Start my own A3</button>` : ""}</div>`;
+    h += `<div class="notice"><p><b>This is an example A3.</b> It shows how a finished A3 reads. ${canEdit ? "Start your own, or edit this one to learn the layout." : ""}</p>${canEdit ? `<button type="button" class="btn primary small" id="startOwn">Start my own A3</button>` : ""}</div>`;
   }
   n.innerHTML = h;
   n.hidden = !h;
 }
 function setMode(m) {
-  mode = (m === "edit" && canEdit) ? "edit" : "present";
+  mode = m === "poster" ? "poster" : (m === "edit" && canEdit) ? "edit" : "present";
   lsSet(LS_MODE, mode);
   $("#modeEdit").setAttribute("aria-pressed", String(mode === "edit"));
   $("#modePresent").setAttribute("aria-pressed", String(mode === "present"));
+  $("#modePoster").setAttribute("aria-pressed", String(mode === "poster"));
   $("#form").hidden = mode !== "edit";
+  $("#sheetWrap").hidden = mode === "poster";
+  $("#posterStage").hidden = mode !== "poster";
   $("#work").classList.toggle("editing", mode === "edit");
   $("#saveBtn").hidden = !(canEdit && mode === "edit");
   if (mode === "edit") renderForm();
+  if (mode === "poster") showPoster(); else $("#posterFrame").innerHTML = "";
 }
 
 /* ---------- saving ---------- */
@@ -925,23 +1198,15 @@ async function buildPdf() {
   const host = $("#captureHost");
   host.innerHTML = "";
   host.classList.add("force-light");
-  const sheet = document.createElement("article");
-  sheet.className = "sheet export force-light";
-  host.appendChild(sheet);
-  const keepComments = comments; comments = null;
-  renderSheet(active(), sheet);
-  comments = keepComments;
   try { await document.fonts.ready; } catch (e) {}
-  inlineSvgStyles(sheet);
-  const canvas = await window.html2canvas(sheet, { scale: 2, backgroundColor: "#ffffff", useCORS: true, logging: false });
+  const poster = renderPoster(active(), host);
+  inlineSvgStyles(poster);
+  // 1587 x 1123 px is A3 landscape at 96 dpi; scale 2.5 gives about 240 dpi on the page.
+  const canvas = await window.html2canvas(poster, { scale: 2.5, width: 1587, height: 1123, windowWidth: 1700, backgroundColor: "#ffffff", useCORS: true, logging: false });
   host.innerHTML = "";
   const { jsPDF } = window.jspdf;
-  const pdf = new jsPDF({ orientation: "landscape", unit: "mm", format: "a3" });
-  const pw = 420, ph = 297, m = 8;
-  const ratio = canvas.width / canvas.height;
-  let w = pw - 2 * m, h = w / ratio;
-  if (h > ph - 2 * m) { h = ph - 2 * m; w = h * ratio; }
-  pdf.addImage(canvas.toDataURL("image/jpeg", 0.92), "JPEG", (pw - w) / 2, m, w, h);
+  const pdf = new jsPDF({ orientation: "landscape", unit: "mm", format: "a3", compress: true });
+  pdf.addImage(canvas.toDataURL("image/jpeg", 0.93), "JPEG", 0, 0, 420, 297, undefined, "FAST");
   pdf.setProperties({ title: active().title || "A3" });
   return pdf.output("blob");
 }
@@ -999,7 +1264,7 @@ $("#form").addEventListener("click", (e) => {
   else if (t.dataset.del) { const [k, i] = t.dataset.del.split(":"); a[k].splice(+i, 1); if (!a[k].length) a[k].push(JSON.parse(JSON.stringify(blank[k][0]))); }
   else if (t.dataset.move) { const [k, i, d] = t.dataset.move.split(":"); const j = +i + +d; [a[k][i], a[k][j]] = [a[k][j], a[k][i]]; }
   else if (t.id === "delA3") {
-    $("#delZone").innerHTML = `<div class="confirm"><span>Delete “${esc(a.title || "Untitled A3")}” for everyone?</span><button type="button" class="btn small" id="delYes" style="border-color:var(--gap);color:var(--gap)">Delete</button><button type="button" class="btn small" id="delNo">Keep it</button></div>`;
+    $("#delZone").innerHTML = `<div class="confirm"><span>Delete “${esc(a.title || "Untitled A3")}” for everyone?</span><button type="button" class="btn small danger" id="delYes">Delete</button><button type="button" class="btn small reverse" id="delNo">Keep it</button></div>`;
     return;
   } else if (t.id === "delNo") { renderForm(); return; }
   else if (t.id === "delYes") {
@@ -1029,6 +1294,9 @@ $("#newA3").addEventListener("click", newA3);
 $("#a3pick").addEventListener("change", (e) => { store.activeId = e.target.value; renderAll(); });
 $("#modeEdit").addEventListener("click", () => { setMode("edit"); renderNotices(); });
 $("#modePresent").addEventListener("click", () => setMode("present"));
+$("#modePoster").addEventListener("click", () => setMode("poster"));
+let resizeT;
+window.addEventListener("resize", () => { clearTimeout(resizeT); resizeT = setTimeout(() => { if (mode === "poster") scalePoster(); }, 80); });
 $("#saveBtn").addEventListener("click", save);
 $("#pdfBtn").addEventListener("click", downloadPdf);
 window.addEventListener("beforeunload", () => { if (dirty) lsSet(LS_KEY, JSON.stringify({ dirty: true, store })); });
@@ -1070,11 +1338,11 @@ function showEditing() {
       restored = true; dirty = true; renderAll();
     }
   } catch (e) {}
-  $("#modeSeg").hidden = false;
+  $("#modeEdit").hidden = false;
   $("#newA3").hidden = false;
   renderNotices();
   const want = lsGet(LS_MODE);
-  setMode(want === "edit" ? "edit" : "present");
+  setMode(want === "edit" || want === "poster" ? want : "present");
   if (!saver) setStatus("Changes are saved in this browser only", "");
   else if (restored) { setStatus("Restored unsaved changes from this browser", "warn"); if (canSaveRemote) saveTimer = setTimeout(save, 4000); }
 }

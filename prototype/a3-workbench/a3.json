@@ -73,6 +73,12 @@
         "standardize": "Send-when-drawn added to ER standard work. Tube station use added to new-starter induction.",
         "yokoten": "Share with Urgent Care and the Day Surgery unit, who use the same porter route.",
         "lessons": "Timestamping each step early showed that the delay was transport, not testing."
+      },
+      "insights": {
+        "headline": "The delay was in moving samples, not testing them, so moving the tube station into the walking path does more than any change inside the lab.",
+        "surprised": "The lab itself met its 30 minute testing standard on 9 in 10 samples. Two thirds of the delay happened before the sample left the ER.",
+        "differently": "Timestamp every step from the first week. We spent a month assuming the analysers were the bottleneck.",
+        "nextStep": "Confirm the tube station install date with Facilities by 23 December (R. Chen), then extend send-when-drawn to night shift."
       }
     }
   ]

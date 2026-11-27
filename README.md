@@ -45,14 +45,16 @@ Every save is kept. Any version can be opened read-only or restored.
 
 ### A3 Workbench prototype
 
-The [prototype](prototype/a3-workbench) is a single page for quick feedback from colleagues, in NHS styling. You fill in a form on the left and the one-page A3 builds on the right. Coach notes flag common mistakes, and **Download PDF** saves the A3 as one landscape A3 page. It is separate from the app and shares no code with it.
+The [prototype](prototype/a3-workbench) is a single page for quick feedback from colleagues, styled on the NHS.UK design system. You fill in a form on the left and the A3 builds on the right. Coach notes flag common mistakes, and section 8, Insights, adds the key takeaway to the standard seven. **Download PDF** saves a poster that fills one A3 landscape page. The prototype is separate from the app and shares no code with it.
 
 ![A3 Workbench in edit mode, with the form on the left and the live A3 on the right](docs/images/workbench-edit.png)
 
 <details>
-<summary>The finished one-page A3 in the prototype</summary>
+<summary>The finished A3 and the poster PDF in the prototype</summary>
 
-![A3 Workbench presentation view of the synthetic example](docs/images/workbench-a3.png)
+![A3 Workbench sheet view of the synthetic example](docs/images/workbench-a3.png)
+
+![The poster that Download PDF produces, on one A3 landscape page](docs/images/workbench-poster.png)
 
 </details>
 

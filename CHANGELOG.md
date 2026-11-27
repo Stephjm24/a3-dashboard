@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- Redesigned the A3 Workbench prototype on the NHS.UK design system, added section 8, Insights, after Follow-up, and added a Poster view. **Download PDF** now produces that poster, filling one A3 landscape page edge to edge with the key insight across the top.
 - Added screenshots of the app and the A3 Workbench prototype to the README, using the synthetic example, with diagrams of the intended coach design.
 - Added the Prototype Pages workflow, which publishes the A3 Workbench prototype to GitHub Pages when it changes on `main`.
 - Added the A3 Workbench prototype in `prototype/a3-workbench`: a single page with NHS styling for filling in an A3, viewing it as a one-page A3 with charts and coach notes, and downloading it as a PDF. It is for collecting feedback and is separate from the app.

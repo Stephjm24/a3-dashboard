@@ -2,7 +2,7 @@
 
 A single-page version of the A3 dashboard that needs no install, database or sign-in. It is for gathering early feedback from colleagues while the full app in [src](../../src) is built. It does not replace the app and shares no code with it.
 
-You fill in the header and the seven problem-solving sections in a form. The page lays them out as a one-page A3 in NHS styling, with these charts:
+You fill in the header and the problem-solving sections in a form. The page lays them out as a one-page A3 styled on the [NHS.UK design system](https://service-manual.nhs.uk/design-system), without NHS logos. It has these charts:
 
 - a run chart with the gap to standard shaded
 - a goal bullet chart
@@ -11,7 +11,17 @@ You fill in the header and the seven problem-solving sections in a form. The pag
 - a Gantt chart
 - a chart of predicted against actual results
 
-Coach notes under each section flag the common mistakes listed in the A3 knowledge base. **Download PDF** saves the A3 as one landscape A3 page.
+Coach notes under each section flag the common mistakes listed in the A3 knowledge base.
+
+Section 8, **Insights**, comes after Follow-up and adds to the standard seven boxes. You write the key insight, what surprised you, what you would do differently and the next step. The page works out how much of the gap is closed, the recent trend, tasks done and overdue, and how many coach checks are clear.
+
+The page has three views:
+
+- **Edit** shows the form beside the live A3.
+- **A3 sheet** shows the A3 as a ruled sheet, Plan on the left and Do, Check and Act on the right.
+- **Poster** shows the page that **Download PDF** produces. It fills one A3 landscape page edge to edge, like a research poster. The title and key insight run across the top, and the eight sections follow in reading order in three columns. The page picks the column split and the largest text and chart size that fit.
+
+![Poster view of the synthetic example](../../docs/images/workbench-poster.png)
 
 ## Three ways to use it
 

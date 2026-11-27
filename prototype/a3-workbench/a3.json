@@ -1,0 +1,79 @@
+{
+  "version": 1,
+  "activeId": "ex1",
+  "a3s": [
+    {
+      "id": "ex1",
+      "example": true,
+      "title": "Late lab results delay ER discharges",
+      "owner": "Jordan Lee",
+      "mentor": "Sam Patel",
+      "team": "ER nursing, lab, patient flow",
+      "date": "2026-11-27",
+      "revision": "3",
+      "background": "Emergency room patients who need blood work wait for lab results before a discharge decision. Long waits block beds, push up 'left without being seen' rates and hurt patient experience scores. This supports the hospital goal of 4-hour ER length of stay.",
+      "strategicLink": "Hospital goal: 95% of ER patients discharged or admitted within 4 hours",
+      "metric": { "name": "Lab turnaround (order to result)", "unit": "min", "better": "lower", "standard": 45 },
+      "currentText": "Observed 3 shifts at the ER and lab (gemba walks 4, 6 and 9 Nov). Average turnaround for routine blood panels is 85 minutes against a 45 minute standard. 62% of samples wait more than 20 minutes for pickup at the ER. Night shift is the worst.",
+      "problemStatement": "Routine ER blood panels take 85 minutes from order to result, 40 minutes over standard, on about 120 samples a day. Most of the delay is between the draw and arrival at the lab.",
+      "current": [
+        { "label": "Jun", "value": 78 },
+        { "label": "Jul", "value": 82 },
+        { "label": "Aug", "value": 88 },
+        { "label": "Sep", "value": 84 },
+        { "label": "Oct", "value": 90 },
+        { "label": "Nov", "value": 85 }
+      ],
+      "goal": {
+        "statement": "Cut average ER routine lab turnaround from 85 to 45 minutes by 31 March 2027, for blood panels drawn in the ER.",
+        "baseline": 85,
+        "target": 45,
+        "current": 78,
+        "deadline": "2027-03-31"
+      },
+      "rcaTool": "both",
+      "whys": [
+        { "why": "Results are late because samples reach the lab 35 minutes after draw", "evidence": "Timestamp study, 214 samples" },
+        { "why": "Samples sit in the ER waiting for the porter's hourly round", "evidence": "Gemba walk, 3 shifts" },
+        { "why": "The pneumatic tube station is at the far end of the ER, so staff batch samples for the porter", "evidence": "Spaghetti map" },
+        { "why": "Tube station location was set before the ER was extended in 2023", "evidence": "Facilities floor plan" }
+      ],
+      "rootCauses": "Sample transport depends on an hourly porter round because the only tube station is out of the staff's walking path.",
+      "fishbone": {
+        "Method": "Hourly porter round\nBatching samples",
+        "Machine": "Tube station far from beds",
+        "People": "Night shift short one porter",
+        "Material": "Mislabeled tubes rejected",
+        "Measurement": "No timestamp at draw",
+        "Environment": "ER extended in 2023"
+      },
+      "countermeasures": [
+        { "name": "Add a second tube station near beds 12 to 20", "cause": "Tube station far from the walking path", "kind": "Permanent", "effect": 5, "effort": 3, "chosen": true },
+        { "name": "Send each sample when drawn (no batching)", "cause": "Batching for porter round", "kind": "Permanent", "effect": 4, "effort": 1, "chosen": true },
+        { "name": "Porter round every 30 minutes", "cause": "Hourly porter round", "kind": "Containment", "effect": 3, "effort": 2, "chosen": true },
+        { "name": "Retrain staff on sample handling", "cause": "Mislabeled tubes", "kind": "Permanent", "effect": 1, "effort": 2, "chosen": false }
+      ],
+      "tasks": [
+        { "task": "Start 30 minute porter rounds", "owner": "M. Ortiz", "start": "2026-12-01", "end": "2026-12-05", "status": "Done" },
+        { "task": "Pilot send-when-drawn on day shift", "owner": "J. Lee", "start": "2026-12-08", "end": "2027-01-09", "status": "In progress" },
+        { "task": "Facilities quote for tube station", "owner": "R. Chen", "start": "2026-12-08", "end": "2026-12-23", "status": "In progress" },
+        { "task": "Install second tube station", "owner": "R. Chen", "start": "2027-01-12", "end": "2027-02-20", "status": "Not started" },
+        { "task": "Update standard work and train", "owner": "J. Lee", "start": "2027-02-16", "end": "2027-03-06", "status": "Not started" },
+        { "task": "Review results with mentor", "owner": "S. Patel", "start": "2027-03-23", "end": "2027-03-31", "status": "Not started" }
+      ],
+      "results": [
+        { "label": "Dec", "predicted": 75, "actual": 78 },
+        { "label": "Jan", "predicted": 65, "actual": null },
+        { "label": "Feb", "predicted": 55, "actual": null },
+        { "label": "Mar", "predicted": 45, "actual": null }
+      ],
+      "followup": {
+        "checkPlan": "Weekly turnaround report from the lab system, reviewed at the Monday huddle. Mentor review on 31 March.",
+        "checkDate": "2027-03-31",
+        "standardize": "Send-when-drawn added to ER standard work. Tube station use added to new-starter induction.",
+        "yokoten": "Share with Urgent Care and the Day Surgery unit, who use the same porter route.",
+        "lessons": "Timestamping each step early showed that the delay was transport, not testing."
+      }
+    }
+  ]
+}

@@ -27,6 +27,7 @@ Open the invite URL printed by the command and enter your name. It is single-use
 | Sign-in, sessions and invites | [src/lib/auth](src/lib/auth) and the [invite creation script](scripts/create-invite.ts) |
 | Database tables and migration history | [prisma/schema.prisma](prisma/schema.prisma) and [prisma/migrations](prisma/migrations) |
 | Versioned reference data and synthetic samples | [Data guide](docs/data.md), [contracts](data/schemas) and [fixtures](tests/fixtures) |
+| A no-install prototype for colleague feedback | [prototype/a3-workbench](prototype/a3-workbench), a single page that is separate from the app |
 | Running checks and submitting a change | [Contributor guide](CONTRIBUTING.md) and [CI workflows](.github/workflows) |
 
 ## Project guides

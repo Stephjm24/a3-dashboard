@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- Added screenshots of the app and the A3 Workbench prototype to the README, using the synthetic example, with diagrams of the intended coach design.
 - Added the Prototype Pages workflow, which publishes the A3 Workbench prototype to GitHub Pages when it changes on `main`.
 - Added the A3 Workbench prototype in `prototype/a3-workbench`: a single page with NHS styling for filling in an A3, viewing it as a one-page A3 with charts and coach notes, and downloading it as a PDF. It is for collecting feedback and is separate from the app.
 - Added phase 2 manual A3 editing: editors for the header, all seven sections and metrics, each save kept as a version with a summary of what changed, a version history page, read-only earlier versions and restore. Saves from an out-of-date page are refused.

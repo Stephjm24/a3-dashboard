@@ -43,7 +43,7 @@ Use a short imperative commit subject such as `docs: clarify local setup` or `fe
 
 The intended protection for `main` requires a PR and both jobs above, and blocks deletion and force pushes. A solo maintainer can review the diff and merge after CI passes. When a second maintainer is available, require independent approval. Check the live repository settings to verify enforcement.
 
-Use read-only workflow permissions by default. The validation workflow takes no secrets and disables persisted checkout credentials. Run untrusted changes using `pull_request`. Keep deployment credentials scoped to the protected environment, and prefer short-lived identity when the chosen host supports it. Enable secret scanning or push protection where available for this public repository.
+GitHub Pages serves only the A3 Workbench prototype. Set its source to **GitHub Actions**, which the [Prototype Pages workflow](.github/workflows/prototype-pages.yml) uses. Use read-only workflow permissions by default. The validation workflow takes no secrets and disables persisted checkout credentials. Run untrusted changes using `pull_request`. Keep deployment credentials scoped to the protected environment, and prefer short-lived identity when the chosen host supports it. Enable secret scanning or push protection where available for this public repository.
 
 ## Dependencies, secrets and assets
 

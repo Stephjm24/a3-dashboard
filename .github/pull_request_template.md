@@ -1,10 +1,10 @@
 ## Change
 
-What changed, and where should the reviewer start?
+Which experience does this change affect (GitHub Pages Workbench, full app, or both)? For repository-only changes, name the guide or tooling affected. Point the reviewer to the relevant page or file.
 
 ## Verification
 
-Which checks passed? For a UI change, include the interaction you tried with synthetic data.
+Which checks passed? For a UI change, name the view you tested with synthetic data and update its README screenshot if the visible behaviour changed.
 
 ## Repository upkeep
 

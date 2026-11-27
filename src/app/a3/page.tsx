@@ -2,6 +2,7 @@ import Link from "next/link";
 import { Suspense } from "react";
 import { requireUser } from "@/lib/auth/session";
 import { listA3s } from "@/lib/a3/repository";
+import { STATUS_LABEL } from "@/lib/a3/edit";
 import { NewA3Form } from "@/components/forms";
 import { SignOutButton } from "@/components/sign-out";
 
@@ -16,15 +17,6 @@ export default function MyA3sPage() {
 }
 
 const dateFormat = new Intl.DateTimeFormat("en-GB", { day: "numeric", month: "short", year: "numeric" });
-
-const STATUS_LABEL: Record<string, string> = {
-  draft: "Draft",
-  in_review: "In review",
-  approved: "Approved",
-  implementing: "Implementing",
-  checking: "Checking",
-  closed: "Closed",
-};
 
 async function MyA3s() {
   const user = await requireUser();
@@ -52,7 +44,7 @@ async function MyA3s() {
               <Link href={`/a3/${a3.id}`} className="flex items-center justify-between gap-4 px-5 py-4 hover:bg-slate-50">
                 <span className="font-medium">{a3.title}</span>
                 <span className="flex shrink-0 items-center gap-4 text-xs text-slate-500">
-                  <span>{STATUS_LABEL[a3.status] ?? a3.status}</span>
+                  <span>{STATUS_LABEL[a3.status as keyof typeof STATUS_LABEL] ?? a3.status}</span>
                   <span className="uppercase">{a3.pdcaStage}</span>
                   <span>v{a3.currentVersion}</span>
                   <span>{dateFormat.format(a3.updatedAt)}</span>

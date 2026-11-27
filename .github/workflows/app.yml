@@ -44,5 +44,12 @@ jobs:
         run: npm test
       - name: Apply database migrations
         run: npm run db:deploy
-      - name: Production build
-        run: npm run build
+      - name: Build production container
+        run: docker build --target runner --tag a3-dashboard:ci .
+      - name: Check the packaged app can query PostgreSQL
+        run: |
+          docker run -d --name a3-smoke --network host -e DATABASE_URL -e APP_URL a3-dashboard:ci
+          trap 'docker rm -f a3-smoke >/dev/null' EXIT
+          curl --fail --silent --show-error --retry 8 --retry-connrefused --retry-delay 1 \
+            --max-time 10 http://localhost:3000/invite/ci-unused-token --output "$RUNNER_TEMP/invite.html"
+          grep -Fq 'This invite link has expired or was already used.' "$RUNNER_TEMP/invite.html"

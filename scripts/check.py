@@ -13,7 +13,9 @@ ROOT = Path(__file__).resolve().parents[1]
 DIALECT = "https://json-schema.org/draft/2020-12/schema"
 CONTRACT = re.compile(r"[a-z][a-z0-9]*(?:-[a-z0-9]+)*\.v[1-9][0-9]*")
 PRIVATE_KEY = re.compile(rb"-----BEGIN (?:[A-Z0-9 ]+ )?PRIVATE KEY-----")
-TOKEN = re.compile(rb"\b(?:gh[pousr]_[A-Za-z0-9]{36,}|github_pat_[A-Za-z0-9_]{60,})\b")
+# GitHub tokens, Anthropic API keys and AWS access key IDs.
+TOKEN = re.compile(rb"\b(?:gh[pousr]_[A-Za-z0-9]{36,}|github_pat_[A-Za-z0-9_]{60,}"
+                   rb"|sk-ant-[A-Za-z0-9_-]{20,}|AKIA[0-9A-Z]{16})\b")
 BLOCKED_SUFFIXES = {".key", ".pem", ".p12", ".pfx", ".db", ".sqlite", ".sqlite3", ".dump", ".bak"}
 BLOCKED_DIRS = {"node_modules", ".venv", "__pycache__", ".next", ".vercel", ".netlify", ".wrangler"}
 DATA_ROOTS = ("data/reference", "tests/fixtures")
@@ -63,7 +65,7 @@ def check_file(root, path):
     if PRIVATE_KEY.search(content):
         raise ValueError("possible private key")
     if TOKEN.search(content):
-        raise ValueError("possible GitHub token")
+        raise ValueError("possible access token")
 
 
 def check(root=ROOT):

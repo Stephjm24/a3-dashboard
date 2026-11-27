@@ -19,7 +19,7 @@ The app is built in six phases, agreed in [0002](decisions/0002-system-architect
 | Test | Render, running the same Docker container, with managed Postgres | Test only | Anthropic API |
 | Azure | Azure Container Apps with Azure Database for PostgreSQL | Real A3s after approval | Claude on Microsoft Foundry |
 
-GitHub Pages is not used: the app needs a server to hold the AI key, run the coach and reach the database. Secrets live in each host's environment settings, and in Azure Key Vault later, never in the repository.
+The app does not run on GitHub Pages, because it needs a server to hold the AI key, run the coach and reach the database. GitHub Pages serves only the static [A3 Workbench prototype](../prototype/a3-workbench). Secrets live in each host's environment settings, and in Azure Key Vault later, never in the repository.
 
 ## Promotion
 

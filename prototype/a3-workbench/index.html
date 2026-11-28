@@ -26,6 +26,8 @@ img { max-width: 100%; }
   --accent: #005eb8;        /* NHS Blue */
   --accent-strong: #003087; /* NHS Dark Blue */
   --on-accent: #ffffff;
+  --on-fill: #ffffff;        /* text on --good, --accent-strong and --gap fills */
+  --good-hover: #00662f;
   --accent-soft: #e8edee;   /* NHS pale grey */
   --tint: #e0ecf7;          /* pale blue tint */
   --gap: #d5281b;           /* NHS red */
@@ -44,21 +46,21 @@ img { max-width: 100%; }
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
     --bg: #0d1820; --paper: #15232e; --ink: #f0f4f5; --muted: #aab8c3; --line: #2b3d4b; --line-strong: #4c6272; --rule: #d8dde0;
-    --accent: #41b6e6; --accent-strong: #8fd3f2; --on-accent: #0d1820; --accent-soft: #1d2f3c; --tint: #17344a;
+    --accent: #41b6e6; --accent-strong: #8fd3f2; --on-accent: #0d1820; --on-fill: #0d1820; --good-hover: #6fd4a2; --accent-soft: #1d2f3c; --tint: #17344a;
     --gap: #ff7b6e; --gap-soft: rgba(255, 123, 110, 0.2); --good: #4cc38a; --good-dark: #1d6b44; --warn: #ffb81c; --warn-ink: #ffd56b;
     --focus: #ffeb3b; --focus-ink: #0d1820; --field: #0f1c25; color-scheme: dark;
   }
 }
 :root[data-theme="dark"] {
   --bg: #0d1820; --paper: #15232e; --ink: #f0f4f5; --muted: #aab8c3; --line: #2b3d4b; --line-strong: #4c6272; --rule: #d8dde0;
-  --accent: #41b6e6; --accent-strong: #8fd3f2; --on-accent: #0d1820; --accent-soft: #1d2f3c; --tint: #17344a;
+  --accent: #41b6e6; --accent-strong: #8fd3f2; --on-accent: #0d1820; --on-fill: #0d1820; --good-hover: #6fd4a2; --accent-soft: #1d2f3c; --tint: #17344a;
   --gap: #ff7b6e; --gap-soft: rgba(255, 123, 110, 0.2); --good: #4cc38a; --good-dark: #1d6b44; --warn: #ffb81c; --warn-ink: #ffd56b;
   --focus: #ffeb3b; --focus-ink: #0d1820; --field: #0f1c25; color-scheme: dark;
 }
 /* Print colours: the poster and the PDF are always light. */
 .force-light {
   --bg: #ffffff; --paper: #ffffff; --ink: #212b32; --muted: #4c6272; --line: #d8dde0; --line-strong: #aeb7bd; --rule: #212b32;
-  --accent: #005eb8; --accent-strong: #003087; --on-accent: #ffffff; --accent-soft: #e8edee; --tint: #e0ecf7;
+  --accent: #005eb8; --accent-strong: #003087; --on-accent: #ffffff; --on-fill: #ffffff; --good-hover: #00662f; --accent-soft: #e8edee; --tint: #e0ecf7;
   --gap: #d5281b; --gap-soft: rgba(213, 40, 27, 0.13); --good: #007f3b; --good-dark: #00401e; --warn: #ffb81c; --warn-ink: #6b4c00;
   --field: #ffffff; color-scheme: light;
 }
@@ -98,15 +100,15 @@ input:focus-visible, select:focus-visible, textarea:focus-visible { outline: 4px
 .btn { position: relative; border: 0; border-radius: 4px; padding: 8px 14px; cursor: pointer; font-weight: 700; font-size: 16px; line-height: 1.25; white-space: nowrap; background: #4c6272; color: #ffffff; box-shadow: 0 4px 0 #263139; margin-bottom: 4px; }
 .btn:hover { background: #384853; }
 .btn:active { top: 4px; box-shadow: none; }
-.btn.primary { background: var(--good); box-shadow: 0 4px 0 var(--good-dark); }
-.btn.primary:hover { background: #00662f; }
+.btn.primary { background: var(--good); color: var(--on-fill); box-shadow: 0 4px 0 var(--good-dark); }
+.btn.primary:hover { background: var(--good-hover); }
 .btn.reverse { background: var(--paper); color: var(--ink); box-shadow: 0 4px 0 var(--muted); }
 .btn.reverse:hover { background: var(--accent-soft); }
 .btn.small { padding: 5px 10px; font-size: 14px; }
 .btn.ghost { background: transparent; color: var(--accent); box-shadow: none; margin: 0; padding: 4px 6px; text-decoration: underline; font-weight: 400; }
 .btn.ghost:hover { background: transparent; color: var(--accent-strong); text-decoration-thickness: 3px; }
 .btn:disabled { opacity: .5; cursor: default; }
-.btn.danger { background: var(--gap); box-shadow: 0 4px 0 #6b140e; }
+.btn.danger { background: var(--gap); color: var(--on-fill); box-shadow: 0 4px 0 #6b140e; }
 
 select, input[type="text"], input[type="number"], input[type="date"], textarea {
   background: var(--field); border: 2px solid var(--muted); border-radius: 0; padding: 6px 8px; width: 100%; min-width: 0; font-size: 16px; min-height: 40px;
@@ -246,7 +248,7 @@ textarea { resize: vertical; min-height: 72px; line-height: 1.45; }
 .why .wn { display: grid; place-items: center; font-weight: 700; font-size: 13px; color: var(--accent-strong); background: var(--tint); }
 .why .wt { padding: 6px 10px; font-size: 15px; overflow-wrap: anywhere; }
 .why .we { display: block; font-size: 13px; color: var(--muted); }
-.why.root .wn { background: var(--accent-strong); color: #ffffff; }
+.why.root .wn { background: var(--accent-strong); color: var(--on-fill); }
 .rc { border: 2px solid var(--rule); padding: 8px 12px; font-weight: 700; overflow-wrap: anywhere; }
 /* NHS tables: rules between rows, no boxes */
 .cm-table, .res-table { width: 100%; border-collapse: collapse; font-size: 14px; }
@@ -269,7 +271,7 @@ textarea { resize: vertical; min-height: 72px; line-height: 1.45; }
 .foot b { color: var(--ink); }
 
 /* Section 8: Insights */
-.insight-head { margin: 0; background: var(--accent-strong); color: #ffffff; padding: 14px 16px; font-size: 20px; line-height: 1.3; font-weight: 700; text-wrap: pretty; }
+.insight-head { margin: 0; background: var(--accent-strong); color: var(--on-fill); padding: 14px 16px; font-size: 20px; line-height: 1.3; font-weight: 700; text-wrap: pretty; }
 .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(118px, 1fr)); gap: 0; border-top: 2px solid var(--rule); border-bottom: 1px solid var(--line); }
 .stat { padding: 8px 10px 10px; border-right: 1px solid var(--line); min-width: 0; }
 .stat:last-child { border-right: 0; }
@@ -357,7 +359,7 @@ textarea { resize: vertical; min-height: 72px; line-height: 1.45; }
 .hero .lede { margin: 0 0 28px; font-size: clamp(19px, 2.4vw, 24px); line-height: 1.4; max-width: 30ch; }
 .hero-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 14px 32px; }
 .action-link { display: inline-flex; align-items: center; gap: 12px; font-size: 21px; font-weight: 700; color: inherit; background: none; border: 0; padding: 4px 0; cursor: pointer; text-decoration: none; }
-.action-link .arrow { display: inline-grid; place-items: center; width: 36px; height: 36px; border-radius: 50%; background: var(--good); color: #ffffff; flex: none; }
+.action-link .arrow { display: inline-grid; place-items: center; width: 36px; height: 36px; border-radius: 50%; background: var(--good); color: var(--on-fill); flex: none; }
 .action-link .arrow svg { width: 20px; height: 20px; fill: currentColor; }
 .action-link:hover span:last-child { text-decoration: underline; text-decoration-thickness: 3px; }
 .hero .text-link { color: inherit; background: none; border: 0; padding: 4px 0; cursor: pointer; font-size: 19px; text-decoration: underline; text-underline-offset: 3px; }
@@ -427,21 +429,25 @@ button.mbox:hover { border-color: var(--accent); box-shadow: inset 0 -3px 0 var(
 .confirm { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; padding: 12px 14px; border-left: 6px solid var(--gap); background: var(--paper); font-size: 15px; }
 .toast { position: fixed; bottom: calc(16px + env(safe-area-inset-bottom, 0px)); left: 50%; transform: translateX(-50%); background: var(--ink); color: var(--paper); padding: 10px 16px; font-size: 15px; z-index: 20; max-width: calc(100vw - 32px); }
 .capture-host { position: fixed; left: -20000px; top: 0; }
+.skip-link { position: absolute; left: -20000px; top: 8px; z-index: 30; padding: 8px 12px; background: var(--focus); color: var(--focus-ink); font-weight: 700; }
+.skip-link:focus { left: 16px; }
+#main:focus { outline: none; }
 @media (prefers-reduced-motion: no-preference) { .toast { transition: opacity .2s; } }
 </style>
 
-<div class="topbar">
-<header class="masthead">
+<a class="skip-link" href="#main">Skip to main content</a>
+<header class="topbar">
+<div class="masthead">
   <div class="mast-in">
     <a class="brand" href="#" id="brandHome"><span class="brand-mark">A3</span><span>A3 Workbench<small>Problem solving on one page</small></span></a>
-    <nav class="tabs" role="group" aria-label="View">
+    <div class="tabs" role="group" aria-label="View">
       <button type="button" id="modeHome" aria-pressed="true">Home</button>
       <button type="button" id="modeEdit" aria-pressed="false" hidden>Edit</button>
       <button type="button" id="modePresent" aria-pressed="true">A3 sheet</button>
       <button type="button" id="modePoster" aria-pressed="false">Poster</button>
-    </nav>
+    </div>
   </div>
-</header>
+</div>
 <div class="toolbar" id="toolbar">
   <div class="tool-in">
     <div class="picker">
@@ -456,10 +462,11 @@ button.mbox:hover { border-color: var(--accent); box-shadow: inset 0 -3px 0 var(
     </div>
   </div>
 </div>
-</div>
+</header>
 
+<main id="main" tabindex="-1">
 <div class="home" id="home"></div>
-<main class="wrap" id="app" hidden>
+<div class="wrap" id="app" hidden>
   <div id="notices"></div>
   <div class="work" id="work">
     <form class="form" id="form" hidden></form>
@@ -469,6 +476,7 @@ button.mbox:hover { border-color: var(--accent); box-shadow: inset 0 -3px 0 var(
       <div class="poster-frame" id="posterFrame"></div>
     </div>
   </div>
+</div>
 </main>
 <div id="captureHost" class="capture-host" aria-hidden="true"></div>
 
@@ -637,7 +645,7 @@ function niceStep(raw) {
 }
 let clipN = 0;
 
-function lineChart({ labels, series, refs = [], gapRef = null, better = "lower", unit = "" }) {
+function lineChart({ labels, series, refs = [], gapRef = null, better = "lower", unit = "", label = "Line chart" }) {
   const W = 560, H = 210, L = 40, R = 64, T = 14, B = 26;
   const all = [];
   series.forEach(s => s.values.forEach(v => v !== null && all.push(v)));
@@ -647,7 +655,7 @@ function lineChart({ labels, series, refs = [], gapRef = null, better = "lower",
   const iw = W - L - R, ih = H - T - B;
   const x = (i) => L + (labels.length === 1 ? iw / 2 : (i * iw) / (labels.length - 1));
   const y = (v) => T + ih - ((v - lo) / (hi - lo)) * ih;
-  let s = `<svg class="chart" viewBox="0 0 ${W} ${H}" role="img">`;
+  let s = `<svg class="chart" viewBox="0 0 ${W} ${H}" role="img" aria-label="${esc(label)}">`;
   for (let v = lo; v <= hi + 1e-9; v += step) {
     s += `<line class="grid" x1="${L}" x2="${W - R}" y1="${y(v)}" y2="${y(v)}"/>`;
     s += `<text x="${L - 6}" y="${y(v) + 3.5}" text-anchor="end">${esc(fmt(v))}</text>`;
@@ -693,14 +701,14 @@ function lineChart({ labels, series, refs = [], gapRef = null, better = "lower",
   return s;
 }
 
-function bulletChart(g, better, unit) {
+function bulletChart(g, better, unit, label = "Bullet chart of baseline, current and target") {
   const b = num(g.baseline), t = num(g.target), c = num(g.current);
   const vals = [b, t, c].filter(v => v !== null);
   if (vals.length < 2) return "";
   const W = 560, H = 74, L = 8, R = 8, T = 22;
   const hi = Math.max(...vals) * 1.12, lo = 0;
   const x = (v) => L + ((v - lo) / (hi - lo)) * (W - L - R);
-  let s = `<svg class="chart" viewBox="0 0 ${W} ${H}" role="img">`;
+  let s = `<svg class="chart" viewBox="0 0 ${W} ${H}" role="img" aria-label="${esc(label)}">`;
   s += `<rect class="b-track" x="${L}" y="${T}" width="${W - L - R}" height="22" rx="2"/>`;
   if (b !== null && t !== null) {
     const a1 = Math.min(b, t), a2 = Math.max(b, t);
@@ -716,11 +724,11 @@ function bulletChart(g, better, unit) {
 }
 
 const FISH = ["Method", "Machine", "People", "Material", "Measurement", "Environment"];
-function fishbone(fb, effect) {
+function fishbone(fb, effect, label = "Fishbone diagram of possible causes") {
   const has = FISH.some(k => (fb[k] || "").trim());
   if (!has) return "";
   const W = 700, H = 270, cy = 135, headX = 565;
-  let s = `<svg class="chart" viewBox="0 0 ${W} ${H}" role="img">`;
+  let s = `<svg class="chart" viewBox="0 0 ${W} ${H}" role="img" aria-label="${esc(label)}">`;
   s += `<line class="spine" x1="20" x2="${headX}" y1="${cy}" y2="${cy}"/>`;
   s += `<path class="head" d="M${headX},${cy - 46} L${W - 6},${cy - 46} L${W - 6},${cy + 46} L${headX},${cy + 46} Z"/>`;
   const words = wrapWords(effect || "Problem", 18).slice(0, 5);
@@ -748,13 +756,13 @@ function wrapWords(t, max) {
   return out;
 }
 
-function matrix(cms) {
+function matrix(cms, label = "Countermeasures plotted by effect and effort") {
   const list = cms.filter(c => c.name.trim());
   if (!list.length) return "";
   const W = 320, H = 250, L = 36, T = 10, S = 196;
   const x = (v) => L + ((Math.min(5, Math.max(1, v)) - 0.5) / 5) * S;
   const y = (v) => T + S - ((Math.min(5, Math.max(1, v)) - 0.5) / 5) * S;
-  let s = `<svg class="chart" viewBox="0 0 ${W} ${H}" role="img">`;
+  let s = `<svg class="chart" viewBox="0 0 ${W} ${H}" role="img" aria-label="${esc(label)}">`;
   s += `<rect class="quad-win" x="${L}" y="${T}" width="${S / 2}" height="${S / 2}"/>`;
   s += `<rect class="quad" x="${L + S / 2}" y="${T}" width="${S / 2}" height="${S / 2}"/>`;
   s += `<rect class="quad" x="${L}" y="${T + S / 2}" width="${S / 2}" height="${S / 2}"/>`;
@@ -777,7 +785,7 @@ function matrix(cms) {
   return s;
 }
 
-function gantt(tasks) {
+function gantt(tasks, label = "Gantt chart of the implementation plan") {
   const list = tasks.filter(t => t.task.trim() && parseDate(t.start) && parseDate(t.end));
   if (!list.length) return "";
   const starts = list.map(t => parseDate(t.start)), ends = list.map(t => parseDate(t.end));
@@ -787,7 +795,7 @@ function gantt(tasks) {
   const W = 640, LW = 200, R = 10, T = 22, RH = 22;
   const H = T + list.length * RH + 8;
   const x = (d) => LW + ((d - min) / (max - min)) * (W - LW - R);
-  let s = `<svg class="chart" viewBox="0 0 ${W} ${H}" role="img">`;
+  let s = `<svg class="chart" viewBox="0 0 ${W} ${H}" role="img" aria-label="${esc(label)}">`;
   for (let m = new Date(min); m <= max; m = new Date(m.getFullYear(), m.getMonth() + 1, 1)) {
     s += `<line class="grid" x1="${x(m)}" x2="${x(m)}" y1="${T - 4}" y2="${H - 6}"/>`;
     const nx = new Date(m.getFullYear(), m.getMonth() + 1, 1);
@@ -891,8 +899,8 @@ function sectionBodies(a, poster = false) {
     }
     b2 += `</div>`;
   }
-  const chart2 = lineChart({ labels: cur.map(p => p.label), series: [{ values: cur.map(p => num(p.value)), cls: "act", dots: true }], refs: [{ value: std, cls: "std", label: "Std", tcls: "t-good" }], gapRef: std, better, unit });
-  if (chart2) b2 += `<div class="scroll-x">${chart2}</div><div class="legend"><span><i></i>${esc(a.metric.name || "Actual")}${unit ? " (" + esc(unit) + ")" : ""}</span><span><i class="std"></i>Standard</span><span><i class="gapk"></i>Gap to standard</span></div>`;
+  const chart2 = lineChart({ labels: cur.map(p => p.label), series: [{ values: cur.map(p => num(p.value)), cls: "act", dots: true }], refs: [{ value: std, cls: "std", label: "Std", tcls: "t-good" }], gapRef: std, better, unit, label: `Run chart of ${a.metric.name || "the problem metric"} against the standard, with the gap shaded` });
+  if (chart2) b2 += `<div class="scroll-x" tabindex="0" role="region" aria-label="Run chart">${chart2}</div><div class="legend"><span><i></i>${esc(a.metric.name || "Actual")}${unit ? " (" + esc(unit) + ")" : ""}</span><span><i class="std"></i>Standard</span><span><i class="gapk"></i>Gap to standard</span></div>`;
   b2 += para(a.currentText);
   B.current = b2 || emptyNote("Facts about today: standard, actual, the gap, and what you saw at the gemba.");
 
@@ -900,7 +908,7 @@ function sectionBodies(a, poster = false) {
   let b3 = "";
   if (a.goal.statement) b3 += `<p class="goal-st">${esc(a.goal.statement)}</p>`;
   const bc = bulletChart(a.goal, better, unit);
-  if (bc) b3 += `<div class="scroll-x">${bc}</div>`;
+  if (bc) b3 += `<div class="scroll-x" tabindex="0" role="region" aria-label="Goal chart">${bc}</div>`;
   if (a.goal.deadline) b3 += `<div class="hint">Deadline: <b>${esc(fmtDate(a.goal.deadline))}</b>${a.metric.name ? " · Metric: " + esc(a.metric.name) : ""}</div>`;
   B.goal = b3 || emptyNote("Metric, baseline, target and deadline.");
 
@@ -912,7 +920,7 @@ function sectionBodies(a, poster = false) {
   if (showWhys) {
     b4 += `<div class="whys">` + whys.map((w, i) => `<div class="why${i === whys.length - 1 ? " root" : ""}"><div class="wn">Why ${i + 1}</div><div class="wt">${esc(w.why)}${w.evidence ? `<span class="we">Evidence: ${esc(w.evidence)}</span>` : ""}</div></div>`).join("") + `</div>`;
   }
-  if (fb) b4 += `<div class="scroll-x">${fb}</div>`;
+  if (fb) b4 += `<div class="scroll-x" tabindex="0" role="region" aria-label="Fishbone">${fb}</div>`;
   if (a.rootCauses.trim()) b4 += `<div><span class="lbl">Root cause</span><div class="rc">${esc(a.rootCauses)}</div></div>`;
   B.rca = b4 || emptyNote("A chain of whys with evidence, or a fishbone, down to one to three root causes.");
 
@@ -921,17 +929,17 @@ function sectionBodies(a, poster = false) {
   if (cms.length) {
     const tbl = `<table class="cm-table"><thead><tr><th>#</th><th>Countermeasure</th><th>Root cause</th><th>Type</th></tr></thead><tbody>` +
       cms.map((c, i) => `<tr class="${c.chosen ? "" : "off"}"><td class="n">${i + 1}</td><td>${esc(c.name)}${c.chosen ? "" : " <span class='hint'>(not chosen)</span>"}</td><td>${esc(c.cause)}</td><td><span class="pill ${c.kind === "Containment" ? "cont" : "perm"}">${esc(c.kind)}</span></td></tr>`).join("") + `</tbody></table>`;
-    B.cm = `<div class="two cm"><div class="scroll-x">${tbl}</div><div style="max-width:340px">${matrix(a.countermeasures)}</div></div>`;
+    B.cm = `<div class="two cm"><div class="scroll-x" tabindex="0" role="region" aria-label="Countermeasures table">${tbl}</div><div style="max-width:340px">${matrix(a.countermeasures)}</div></div>`;
   } else B.cm = emptyNote("Two or three options, each linked to a root cause, compared on effect and effort.");
 
   // 6 Plan
   let b6 = "";
   const tasks = a.tasks.filter(t => t.task.trim());
   const gc = gantt(a.tasks);
-  if (gc) b6 += `<div class="scroll-x">${gc}</div><div class="legend"><span><i class="sq" style="background:var(--good)"></i>Done</span><span><i class="sq" style="background:var(--accent)"></i>In progress</span><span><i class="sq" style="border:1.2px solid var(--line-strong)"></i>Not started</span><span><i class="sq" style="background:var(--gap)"></i>Overdue</span></div>`;
+  if (gc) b6 += `<div class="scroll-x" tabindex="0" role="region" aria-label="Gantt chart">${gc}</div><div class="legend"><span><i class="sq" style="background:var(--good)"></i>Done</span><span><i class="sq" style="background:var(--accent)"></i>In progress</span><span><i class="sq" style="border:1.2px solid var(--line-strong)"></i>Not started</span><span><i class="sq" style="background:var(--gap)"></i>Overdue</span></div>`;
   if (tasks.length && !(poster && gc)) {
     const now = new Date();
-    b6 += `<div class="scroll-x"><table class="res-table"><thead><tr><th>Task</th><th>Owner</th><th>Due</th><th>Status</th></tr></thead><tbody>` + tasks.map(t => {
+    b6 += `<div class="scroll-x" tabindex="0" role="region" aria-label="Tasks table"><table class="res-table"><thead><tr><th>Task</th><th>Owner</th><th>Due</th><th>Status</th></tr></thead><tbody>` + tasks.map(t => {
       const late = t.status !== "Done" && parseDate(t.end) && parseDate(t.end) < now;
       const pc = t.status === "Done" ? "done" : late ? "late" : t.status === "In progress" ? "prog" : "";
       return `<tr><td>${esc(t.task)}</td><td>${esc(t.owner) || "<span class='empty'>none</span>"}</td><td style="white-space:nowrap">${esc(fmtDate(t.end)) || "<span class='empty'>none</span>"}</td><td><span class="pill ${pc}">${late ? "Overdue" : esc(t.status)}</span></td></tr>`;
@@ -946,9 +954,9 @@ function sectionBodies(a, poster = false) {
     labels: res.map(r => r.label),
     series: [{ values: res.map(r => num(r.predicted)), cls: "pred" }, { values: res.map(r => num(r.actual)), cls: "act", dots: true }],
     refs: [{ value: num(a.goal.target), cls: "tgt", label: "Target", tcls: "t-good" }, { value: num(a.goal.baseline), cls: "base", label: "Base" }],
-    better, unit
+    better, unit, label: `Follow-up chart of predicted and actual ${a.metric.name || "results"} against the target and baseline`
   });
-  if (fc) b7 += `<div class="scroll-x">${fc}</div><div class="legend"><span><i></i>Actual</span><span><i class="pred"></i>Predicted</span><span><i class="std"></i>Target</span></div>`;
+  if (fc) b7 += `<div class="scroll-x" tabindex="0" role="region" aria-label="Follow-up chart">${fc}</div><div class="legend"><span><i></i>Actual</span><span><i class="pred"></i>Predicted</span><span><i class="std"></i>Target</span></div>`;
   const f = a.followup;
   const fl = [["How and when we check", f.checkPlan + (f.checkDate ? (f.checkPlan ? "\n" : "") + "Check date: " + fmtDate(f.checkDate) : "")], ["Standardize", f.standardize], ["Share (yokoten)", f.yokoten], ["Lessons learned", f.lessons]].filter(x => x[1] && x[1].trim());
   if (fl.length) b7 += `<div class="two">` + fl.map(([l, t]) => `<div><span class="lbl">${esc(l)}</span><p>${esc(t)}</p></div>`).join("") + `</div>`;
@@ -1107,7 +1115,7 @@ function renderHome() {
   const list = mine.concat(ex ? [ex] : []);
   const mapBox = (s) => `<${canEdit ? `button type="button" data-jump="${s.key}"` : "div"} class="mbox${s.extra ? " extra" : ""}"><span class="num">${s.n}</span><b>${esc(s.title)} <span class="tag ${phaseClass(s.phase)}">${esc(s.phase)}</span></b><span class="d">${esc(MAP[s.key])}</span></${canEdit ? "button" : "div"}>`;
   const where = !window.claude
-    ? `<b>Your work stays in this browser.</b> Nothing you type is sent anywhere, and other people can't see it. This address is public, so keep real or sensitive A3s off it.`
+    ? `<b>Your work stays in this browser.</b> Nothing you type is sent anywhere, and other people can't see it. It is kept in this browser's local storage until you delete the A3 or clear your browsing data, so on a shared computer the next person can see it. When you first download a PDF, the page fetches two open-source libraries from cdn.jsdelivr.net, which sees your IP address but not your A3. This address is public, so keep real, personal or sensitive A3s off it.`
     : saver
       ? `<b>Your work is saved to this page.</b> Everyone it's shared with sees the latest saved version, and can comment on each section.`
       : `<b>You can view, comment on and download these A3s.</b> Ask the owner for edit access if you want to change them.`;
@@ -1177,7 +1185,7 @@ function renderHome() {
       </div>
     </section>
     <p class="home-note">${where}</p>
-    <div class="home-foot"><span>A3 Workbench · a prototype for feedback</span><span>Built on the NHS.UK design system</span></div>
+    <div class="home-foot"><span>A3 Workbench · a prototype for feedback</span><span>Styled on the NHS.UK design system. Not an NHS service.</span></div>
   </div></div>`;
   clearTimeout(thumbTimer);
   thumbTimer = setTimeout(() => {

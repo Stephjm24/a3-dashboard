@@ -12,7 +12,7 @@ export function CoachPane() {
       </div>
       <div className="flex-1 space-y-3 p-5 text-sm">
         <div className="max-w-[90%] rounded-lg bg-slate-100 px-4 py-3 text-slate-800">
-          <p className="mb-1 text-xs font-medium text-slate-500">
+          <p className="mb-1 text-xs font-medium text-slate-600">
             {first.title} · {first.pdca}
           </p>
           {first.prompt}

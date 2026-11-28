@@ -88,7 +88,7 @@ function SeriesField({ series, onChange }: { series: Point[]; onChange: (s: Poin
             setSkipped(result.skipped);
             onChange(result.series);
           }}
-          className="mt-1 w-full rounded-md border border-slate-300 bg-white px-2.5 py-1.5 font-mono text-xs font-normal focus:border-blue-600 focus:outline-none"
+          className="mt-1 w-full rounded-md border border-slate-500 bg-white px-2.5 py-1.5 font-mono text-xs font-normal focus:border-blue-700 focus:outline-2 focus:outline-offset-1 focus:outline-blue-700"
         />
       </label>
       <p className="text-[11px] text-slate-500">

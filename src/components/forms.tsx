@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useActionState } from "react";
 import { acceptInvite, newA3, type FormState } from "@/app/actions";
 
@@ -20,10 +21,22 @@ export function AcceptInviteForm({ token, email }: { token: string; email: strin
           required
           maxLength={120}
           autoComplete="name"
-          className="rounded-md border border-slate-300 px-3 py-2 font-normal focus:border-blue-600 focus:outline-none"
+          className="rounded-md border border-slate-500 px-3 py-2 font-normal focus:border-blue-700 focus:outline-2 focus:outline-offset-1 focus:outline-blue-700"
         />
       </label>
-      {state.error && <p className="text-sm text-red-700">{state.error}</p>}
+      <p className="text-xs text-slate-600">
+        Your email address is used to sign you in, and your name is shown as the owner of your A3s. Continuing sets one sign-in
+        cookie. Read the{" "}
+        <Link href="/privacy" className="font-medium text-blue-700 underline underline-offset-2">
+          privacy notice
+        </Link>
+        .
+      </p>
+      {state.error && (
+        <p role="alert" className="text-sm text-red-700">
+          {state.error}
+        </p>
+      )}
       <button
         type="submit"
         disabled={pending}
@@ -50,9 +63,13 @@ export function NewA3Form() {
           minLength={3}
           maxLength={160}
           placeholder="Name the problem, not the solution: e.g. Late lab results delay discharges"
-          className="rounded-md border border-slate-300 bg-white px-3 py-2 text-sm focus:border-blue-600 focus:outline-none"
+          className="rounded-md border border-slate-500 bg-white px-3 py-2 text-sm focus:border-blue-700 focus:outline-2 focus:outline-offset-1 focus:outline-blue-700"
         />
-        {state.error && <p className="text-sm text-red-700">{state.error}</p>}
+        {state.error && (
+          <p role="alert" className="text-sm text-red-700">
+            {state.error}
+          </p>
+        )}
       </div>
       <button
         type="submit"

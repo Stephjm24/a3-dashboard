@@ -143,3 +143,4 @@ Open the invite URL printed by the command and enter your name. It is single-use
 - [System architecture](docs/architecture.md) shows how the proposed coach, A3 workspace and storage fit together. [Decision records](docs/decisions) preserve the reasoning behind those choices.
 - [Delivery plan](docs/delivery.md) lists the six phases, what the product owner reviews and where deployments are planned.
 - [Changelog](CHANGELOG.md) records additions awaiting release.
+- [Compliance audit](docs/compliance/COMPLIANCE_AUDIT.md) and [action plan](docs/compliance/COMPLIANCE_ACTION_PLAN.md) record the privacy, security, accessibility and licensing checks, with draft [privacy notice](docs/legal/PRIVACY_POLICY.md) and [tester terms](docs/legal/TERMS_OF_USE.md) awaiting approval. Report vulnerabilities as described in [SECURITY.md](SECURITY.md).

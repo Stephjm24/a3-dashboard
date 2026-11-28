@@ -3,7 +3,7 @@
 import { useId, useState, type ReactNode } from "react";
 
 const input =
-  "w-full rounded-md border border-slate-300 bg-white px-2.5 py-1.5 text-sm font-normal focus:border-blue-600 focus:outline-none";
+  "w-full rounded-md border border-slate-500 bg-white px-2.5 py-1.5 text-sm font-normal focus:border-blue-700 focus:outline-2 focus:outline-offset-1 focus:outline-blue-700";
 
 export function newId(prefix: string): string {
   const random =

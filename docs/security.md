@@ -21,6 +21,8 @@ How the two experiences are protected, and what to keep in mind when changing th
 - **Input checks.** Every Server Action validates its input with zod. Uploads are capped at 2 MB, and Excel files are refused if they would unpack beyond 50 MB.
 - **Headers.** [next.config.ts](../next.config.ts) sends a Content Security Policy, HSTS, `X-Frame-Options: DENY`, `nosniff`, a same-origin referrer policy and a restrictive permissions policy, and hides `X-Powered-By`.
 - **Secrets.** `DATABASE_URL` and `APP_URL` come from the environment. `.env` files are git-ignored and kept out of the Docker image, and `scripts/check.py` fails CI if a key or token is committed.
+- **Search engines.** Every page sends `noindex, nofollow` while the app is a private pilot.
+- **Personal data requests.** `npm run user-data -- export <email>`, `delete <email> --confirm` and `purge` answer access and erasure requests and remove expired invites and sessions. See [compliance/DATA_RETENTION.md](compliance/DATA_RETENTION.md).
 - **Production mode.** The Docker image runs `node server.js` with `NODE_ENV=production`: no dev server, no source maps, no detailed error pages.
 
 ## Checks to run after a dependency change
